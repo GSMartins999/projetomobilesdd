@@ -1,20 +1,73 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+  # Curata — App de Conservação e Restauração de Arte
+  # "Curata" do italiano curare (cuidar, tratar)
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  ## Produto
+  App mobile offline-first para profissionais de conservação e restauração de arte.
+  Permite registrar, fotografar e geolocalizar obras que necessitam de manutenção.
+  Usuário solo em v1. Equipe em v2.
+
+  ## Stack
+  - Framework: Expo SDK 52 + React Native + TypeScript (Managed Workflow)
+  - Plataformas: iOS + Android simultâneos
+  - Backend: Supabase (Auth + PostgreSQL + Storage Buckets)
+  - Banco local: expo-sqlite + drizzle-orm (com migrations)
+  - Mapa: react-native-maplibre + OpenStreetMap (offline-first nativo, NÃO Leaflet)
+  - Auth: expo-secure-store para JWT (NÃO AsyncStorage)
+  - i18n: i18next + react-i18next + expo-localization (pt-BR, en, es)
+  - Notificações: expo-notifications
+  - PDF: react-native-html-to-pdf
+  - Fotos: expo-camera + expo-file-system (cache local) + Supabase Buckets
+
+  ## Arquitetura
+  Clean Architecture estrita:
+  - domain/entities, domain/usecases, domain/repositories (interfaces)
+  - data/repositories (implementações), data/datasources/local (SQLite), data/datasources/remote (Supabase)
+  - presentation/screens, presentation/components, presentation/hooks
+  - infrastructure/di (Context API + factories), infrastructure/navigation, infrastructure/i18n
+
+  ## DI
+  Context API + factories (NÃO tsyringe nem inversify — incompatíveis com Metro bundler)
+
+  ## Modelo de Dados
+  Todas as entidades possuem:
+  - updated_at: timestamp da ação do usuário (preservado sempre, usado para sync)
+  - synced_at: timestamp do upload ao servidor
+  - deleted_at: nullable, para soft delete (deleções offline propagadas via sync)
+  - device_id: identifica o dispositivo de origem (prepara para multi-device futuro)
+
+  ## Estratégia de Sync
+  Offline-first. SQLite é source of truth local.
+  Resolução de conflito: last-write-wins por updated_at.
+  Soft delete obrigatório: nunca deletar fisicamente.
+  Fotos: compressão antes do upload (max 1200px / 300KB). Upload em partes com estado.
+
+  ## Convenções
+  - Commits: Conventional Commits (feat, fix, chore, refactor, docs)
+  - Nomenclatura: PascalCase para componentes/entidades, camelCase para funções/variáveis
+  - Testes: Jest para domain, Maestro para E2E
+
+  ## IDs de obras
+  Formato: ART-YYYY-XXXXX (ex: ART-2026-00001)
+
+  ## Escopo v1 (MVP)
+  Auth + JWT offline, câmera + GPS + cadastro de obra, formulário de inspeção,
+  mapa com obras, offline-first (SQLite + sync Supabase), detecção de duplicatas (geofence 30m),
+  relatório PDF, notificações de revisita, busca/filtros, dashboard, i18n, onboarding.
+
+  ## Non-goals v1
+  Colaboração em equipe, integração IPHAN, QR Code nas obras.
+
+rules:
+  proposal:
+    - Sempre incluir seção de Non-goals
+    - Referenciar a Clean Architecture ao descrever componentes
+    - Nunca sugerir Leaflet — usar react-native-maplibre
+    - Nunca sugerir AsyncStorage para tokens — usar expo-secure-store
+    - Nunca sugerir tsyringe — usar Context API + factories
+  tasks:
+    - Quebrar tasks em no máximo 2 horas de trabalho
+    - Sempre indicar a camada da Clean Architecture afetada (domain/data/presentation/infrastructure)
+    - Incluir critério de aceite testável
