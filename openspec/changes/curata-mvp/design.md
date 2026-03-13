@@ -4,6 +4,8 @@ O Curata é um app mobile novo, construído do zero sobre Expo SDK 52 + React Na
 
 O usuário é profissional solo de conservação/restauração de arte que trabalha em campo, frequentemente sem internet, com dispositivos iOS ou Android.
 
+> **Nota de build:** O projeto usa **Expo Dev Client** (não Managed Workflow puro) desde o início, para suportar react-native-maplibre (renderização GL nativa).
+
 ## Goals / Non-Goals
 
 **Goals:**
@@ -70,6 +72,25 @@ Toda entidade possui: `id (UUID)`, `updated_at`, `synced_at`, `deleted_at`, `dev
 
 ---
 
+### D4b — JWT expirado offline: janela de graça de 7 dias
+
+Se o JWT expirar e não houver conexão para renová-lo:
+- O app exibe um **banner de aviso** persistente: *"Sessão expirada — reconecte para sincronizar"*
+- O acesso aos dados locais **não é bloqueado** por até **7 dias** após a expiração
+- Após 7 dias sem renovação, o app exige novo login
+
+**Motivo:** Bloquear offline imediatamente torna o app inutilizável em campo estendido — cenário central de uso da profissional.
+
+---
+
+### D4c — Propagação de `conservation_status` após inspeção
+
+O `CreateInspectionUseCase` deve, após salvar a inspeção com sucesso, **atualizar o `conservation_status` da obra-mãe** com o `status_at_visit` da nova inspeção (e atualizar `updated_at` da obra).
+
+**Motivo:** O status da obra deve sempre refletir a avaliação técnica mais recente, sem exigir ação manual da profissional.
+
+---
+
 ### D5 — Mapa com react-native-maplibre (não Leaflet, não react-native-maps)
 
 **Motivo:** Leaflet é biblioteca web (DOM) — incompatível com RN nativo. react-native-maps não tem suporte real a tiles offline. react-native-maplibre oferece rendering GL nativo e download de tiles offline sem WebView.
@@ -88,11 +109,13 @@ Fluxo:
 
 ---
 
-### D7 — `technical_form` como JSON + validação Zod
+### D7 — `technical_form` como JSON + validação Zod + `form_version`
 
 O formulário técnico de inspeção é serializado como JSON no campo `technical_form` de INSPECTION. O schema é validado por um `InspectionFormSchema` (Zod) na camada domain.
 
-**Motivo:** Tabela separada aumenta complexidade de migrations. JSON + Zod é simples para v1 e evolui sem alterar o schema do BD.
+A entidade INSPECTION recebe um campo adicional: **`form_version: integer`** (default `1`). O domain mantém um mapa de schemas por versão (`InspectionFormSchemaV1`, `InspectionFormSchemaV2`, …) e seleciona o schema correto ao ler uma inspeção antiga.
+
+**Motivo:** Tabela separada aumenta complexidade de migrations. JSON + Zod é simples para v1 e o `form_version` garante que inspeções antigas não falhem quando o schema evoluir.
 
 ---
 
@@ -124,4 +147,9 @@ Modal Stack (sobre qualquer tab):
 | react-native-maplibre — curva de aprendizado (configuração de tiles offline) | Testar download de tiles no início do projeto, antes de outras features |
 | drizzle-orm com expo-sqlite — integração ainda relativamente nova | Criar um spike de migration antes de modelar todas as entidades |
 | Supabase Storage free tier (1GB) pode ser atingido rapidamente com fotos | Compressão obrigatória (300KB/foto) + limite de 10 fotos por inspeção |
-| Expo Managed Workflow pode restringir libs nativas | Verificar compatibilidade de react-native-maplibre com Managed Workflow antes de iniciar |
+| react-native-maplibre exige módulo GL nativo | **Resolvido: Expo Dev Client adotado desde o início** |
+
+## Limitações Explícitas (v1)
+
+- **Notificações:** verificação de obras sem revisita roda **apenas ao abrir o app** — sem background task. Se o app não for aberto, nenhuma notificação é disparada naquele dia.
+- **JWT grace period:** o acesso offline é mantido por até 7 dias após expiração do token, com banner de aviso persistente.

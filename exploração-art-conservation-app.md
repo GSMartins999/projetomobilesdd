@@ -14,7 +14,7 @@
 
 | Camada | Tecnologia |
 |---|---|
-| Framework | Expo SDK 52 + React Native + **TypeScript** |
+| Framework | Expo SDK 52 + React Native + **TypeScript** + **Expo Dev Client** |
 | Câmera | expo-camera |
 | Geolocalização | expo-location |
 | Armazenamento local | expo-sqlite + expo-file-system |
@@ -80,6 +80,7 @@ INSPECTION (registro de inspeção)
 ├── notes                (texto livre)
 ├── status_at_visit      (good | regular | poor | urgent)  ← enum
 ├── technical_form       JSON estruturado — schema validado por Zod no domain
+├── form_version         INTEGER DEFAULT 1 ← versão do schema Zod usado
 ├── updated_at
 ├── synced_at
 ├── deleted_at           ← nullable — soft delete
@@ -136,7 +137,7 @@ Deleção (offline) → seta deleted_at → SQLite → internet → Supabase
 - Login obrigatório apenas na **primeira vez**
 - JWT armazenado no **expo-secure-store** (keychain criptografado)
 - Supabase SDK gerencia **refresh automático** quando online
-- Offline: usa token local sem nova autenticação
+- **Offline com token expirado:** janela de graça de **7 dias** — o app exibe banner de aviso (*"Sessão expirada — reconecte para sincronizar"*) mas não bloqueia o acesso aos dados locais; após 7 dias sem renovação, exige novo login
 - Dados modelados com `user_id` desde o início (prepara para equipe futura)
 
 ---
@@ -167,6 +168,10 @@ Nova obra registrada → busca obras num raio de 30m
                    [Sim - vincular]  [Não - criar nova]
 ```
 
+**Comportamento de [Vincular]:** foto e GPS capturados são descartados; a profissional é redirecionada para o `ArtworkDetailScreen` da obra existente, onde pode iniciar uma nova inspeção normalmente.
+
+**Comportamento de [Criar nova]:** continua normalmente para `ArtworkFormScreen`.
+
 ---
 
 ## 📋 Formulário Técnico vs. Relatório Simples
@@ -195,7 +200,8 @@ Nova obra registrada → busca obras num raio de 30m
 - Lembretes de revisita para obras que:
   - Estão em estado **precário ou urgente**
   - Não recebem visita há **X dias** (configurável)
-- Powered by: `expo-notifications`
+- Powered by: `expo-notifications` (notificações locais)
+- ⚠️ **Limitação v1:** a verificação roda apenas ao abrir o app — sem background task. Se o app não for aberto, nenhuma notificação é disparada naquele dia.
 
 ---
 
@@ -533,9 +539,14 @@ Total: XX obras
 | 5 | Fotos offline | Só URL remota | **`expo-file-system` (local) + URL remota** | URL Supabase não funciona offline |
 | 6 | Armazenamento de fotos | Array em INSPECTION | **Tabela PHOTO separada (1-N)** | SQLite não tem array nativo; tabela permite labels e order |
 | 7 | `conservation_status` | Enum em PT-BR | **Enum em inglês + i18n na UI** | Consistência com sistema de i18n já adotado |
-| 8 | `technical_form` | Tabela INSPECTION_FORM com campos explícitos | **JSON + validação Zod no domain** | Mais simples para v1; schema evolui via Zod sem migration |
+| 8 | `technical_form` | Tabela INSPECTION_FORM com campos explícitos | **JSON + validação Zod + `form_version`** | Simples para v1; `form_version` garante compatibilidade com inspeções antigas ao evoluir o schema |
 | 9 | Entity User local | Sem entity local, User entity completa | **User mínimo (id, name, avatar_url)** | Necessário para exibição offline sem chamada de API |
 | 10 | ID de obra | Sequencial (ART-YYYY-XXXXX) como primary key | **UUID interno + display_id gerado no sync** | UUID evita colisões entre devices offline |
+| 11 | Build workflow | Managed Workflow puro | **Expo Dev Client** | react-native-maplibre requer módulo GL nativo, incompatível com Managed Workflow puro |
+| 12 | JWT expirado offline | Bloquear acesso imediatamente | **Janela de graça de 7 dias + banner de aviso** | Bloquear offline torna o app inutilizável em campo estendido |
+| 13 | Atualização de `conservation_status` | Manual pela profissional | **Automática via `CreateInspectionUseCase`** | Status deve sempre refletir a avaliação mais recente sem ação manual |
+| 14 | Fluxo de [Vincular] duplicata | Manter foto/GPS ou redirecionar com dados | **Descarta foto+GPS, redireciona para obra existente** | Simplifica UX; profissional inicia inspeção normalmente na obra correta |
+| 15 | Verificação de notificações | Background task periódica | **Apenas ao abrir o app** | Suficiente para o perfil de uso; evita complexidade de background fetch |
 
 ---
 
