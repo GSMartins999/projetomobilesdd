@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@700&amp;family=DM+Sans:wght@400;500&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#ec5b13",
+                "background-light": "#f8f6f6",
+                "background-dark": "#221610",
+              },
+              fontFamily: {
+                "display": ["Public Sans", "sans-serif"],
+                "serif": ["Playfair Display", "serif"],
+                "sans-alt": ["DM Sans", "sans-serif"],
+                "mono": ["JetBrains Mono", "monospace"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<title>Curata - Lista de Obras</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 border-b border-primary/10">
+<div class="text-primary flex size-10 shrink-0 items-center justify-center">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight flex-1 text-center font-serif">Curata</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex items-center justify-center rounded-full h-10 w-10 bg-primary/10 text-primary">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Search and Filters -->
+<div class="px-4 py-4 space-y-4">
+<div class="flex gap-2">
+<label class="flex flex-col flex-1 h-12">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700">
+<div class="text-slate-400 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:ring-0 h-full placeholder:text-slate-400 px-4 pl-2 text-base font-normal leading-normal" placeholder="Pesquisar obras..." value=""/>
+</div>
+</label>
+<button class="flex items-center justify-center w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shadow-sm">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-primary px-5 shadow-md shadow-primary/20">
+<p class="text-white text-sm font-medium">Tudo</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-5">
+<p class="text-slate-600 dark:text-slate-300 text-sm font-medium">Urgente</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-5">
+<p class="text-slate-600 dark:text-slate-300 text-sm font-medium">Precário</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-5">
+<p class="text-slate-600 dark:text-slate-300 text-sm font-medium">Regular</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-5">
+<p class="text-slate-600 dark:text-slate-300 text-sm font-medium">Bom</p>
+</div>
+</div>
+</div>
+<!-- Artwork List -->
+<main class="flex-1 px-4 pb-24">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight pb-4 pt-2">Obras Registradas</h3>
+<div class="space-y-4">
+<!-- Card 1 -->
+<div class="flex gap-4 p-3 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700/50">
+<div class="w-24 h-24 rounded-lg overflow-hidden shrink-0 bg-slate-200">
+<img alt="Pintura clássica em moldura dourada" class="w-full h-full object-cover" data-alt="Classical oil painting with ornate gold frame" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJyTc4p7N8L-ENc35gn0qobLlQZ3LIK5EpHLImqi5Xe2oAm_zy_VvxMX_m_CT8l8_Kktv3WAplTkOYJHpyI1MuIigVQvwMoei9PDxtajAgVVRD1AOEnPRUfWQJ0iem5ZNE-2mfztqklZIQ8MxbZbhA9bxv1buJKyebaGUnhYNRbO1-sgv_eYvo7KdWOBehZrLtu0TJvuiiEiohGgC8WzJcYsI32Gft1h3-Fav48XIuX8N68YXeyF61ZVV21FD-pIOba2XHi8bdCrS9"/>
+</div>
+<div class="flex flex-col justify-between flex-1 py-0.5">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-serif text-lg text-slate-900 dark:text-slate-100 leading-tight">A Noite Estrelada</h4>
+<span class="material-symbols-outlined text-emerald-500 text-sm" title="Sincronizado">sync</span>
+</div>
+<p class="font-sans-alt text-xs text-slate-500 dark:text-slate-400 mt-1">Av. Paulista, 1578 - São Paulo</p>
+<code class="font-mono text-[10px] text-primary/70 bg-primary/5 px-1.5 py-0.5 rounded mt-2 inline-block">ART-2026-00123</code>
+</div>
+<div class="flex items-center mt-2">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Bom</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex gap-4 p-3 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700/50">
+<div class="w-24 h-24 rounded-lg overflow-hidden shrink-0 bg-slate-200">
+<img alt="Escultura moderna de bronze" class="w-full h-full object-cover" data-alt="Modern bronze sculpture in a gallery setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdrDKt-AXl9JofImIwetVTyr0PQOX0zrpPVoDlrYGkJuz1hUA4pc68QoxIJDmDg6GgOe3ojgJmJDcZcqNvO7U2zucz_OCpgPB80NS0dNeN6XE20eYMTCgqW5UIF5uSYmGndfIXrxQMxlfCiD7yh0fn7vpcGHSyeaFsTB6ZD-PYXZee-nK77iDGQfvzdVXig8X9UQGJnaDzpTK-siT9LWHByifHeKZssNzCUgMK5yT1dOymP9w2Rmzblk6cu_hTQB9aVimrKRD-feWf"/>
+</div>
+<div class="flex flex-col justify-between flex-1 py-0.5">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-serif text-lg text-slate-900 dark:text-slate-100 leading-tight">O Pensador</h4>
+<span class="material-symbols-outlined text-amber-500 text-sm" title="Sincronizando...">sync_lock</span>
+</div>
+<p class="font-sans-alt text-xs text-slate-500 dark:text-slate-400 mt-1">Praça da Sé, s/n - Centro</p>
+<code class="font-mono text-[10px] text-primary/70 bg-primary/5 px-1.5 py-0.5 rounded mt-2 inline-block">ART-2026-00124</code>
+</div>
+<div class="flex items-center mt-2">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">Urgente</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex gap-4 p-3 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700/50">
+<div class="w-24 h-24 rounded-lg overflow-hidden shrink-0 bg-slate-200">
+<img alt="Mosaico colorido em parede" class="w-full h-full object-cover" data-alt="Colorful abstract wall mosaic pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDLZXodFvbZFXDEbR_6t15PKrsryA48N3cMa_gFdpSEXbEazU2GT7z7JMUdKiTfSLJsFOwaqTzUiDjZjfl4WrzEsBLDlrkmnHZ6bazAJO2Es1jG-U0ZClom60PnmJ72fABjTtwinOLNc4hKlfUUsVYVV-8jemML-qc7P15FIp95t74zMy_-b_YgGUgFvtZUgUIFAX9Xa8B-hbBN0DiM0LtpI2e6DNwvH3Chfxkkr9jOlgYbfvvxi-1VhV7z5lUeEdrZ1I3IzVxdYut"/>
+</div>
+<div class="flex flex-col justify-between flex-1 py-0.5">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-serif text-lg text-slate-900 dark:text-slate-100 leading-tight">Mosaico Urbano</h4>
+<span class="material-symbols-outlined text-slate-400 text-sm" title="Offline">cloud_off</span>
+</div>
+<p class="font-sans-alt text-xs text-slate-500 dark:text-slate-400 mt-1">Rua Augusta, 1100 - Consolação</p>
+<code class="font-mono text-[10px] text-primary/70 bg-primary/5 px-1.5 py-0.5 rounded mt-2 inline-block">ART-2026-00125</code>
+</div>
+<div class="flex items-center mt-2">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">Precário</span>
+</div>
+</div>
+</div>
+<!-- Empty State Message (hidden by default in this demo but coded) -->
+<!-- 
+                <div class="flex flex-col items-center justify-center py-20 text-center space-y-4">
+                    <div class="bg-primary/5 p-6 rounded-full">
+                        <span class="material-symbols-outlined text-6xl text-primary/30">inventory_2</span>
+                    </div>
+                    <div>
+                        <p class="text-slate-600 dark:text-slate-400 text-lg font-medium">Nenhuma obra registrada ainda.</p>
+                        <p class="text-slate-400 text-sm">Toque no botão + para adicionar sua primeira obra.</p>
+                    </div>
+                </div> 
+                -->
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 pb-6 pt-2 flex justify-between items-center z-20">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-[10px] font-medium leading-normal">Início</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">format_list_bulleted</span>
+<p class="text-[10px] font-medium leading-normal">Lista</p>
+</a>
+<div class="flex flex-1 justify-center -mt-8">
+<button class="bg-primary text-white w-14 h-14 rounded-full shadow-lg shadow-primary/40 flex items-center justify-center border-4 border-background-light dark:border-background-dark">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">map</span>
+<p class="text-[10px] font-medium leading-normal">Mapa</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-[10px] font-medium leading-normal">Ajustes</p>
+</a>
+</nav>
+</div>
+</body></html>

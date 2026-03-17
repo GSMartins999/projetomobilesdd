@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&amp;family=Playfair+Display:wght@700&amp;family=DM+Sans:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7C5C3E",
+                        "parchment": "#F5F0E8",
+                        "background-light": "#F5F0E8",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"],
+                        "sans-alt": ["DM Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .loading-spinner {
+            border: 2px solid rgba(124, 92, 62, 0.1);
+            border-top: 2px solid #7C5C3E;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display overflow-hidden">
+<div class="relative flex h-screen w-full flex-col items-center justify-between py-12 px-6">
+<div class="flex-1 flex flex-col items-center justify-center w-full max-w-md">
+<!-- Logo Section -->
+<div class="mb-2">
+<span class="material-symbols-outlined text-primary text-5xl mb-4">brush</span>
+</div>
+<h1 class="text-primary font-serif text-[48px] font-bold leading-tight text-center">
+                Curata
+            </h1>
+<h2 class="text-primary/80 font-sans-alt text-lg font-medium leading-tight tracking-wide text-center mt-2">
+                Conservação e Restauração de Arte
+            </h2>
+<!-- Loading Indicator -->
+<div class="mt-16 flex flex-col items-center gap-4">
+<div class="loading-spinner"></div>
+<p class="text-primary/60 font-sans-alt text-sm font-medium tracking-widest uppercase">
+                    Carregando
+                </p>
+</div>
+</div>
+<!-- Footer / Build Info -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-[1px] bg-primary/20 mb-2"></div>
+<p class="text-primary/40 font-sans-alt text-[10px] font-normal leading-normal tracking-tighter">
+                SISTEMA DE GESTÃO PATRIMONIAL
+            </p>
+<p class="text-primary/40 font-sans-alt text-[10px] font-normal leading-normal">
+                v1.0.4 (build 24)
+            </p>
+</div>
+<!-- Decorative elements -->
+<div class="absolute top-0 left-0 w-32 h-32 opacity-5 pointer-events-none">
+<img class="w-full h-full object-cover" data-alt="Abstract classical paint texture pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi08RYWM7k2xoWSlZDhzNDXnjmEePmMPY8QQB8NJQq22NaZiBNmylpC8-u_ZrnLISc_BucGI5Eq1Mj7Spn12UZFeWzmDsPaBaNaZsAiyrrI7JDUy38KlNa06C9svIddVbbExAXIrbwgXHFdBbiLfowF07WrG73PQ1gJNeZWo147gpkgLm6Vl81U-9xY3bDSq69ltY-7adPowfBJpwcSgdayKZOCecmCnlUGBf3pNzILbQHJSd3FppNox2jMSmD5FBaHOsysVesBCno"/>
+</div>
+<div class="absolute bottom-0 right-0 w-32 h-32 opacity-5 pointer-events-none rotate-180">
+<img class="w-full h-full object-cover" data-alt="Abstract classical paint texture pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3esRx8S9U17bgl_hosRDPCqCa2Tha4tc_tkiJ1goZHFu_gqNosUCXkkj2omgAeySfWE_S7Id4TtClHMqZc5sbqTEZfuQY9sLTUuE8jaQ1ar_4wexEzMFsg6xBQWzVkv-b7TlmBjssqmsJxdZ_-d81SWGVMozNFFhN0Kr1GVuHnUzzxmYJO4QReSEZa_crKTZzXjCL4jjMiK9T-inDL_8fvZ6X599tJu7vbD4a9uaTUOyoWsRk-BZjBKF_2VOe5bJyufApDxZWFNZl"/>
+</div>
+</div>
+</body></html>

@@ -10,7 +10,7 @@ context: |
   Usuário solo em v1. Equipe em v2.
 
   ## Stack
-  - Framework: Expo SDK 52 + React Native + TypeScript (Managed Workflow)
+  - Framework: Expo SDK latest + React Native + TypeScript (Managed Workflow)
   - Plataformas: iOS + Android simultâneos
   - Backend: Supabase (Auth + PostgreSQL + Storage Buckets)
   - Banco local: expo-sqlite + drizzle-orm (com migrations)
@@ -47,7 +47,7 @@ context: |
   ## Convenções
   - Commits: Conventional Commits (feat, fix, chore, refactor, docs)
   - Nomenclatura: PascalCase para componentes/entidades, camelCase para funções/variáveis
-  - Testes: Jest para domain, Maestro para E2E
+  - Testes: Jest para domain, RNTL (React Native Testing Library) para presentation/components, Maestro para E2E
 
   ## IDs de obras
   Formato: ART-YYYY-XXXXX (ex: ART-2026-00001)

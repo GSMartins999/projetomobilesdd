@@ -1,6 +1,6 @@
 # 🎨 Curata — App de Conservação e Restauração de Arte
 
-> Sessão de exploração realizada em 06/03/2026
+> Sessões de exploração: **06/03/2026** (produto e arquitetura) · **10/03/2026** (decisões técnicas e refinamentos)
 
 ---
 
@@ -14,18 +14,21 @@
 
 | Camada | Tecnologia |
 |---|---|
-| Framework | Expo SDK 52 + React Native + **TypeScript** + **Expo Dev Client** |
+| Framework | Expo SDK **latest** + React Native + **TypeScript** |
+| Build | **Expo Dev Client** ← obrigatório (react-native-maplibre requer GL nativo, incompatível com Managed Workflow puro) |
 | Câmera | expo-camera |
 | Geolocalização | expo-location |
 | Armazenamento local | expo-sqlite + expo-file-system |
 | Auth / Backend | Supabase (Auth + PostgreSQL + Storage Buckets) |
-| Mapa | react-native-maplibre + OpenStreetMap (offline nativo) |
+| Mapa | react-native-maplibre + OpenStreetMap (offline nativo, **não** Leaflet, **não** react-native-maps) |
 | i18n | i18next + react-i18next + expo-localization |
-| DI / Arch | Clean Architecture + Context API + factories |
+| DI / Arch | Clean Architecture + Context API + factories (**não** tsyringe, **não** inversify) |
+| Validação | zod (schema `technical_form` + entities) |
 | Notificações | expo-notifications |
 | PDF | react-native-html-to-pdf |
-| Auth storage | expo-secure-store (JWT) |
+| Auth storage | expo-secure-store (JWT — **nunca** AsyncStorage) |
 | ORM/Migrations | drizzle-orm (SQLite local com migrations) |
+| Testes | **Jest** (domain/usecases/Zod) + **RNTL** `@testing-library/react-native` (presentation/components) + **Maestro** (E2E) |
 
 ---
 
@@ -313,8 +316,17 @@ Total: XX obras
 |---|---|
 | RNF-01 | O mapa deve renderizar até 500 marcadores sem degradação visível de framerate (meta: 60fps). |
 | RNF-02 | A tela Splash deve transitar para Login ou TabBar em no máximo 2 segundos em dispositivo de entrada. |
-| RNF-03 | A geração de PDF deve concluir em no máximo 5 segundos para inspeções com até 10 fotos. |
+| RNF-03 | A geração de PDF deve concluir em no máximo **5 segundos** em dispositivos mid/high-end e **10 segundos** em dispositivos de entrada (≤ 3GB RAM, CPU quad-core ≤ 2GHz) para inspeções com até 10 fotos. Inspeções sem fotos devem gerar PDF em ≤ 2 segundos em qualquer device. |
+| RNF-03b | A UI deve exibir barra de progresso incremental na geração do PDF, com etapas visíveis: "Preparando dados" → "Processando fotos" → "Gerando documento", para que o usuário perceba atividade mesmo em dispositivos lentos. |
 | RNF-04 | Cada inspeção admite no máximo **10 fotos** de até 300KB cada (após compressão). |
+
+### Escalabilidade de Dados (SQLite Local)
+| ID | Requisito |
+|---|---|
+| RNF-04b | O banco SQLite local deve suportar até **1.000 obras** e **5.000 inspeções** por usuário sem degradação perceptível de performance nas queries de listagem e mapa (tempo de resposta ≤ 200ms em dispositivo de entrada). |
+| RNF-04c | A tabela PHOTO pode acumular até **50.000 registros** (1.000 obras × 10 fotos × 5 inspeções). Índices obrigatórios: `inspection_id`, `upload_status`, `deleted_at` para garantir queries eficientes. |
+| RNF-04d | Ao ultrapassar **800 obras** locais, o app deve exibir aviso de "Banco próximo do limite recomendado" e sugerir sync + arquivamento de obras antigas. O limite **nunca** deve bloquear cadastro — apenas alertar. |
+| RNF-04e | Paginação obrigatória na Lista de Obras e Histórico de Inspeções: carregar **20 registros por página** (cursor-based, não offset) para evitar leitura total da tabela em listas grandes. |
 
 ### Disponibilidade e Offline
 | ID | Requisito |
@@ -330,6 +342,10 @@ Total: XX obras
 | RNF-09 | Permissões de câmera e localização devem ser solicitadas com justificativa explícita antes do uso (LGPD/GDPR). |
 | RNF-10 | Dados sensíveis (tokens, coordinates) não devem ser registrados em logs de produção. |
 | RNF-11 | Acesso ao Supabase Storage deve ser restrito por `user_id` via Row-Level Security (RLS). |
+| RNF-11b | O arquivo de banco SQLite (`curata.db`) deve ser armazenado no diretório privado do app (`expo-file-system` → `documentDirectory`), inacessível por outros apps e pelo backup padrão do sistema (Android: `android:allowBackup="false"` para o db; iOS: `NSURLIsExcludedFromBackupKey = true` no arquivo SQLite). |
+| RNF-11c | Coordenadas GPS (lat/lng) presentes nas tabelas ARTWORK e INSPECTION são classificadas como **dados sensíveis de localização** (LGPD Art. 11). A exportação do PDF simplificado deve omitir coordenadas exatas, exibindo apenas o endereço aproximado (logradouro + bairro, sem número). O PDF técnico mantém coordenadas completas, destinado exclusivamente a profissionais autorizados. |
+| RNF-11d | Fotos armazenadas localmente (`expo-file-system`) devem residir no diretório privado do app, excluídas de bibliotecas de fotos do sistema e de backups automáticos não criptografados. Ao fazer logout, todos os arquivos de foto locais e o banco SQLite devem ser apagados (`FileSystem.deleteAsync` + `SQLite.closeAsync`). |
+| RNF-11e | Em dispositivos Android sem criptografia de disco habilitada (API < 29 com criptografia opcional), o app deve exibir banner de aviso: *"Seu dispositivo pode não ter criptografia de disco ativa. Recomendamos habilitar nas configurações de segurança do Android."* — sem bloquear o uso. |
 
 ### Plataforma e Compatibilidade
 | ID | Requisito |
@@ -528,6 +544,41 @@ Total: XX obras
 
 ---
 
+## ⚙️ Convenções de Desenvolvimento
+
+| Área | Convenção |
+|---|---|
+| Commits | Conventional Commits (`feat`, `fix`, `chore`, `refactor`, `docs`) |
+| Nomenclatura | PascalCase para componentes/entidades; camelCase para funções/variáveis |
+| Testes — domain | **Jest**: usecases, entities, schemas Zod |
+| Testes — presentation | **RNTL** (`@testing-library/react-native` + `@testing-library/jest-native`): screens e components |
+| Testes — E2E | **Maestro**: fluxos completos (login → obra → inspeção) |
+| Indicação de camada | Sempre indicar a camada Clean Arch afetada nas tasks: `[domain]`, `[data]`, `[presentation]`, `[infrastructure]` |
+
+---
+
+## ⚠️ Riscos e Trade-offs
+
+| Risco | Mitigação |
+|---|---|
+| `updated_at` incorreto (relógio do device) → conflito silencioso | Validar no servidor que `updated_at` não é data futura; `device_id` para auditoria |
+| react-native-maplibre — curva de aprendizado (configuração de tiles offline) | Testar download de tiles como **spike** no início do projeto, antes de outras features |
+| drizzle-orm + expo-sqlite — integração relativamente nova | Criar **spike de migration** antes de modelar todas as entidades (task 2.1) |
+| Supabase Storage free tier (1GB) atingido com fotos | Compressão obrigatória (300KB/foto) + limite de 10 fotos por inspeção |
+| react-native-maplibre exige módulo GL nativo | **Resolvido:** Expo Dev Client adotado desde o início |
+
+---
+
+## 🚧 Limitações Explícitas (v1)
+
+1. **Notificações:** verificação de obras sem revisita roda **apenas ao abrir o app** — sem background task. Se o app não for aberto, nenhuma notificação é disparada naquele dia.
+2. **JWT grace period:** acesso offline mantido por até **7 dias** após expiração do token, com banner de aviso persistente — sem bloquear o uso dos dados locais.
+3. **Tablets:** suportados opcionalmente em portrait; landscape em tablets é v2.
+4. **Colaboração:** usuário solo em v1 — dados modelados com `user_id` para preparar equipe em v2.
+5. **Mapa offline:** somente raio de 10km configurado automaticamente; sem download de área global.
+
+---
+
 ## 🧠 Decision Log (Brainstorming — 10/03/2026)
 
 | # | Decisão | Alternativas Consideradas | Escolha Final | Motivo |
@@ -550,4 +601,7 @@ Total: XX obras
 
 ---
 
-> **Change `curata-mvp` criado.** Próximo passo: `/opsx-apply` para iniciar a implementação.
+> **Status do projeto (17/03/2026):**
+> - ✅ `curata-mvp` change criado com `proposal.md`, `design.md`, specs por capability e `tasks.md` (15 grupos, ~60 tasks)
+> - ✅ Dependências instaladas (`node_modules` gerado)
+> - ⏳ Implementação pendente — próximo passo: `/opsx-apply` para iniciar pela task 1.1 (setup Expo Dev Client)

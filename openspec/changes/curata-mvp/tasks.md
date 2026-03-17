@@ -121,3 +121,8 @@
 - [ ] 15.2 Escrever testes unitários para `CreateArtworkUseCase` e lógica de sync [domain]
 - [ ] 15.3 Escrever testes unitários para `InspectionFormSchema` (Zod) [domain]
 - [ ] 15.4 Configurar Maestro para testes E2E básicos (login → cadastrar obra → inspecionar) [infrastructure]
+- [ ] 15.5 Instalar e configurar `@testing-library/react-native` + `@testing-library/jest-native` com preset `jest-expo`; configurar mocks de `expo-camera`, `expo-location`, `expo-secure-store` e `expo-sqlite` [infrastructure]
+- [ ] 15.6 Escrever testes RNTL para `LoginScreen` (submit com credenciais válidas e inválidas, exibição de erro inline) [presentation]
+- [ ] 15.7 Escrever testes RNTL para `ArtworkFormScreen` (validação de campos obrigatórios, submit com dados completos) [presentation]
+- [ ] 15.8 Escrever testes RNTL para `InspectionFormScreen` (limite de 10 fotos bloqueado, campos obrigatórios, urgência [1–5]) [presentation]
+- [ ] 15.9 Escrever testes RNTL para `DashboardScreen` (renderização de cards por estado de conservação, navegação para lista filtrada) [presentation]

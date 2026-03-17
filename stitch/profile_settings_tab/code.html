@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Curata - Perfil</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto border-x border-slate-200 dark:border-slate-800 shadow-sm">
+<!-- Header -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 border-b border-slate-200 dark:border-slate-800">
+<div class="flex size-12 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 cursor-pointer">arrow_back</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center">Perfil</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex size-10 cursor-pointer items-center justify-center rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">settings</span>
+</button>
+</div>
+</div>
+<!-- User Profile Card -->
+<div class="flex p-6">
+<div class="flex w-full flex-col gap-4 items-center">
+<div class="flex gap-4 flex-col items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full border-4 border-primary/20 p-1" data-alt="Avatar de um homem sorrindo com barba" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDlBcOFV8jCNv7RR2k6IZeBlEn8pY4cVbgdqc248ystoSonH7jANVPpraOMw2DyZYPPqoTJdgHzG3oSCankO6GX4X8VeWFfa9dYPU9vKcND68IPvuM8llxr68z8uj29AkiqB3aJa-ln1wvqxxQPjbM1dj6KHtNXhWVTEF1LmiT92EhTdZF4O4QbMtnGGj_GtcY1lpnuzDRpT-QQpVw8ygUSDW0Du0IA9CoVvoN2q6hsOn100r6-NGVUvBO9vY1Nfpv1NJvbSHrbPQ1a");'></div>
+<div class="flex flex-col items-center justify-center">
+<p class="text-[24px] font-bold leading-tight tracking-tight text-center">Alex Silva</p>
+<p class="text-primary font-medium leading-normal text-center">alex.silva@curata.com</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Sync Status -->
+<div class="px-6 mb-4">
+<div class="bg-primary/10 dark:bg-primary/20 rounded-xl p-3 flex items-center justify-center gap-2 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-sm">sync</span>
+<p class="text-xs font-medium text-primary uppercase tracking-wider">Última sincronização: Hoje, às 14:32</p>
+</div>
+</div>
+<!-- Section: Preferências -->
+<div class="flex flex-col gap-1">
+<h3 class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase leading-tight tracking-widest px-6 pb-2 pt-4">Preferências</h3>
+<!-- Language -->
+<div class="flex items-center gap-4 px-6 min-h-[72px] py-2 justify-between hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-lg bg-primary/20 dark:bg-primary/30 text-primary shrink-0 size-11">
+<span class="material-symbols-outlined">translate</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-base font-semibold leading-normal">Idioma</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal">Português (Brasil)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400">chevron_right</span>
+</div>
+<!-- Download WiFi/Manual -->
+<div class="flex items-center gap-4 px-6 min-h-[72px] py-2 justify-between hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-lg bg-primary/20 dark:bg-primary/30 text-primary shrink-0 size-11">
+<span class="material-symbols-outlined">map</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-base font-semibold leading-normal">Download de Mapas</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal">Somente via Wi-Fi</p>
+</div>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+<!-- Revisit reminder stepper -->
+<div class="flex flex-col gap-2 px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-4 justify-between mb-2">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-lg bg-primary/20 dark:bg-primary/30 text-primary shrink-0 size-11">
+<span class="material-symbols-outlined">notification_important</span>
+</div>
+<p class="text-base font-semibold leading-normal">Lembrete de Revisita</p>
+</div>
+</div>
+<div class="flex items-center justify-between bg-slate-100 dark:bg-slate-800 p-2 rounded-xl">
+<button class="size-10 flex items-center justify-center bg-white dark:bg-slate-700 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-primary">remove</span>
+</button>
+<div class="text-center">
+<span class="text-lg font-bold">15 dias</span>
+<p class="text-[10px] uppercase text-slate-400 font-bold">Intervalo sugerido</p>
+</div>
+<button class="size-10 flex items-center justify-center bg-white dark:bg-slate-700 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-primary">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Section: Conta -->
+<div class="flex flex-col gap-1 pb-24">
+<h3 class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase leading-tight tracking-widest px-6 pb-2 pt-6">Conta</h3>
+<!-- Sincronizar agora -->
+<div class="flex items-center gap-4 px-6 min-h-[64px] py-2 justify-between hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 shrink-0 size-11">
+<span class="material-symbols-outlined">sync</span>
+</div>
+<p class="text-base font-semibold leading-normal">Sincronizar agora</p>
+</div>
+<span class="material-symbols-outlined text-slate-400">refresh</span>
+</div>
+<!-- Sair/Logout -->
+<div class="flex items-center gap-4 px-6 min-h-[64px] py-2 justify-between hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 shrink-0 size-11">
+<span class="material-symbols-outlined">logout</span>
+</div>
+<p class="text-base font-semibold leading-normal text-red-600">Sair da conta</p>
+</div>
+</div>
+</div>
+<!-- Bottom Tab Bar -->
+<div class="fixed bottom-0 left-0 right-0 z-20 flex items-center justify-center px-4 pb-4">
+<div class="flex w-full max-w-md gap-2 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md px-4 pb-3 pt-2 rounded-2xl shadow-lg">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">home</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Início</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">explore</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Explorar</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">bookmark</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Salvos</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined fill-1">person</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Perfil</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-checkbox:checked {
+            background-image: url("data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27white%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e");
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="flex items-center p-4 justify-between max-w-2xl mx-auto w-full">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10 font-display">Gerar Relatório</h1>
+</div>
+</header>
+<main class="flex-1 max-w-2xl mx-auto w-full pb-32">
+<!-- Artwork Identification Header -->
+<div class="p-4">
+<div class="flex items-center justify-between gap-4 p-4 rounded-xl bg-white dark:bg-slate-800/50 shadow-sm border border-primary/5">
+<div class="flex flex-col gap-1 flex-1">
+<p class="text-primary text-xs font-semibold uppercase tracking-wider">Última inspeção: 12 Out 2023</p>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold font-display">O Grito</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Edvard Munch</p>
+</div>
+<div class="size-20 bg-center bg-no-repeat bg-cover rounded-lg shadow-inner ring-1 ring-black/5" data-alt="Pintura expressionista famosa O Grito de Munch" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAk8Xe3xQImzypN-MxKPeiPF7yV8FQ8k93SsrKJeNmWVo-9RSzacAiU5_9zzliRnxh457pXQUZLtp-bjXsP67FtmbypY377LWB4nA9wtvRDju51SpLb9-ylXmTjpA5dNDNS8rE5fDc2t-vOiwdL-bHUSdla3bZeb9ysi9YYkUtUDTTjBB5MgUPbOaemntbaB6ZKDEdHpVidUCRdYzHf43zpUmLgXTEH6_rulY_yOUz20PtkPoF3dvgqzHYkXOulEEYfZAVscEw_Dvb2");'></div>
+</div>
+</div>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold px-4 pb-2 pt-4 font-display">Selecione o tipo de relatório</h3>
+<!-- Report Options Grid -->
+<div class="px-4 space-y-4">
+<!-- Technical Report (Selected State) -->
+<label class="relative cursor-pointer group">
+<input checked="" class="peer sr-only" name="report_type" type="radio"/>
+<div class="flex flex-col overflow-hidden rounded-xl bg-white dark:bg-slate-800 border-2 border-transparent peer-checked:border-primary shadow-sm transition-all hover:shadow-md">
+<div class="w-full bg-center bg-no-repeat aspect-[21/9] bg-cover" data-alt="Microscopia técnica de pigmentos e texturas" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCE3jmRTbzQ18mNVLw9sGPzBDJrobHytNNS5CaM5733fkNMCeE3RRjbB4r6cW6_-qtvA9VnwK2HPfUdBIDCqRDYOJUaqIjrchYhIyCJXxTqDD6wRly_BG_xNRe0loahm_8ZTg1qqqyLl2FByDPj1m8NpX1mj8MGKLvwyHyG_DIHXKw2R9oQ0DgpcDwrcV0DxKT4WkWHASToE-Nx4uwraJZdJYSHfkjA7V5i50yRGFZxn837OrltGuvmuGAEbI9PeEIjpTSO7q9tI_Nl");'></div>
+<div class="p-4 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<p class="text-slate-900 dark:text-white text-lg font-bold font-display">Relatório Técnico</p>
+<span class="material-symbols-outlined text-primary scale-110 opacity-0 peer-checked:group-[]:opacity-100">check_circle</span>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                            Ideal para conservadores e especialistas. Inclui análise química, macrofotografia e mapeamento detalhado de danos.
+                        </p>
+</div>
+</div>
+</label>
+<!-- Simplified Report -->
+<label class="relative cursor-pointer group">
+<input class="peer sr-only" name="report_type" type="radio"/>
+<div class="flex flex-col overflow-hidden rounded-xl bg-white dark:bg-slate-800 border-2 border-transparent peer-checked:border-primary shadow-sm transition-all hover:shadow-md">
+<div class="w-full bg-center bg-no-repeat aspect-[21/9] bg-cover opacity-80" data-alt="Visão geral simplificada de galeria de arte" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3gLGBBzhE-CC66o8R2sQZfjS7pYHX5z8qc_r14F4nQ5xW-3Da5tPEMCo9ttnOgtwXII8KNyCxSBCxdrRhFTHspTmlr9mw8-N_r0MGGeUn5X1Em5Pn7XKVKMxec2uFgsjMuBO_dig62Xg9sdhEyZhpVenNfHgQep_KOcMHCrorJligCW16f8oxKQ8DPWF49r-qy9gjPp1yutC1H_DyOE3qVENteuI7htsqUGW_jb-PcU0o48wJJ8A_Ph1xXh-I2EuQFKlnmqj__G_U");'></div>
+<div class="p-4 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<p class="text-slate-900 dark:text-white text-lg font-bold font-display">Relatório Simplificado</p>
+<span class="material-symbols-outlined text-primary scale-110 opacity-0 peer-checked:group-[]:opacity-100">check_circle</span>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                            Para proprietários e colecionadores. Resumo visual intuitivo do estado de conservação e recomendações gerais.
+                        </p>
+</div>
+</div>
+</label>
+</div>
+<!-- Content Preview Checklist -->
+<h3 class="text-slate-900 dark:text-white text-base font-bold px-4 pb-2 pt-8 font-display">Conteúdo do PDF</h3>
+<div class="px-4 space-y-1">
+<label class="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer group">
+<div class="relative flex items-center">
+<input checked="" class="custom-checkbox size-5 rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-primary focus:ring-offset-0 transition-all cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">Análise de pigmentos</span>
+<span class="text-slate-500 text-xs">Espectroscopia e fluorescência de raios-X</span>
+</div>
+</label>
+<label class="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer group">
+<div class="relative flex items-center">
+<input checked="" class="custom-checkbox size-5 rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-primary focus:ring-offset-0 transition-all cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">Estado do suporte</span>
+<span class="text-slate-500 text-xs">Avaliação de tela, chassi e moldura</span>
+</div>
+</label>
+<label class="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer group">
+<div class="relative flex items-center">
+<input checked="" class="custom-checkbox size-5 rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-primary focus:ring-offset-0 transition-all cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">Mapeamento de lacunas</span>
+<span class="text-slate-500 text-xs">Identificação de perdas de camada pictórica</span>
+</div>
+</label>
+<label class="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer group">
+<div class="relative flex items-center">
+<input class="custom-checkbox size-5 rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-primary focus:ring-offset-0 transition-all cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">Histórico de intervenções</span>
+<span class="text-slate-500 text-xs">Registros de restaurações anteriores</span>
+</div>
+</label>
+</div>
+</main>
+<!-- Sticky Bottom Button -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent pt-10">
+<div class="max-w-2xl mx-auto">
+<button class="w-full flex items-center justify-center gap-2 h-14 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold text-base shadow-lg shadow-primary/20 transition-transform active:scale-[0.98]">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+                Gerar PDF
+            </button>
+<p class="text-center text-[10px] text-slate-400 mt-2 font-medium tracking-wide uppercase">O arquivo será salvo na pasta de downloads</p>
+</div>
+</div>
+</body></html>

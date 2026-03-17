@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#ec5b13",
+              "background-light": "#f8f6f6",
+              "background-dark": "#221610",
+              "sepia-accent": "#dcc8b1",
+              "sepia-text": "#5d4037",
+            },
+            fontFamily: {
+              "display": ["Public Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto shadow-xl bg-background-light dark:bg-background-dark">
+<!-- Header -->
+<header class="sticky top-0 z-10 flex items-center bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm p-4 border-b border-primary/10">
+<button class="text-slate-900 dark:text-slate-100 flex size-10 items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold leading-tight tracking-tight flex-1 text-center pr-10">Notificações</h1>
+</header>
+<main class="flex-1 pb-24">
+<!-- Group: Hoje -->
+<section class="mt-4">
+<h2 class="text-xs font-bold uppercase tracking-widest text-primary px-4 pb-2 pt-2">Hoje</h2>
+<!-- Notification Card Urgent -->
+<div class="flex gap-4 bg-white dark:bg-slate-800/50 mx-4 mb-2 p-4 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 shrink-0 size-12">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<div class="flex justify-between items-start">
+<p class="text-slate-900 dark:text-slate-100 text-base font-semibold">A Noite Estrelada</p>
+<span class="text-slate-400 dark:text-slate-500 text-xs">10:30</span>
+</div>
+<p class="text-red-600 dark:text-red-400 text-sm font-medium">Urgente: Sem visita há 5 dias</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+<span class="material-symbols-outlined text-[14px] align-middle">location_on</span> Rua das Artes, 123
+                        </p>
+</div>
+</div>
+<!-- Notification Card Revisit -->
+<div class="flex gap-4 bg-white dark:bg-slate-800/50 mx-4 mb-2 p-4 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0 size-12">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<div class="flex justify-between items-start">
+<p class="text-slate-900 dark:text-slate-100 text-base font-semibold">O Grito</p>
+<span class="text-slate-400 dark:text-slate-500 text-xs">08:15</span>
+</div>
+<p class="text-primary text-sm font-medium">Revisitar: Sem visita há 10 dias</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+<span class="material-symbols-outlined text-[14px] align-middle">location_on</span> Galeria Central
+                        </p>
+</div>
+</div>
+</section>
+<!-- Group: Esta Semana -->
+<section class="mt-6">
+<h2 class="text-xs font-bold uppercase tracking-widest text-primary px-4 pb-2 pt-2">Esta Semana</h2>
+<div class="flex gap-4 bg-white dark:bg-slate-800/50 mx-4 mb-2 p-4 rounded-xl border border-primary/5 shadow-sm opacity-90">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0 size-12">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<div class="flex justify-between items-start">
+<p class="text-slate-900 dark:text-slate-100 text-base font-semibold">Moça com Brinco de Pérola</p>
+<span class="text-slate-400 dark:text-slate-500 text-xs">Ter</span>
+</div>
+<p class="text-primary text-sm font-medium">Revisitar: Sem visita há 12 dias</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+<span class="material-symbols-outlined text-[14px] align-middle">location_on</span> Museu de Arte Norte
+                        </p>
+</div>
+</div>
+<div class="flex gap-4 bg-white dark:bg-slate-800/50 mx-4 mb-2 p-4 rounded-xl border border-primary/5 shadow-sm opacity-90">
+<div class="flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-500 shrink-0 size-12">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<div class="flex justify-between items-start">
+<p class="text-slate-900 dark:text-slate-100 text-base font-semibold text-slate-400 line-through">Abaporu</p>
+<span class="text-slate-400 dark:text-slate-500 text-xs">Seg</span>
+</div>
+<p class="text-slate-400 text-sm font-medium">Visita concluída com sucesso</p>
+</div>
+</div>
+</section>
+<!-- Group: Antigas -->
+<section class="mt-6">
+<h2 class="text-xs font-bold uppercase tracking-widest text-primary px-4 pb-2 pt-2">Antigas</h2>
+<div class="flex gap-4 bg-slate-100/50 dark:bg-slate-800/30 mx-4 mb-2 p-4 rounded-xl border border-transparent opacity-75">
+<div class="flex items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-400 shrink-0 size-12">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<div class="flex justify-between items-start">
+<p class="text-slate-600 dark:text-slate-400 text-base font-semibold">Relatório Mensal</p>
+<span class="text-slate-400 dark:text-slate-500 text-xs">15 Out</span>
+</div>
+<p class="text-slate-500 text-sm">O relatório de Outubro está pronto.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/90 dark:bg-background-dark/95 backdrop-blur-md border-t border-primary/10 flex justify-around items-center px-4 pb-6 pt-3">
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-[10px] font-semibold uppercase tracking-tighter">Início</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">palette</span>
+<p class="text-[10px] font-semibold uppercase tracking-tighter">Obras</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<div class="relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">notifications</span>
+<span class="absolute -top-1 -right-1 flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</span>
+</div>
+<p class="text-[10px] font-semibold uppercase tracking-tighter">Notificações</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-[10px] font-semibold uppercase tracking-tighter">Perfil</p>
+</a>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Curata - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10 px-4 py-6">
+<div class="flex items-center justify-between max-w-lg mx-auto w-full">
+<h1 class="font-serif text-2xl text-slate-900 dark:text-slate-50">Meu Mapa de Obras</h1>
+<div class="flex items-center gap-3">
+<button class="p-2 rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Avatar de perfil do usuário" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmUiWXowQMxKZxKMQpBzzcXXNPHZa0dsSaw0yhBPCqg_2X5w_a4aa_aC0y5hH-EK9IVxxH60AqKgnMkF62Y0aGBvdcPoDOAOubQXNlkk1NwmY9wxUSklnn49l5MjC-rmgXKyft36ZzDsO_QKvct5aabJUHVW7ENAxnCvr4vA0zfGWDdG5dheBGlqSpoWVH8cPOjjDUBwhndM6XF7ge2W4qgmY4pejoF51LzqY-4-6E_ZHSk4tR5BtZBVNm2k1wuIj7GSNlrJ9hFZ3F"/>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 max-w-lg mx-auto w-full pb-24">
+<!-- Summary Cards Section -->
+<section class="p-4">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-lg font-bold tracking-tight">Resumo do Portfólio</h2>
+<span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Maio 2024</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<!-- Total -->
+<div class="flex flex-col gap-3 rounded-xl border border-primary/10 bg-white dark:bg-slate-900 p-4 shadow-sm">
+<div class="text-primary bg-primary/10 w-10 h-10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">corporate_fare</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wide">Total de Obras</h3>
+<p class="text-2xl font-bold">124</p>
+</div>
+</div>
+<!-- Urgente (Red) -->
+<div class="flex flex-col gap-3 rounded-xl border border-red-500/20 bg-red-50 dark:bg-red-950/20 p-4 shadow-sm">
+<div class="text-red-600 bg-red-100 dark:bg-red-900/40 w-10 h-10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">priority_high</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-red-700 dark:text-red-400 text-xs font-semibold uppercase tracking-wide">Urgente</h3>
+<p class="text-2xl font-bold text-red-600">08</p>
+</div>
+</div>
+<!-- Precário (Orange) -->
+<div class="flex flex-col gap-3 rounded-xl border border-orange-500/20 bg-orange-50 dark:bg-orange-950/20 p-4 shadow-sm">
+<div class="text-orange-600 bg-orange-100 dark:bg-orange-900/40 w-10 h-10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-orange-700 dark:text-orange-400 text-xs font-semibold uppercase tracking-wide">Precário</h3>
+<p class="text-2xl font-bold text-orange-600">15</p>
+</div>
+</div>
+<!-- Regular (Amber) -->
+<div class="flex flex-col gap-3 rounded-xl border border-amber-500/20 bg-amber-50 dark:bg-amber-950/20 p-4 shadow-sm">
+<div class="text-amber-600 bg-amber-100 dark:bg-amber-900/40 w-10 h-10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">info</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-amber-700 dark:text-amber-400 text-xs font-semibold uppercase tracking-wide">Regular</h3>
+<p class="text-2xl font-bold text-amber-600">32</p>
+</div>
+</div>
+<!-- Bom (Green) -->
+<div class="flex flex-col gap-3 rounded-xl border border-emerald-500/20 bg-emerald-50 dark:bg-emerald-950/20 p-4 shadow-sm">
+<div class="text-emerald-600 bg-emerald-100 dark:bg-emerald-900/40 w-10 h-10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-emerald-700 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wide">Bom</h3>
+<p class="text-2xl font-bold text-emerald-600">54</p>
+</div>
+</div>
+<!-- Sem visita +90 dias (Muted) -->
+<div class="flex flex-col gap-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm">
+<div class="text-slate-500 bg-slate-100 dark:bg-slate-800 w-10 h-10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">history</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wide">+90 dias</h3>
+<p class="text-2xl font-bold">15</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Ultimas Inspeções Section -->
+<section class="mt-4">
+<div class="flex items-center justify-between px-4 mb-4">
+<h2 class="text-lg font-bold tracking-tight">Últimas inspeções</h2>
+<a class="text-primary text-sm font-semibold" href="#">Ver todas</a>
+</div>
+<div class="flex overflow-x-auto gap-4 px-4 pb-4 no-scrollbar">
+<!-- Card 1 -->
+<div class="flex-none w-72 bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-primary/5 shadow-md">
+<div class="relative h-32">
+<img class="w-full h-full object-cover" data-alt="Canteiro de obras em construção" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBq00pAhEk8r5UCe9TYysYa5lVHs4v6AG68_ULjqnt4ZnAoAftnaGOQpD7s7L4uZ-OabLCVJDL7uUkRUrCxYxKDs25D3Of5HuSv2cwNSo0Y7fp6dZSw3g2HrRjWMJYq7v8-ObvI5rxzWDugWbzaJvlTyjBVTlGH1kzB3l85CyMzuHXpDhURoU95estFYkoJJ4IBNt0ZgeP7e3kuRLlCx_gYowfBP6kaDPUKv76iEVwEKZEP-DgHOowBFSYMWCXzwcXKG1uAmI9uc31r"/>
+<div class="absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-[10px] font-bold rounded uppercase">Crítico</div>
+</div>
+<div class="p-3">
+<h4 class="font-bold text-sm truncate">Viaduto Santa Efigênia</h4>
+<p class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span> Há 2 horas
+                        </p>
+<div class="mt-3 flex items-center justify-between">
+<span class="text-[11px] font-medium text-slate-400 uppercase tracking-tighter">Inspetor: João Silva</span>
+<button class="text-xs font-bold text-primary">Detalhes</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex-none w-72 bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-primary/5 shadow-md">
+<div class="relative h-32">
+<img class="w-full h-full object-cover" data-alt="Estrutura de ponte moderna" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl6r_qgyiVzW2a6OLsPtPDII2DUY3HjDz0xdRKjyRshvuffnvT7BZnCgDYEzkskJOdEGGfNMbxn5WyRKXKvA7bQb6RDMpZo3GL1tZOKfpLgncCVdtA7JZNUbJpebkqhDXMU7HPbDzLSmdxG93Z__nrKz1R79A9BB4qWMRDX5nDPqEG6083aX4o3_kddM8PJ-MFmeNd0h3wFyNkFJgGUuHMMXChjzjNU-1x3kePzpWoCVt9GGiXsXpg5lVAq5Hr1ClPesxRkC5uULl4"/>
+<div class="absolute top-2 right-2 px-2 py-1 bg-emerald-600 text-white text-[10px] font-bold rounded uppercase">Bom</div>
+</div>
+<div class="p-3">
+<h4 class="font-bold text-sm truncate">Ponte Estaiada Octávio Frias</h4>
+<p class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span> Ontem às 14:30
+                        </p>
+<div class="mt-3 flex items-center justify-between">
+<span class="text-[11px] font-medium text-slate-400 uppercase tracking-tighter">Inspetor: Maria Luz</span>
+<button class="text-xs font-bold text-primary">Detalhes</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex-none w-72 bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-primary/5 shadow-md">
+<div class="relative h-32">
+<img class="w-full h-full object-cover" data-alt="Operários trabalhando em infraestrutura" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPEyD0OhSU02TGd04PSRi0e3ybnRJcLlH5H4q1Kn4EawWXAwMLntCiQVTkKeKGTbVpHfTUSj8WMwwaYOXgkT5Wdw0Ms6rsvZk-LhabsopuVaPnggE01bWDaQ_Jm_Wrv0yvV9kcIBg2mDPJZh_iKZYiEZ5F9ITye6LVprHZZE6Z3CLcGvPiu2XXGPZWiikvlECn1qpp0VPcN-ll6WV4DQpx4eGLCOkP4EFxvOPeeyrJMxLjfZfUiJskszd1rdYpqMjNTUVzW8XwunFT"/>
+<div class="absolute top-2 right-2 px-2 py-1 bg-amber-500 text-white text-[10px] font-bold rounded uppercase">Regular</div>
+</div>
+<div class="p-3">
+<h4 class="font-bold text-sm truncate">Túnel Ayrton Senna</h4>
+<p class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span> 12 Mai, 2024
+                        </p>
+<div class="mt-3 flex items-center justify-between">
+<span class="text-[11px] font-medium text-slate-400 uppercase tracking-tighter">Inspetor: Carlos Eduardo</span>
+<button class="text-xs font-bold text-primary">Detalhes</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-20 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 pb-safe">
+<div class="flex justify-around items-center max-w-lg mx-auto h-16 px-2">
+<a class="flex flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined fill-1">dashboard</span>
+<span class="text-[10px] font-bold uppercase tracking-tight">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">architecture</span>
+<span class="text-[10px] font-medium uppercase tracking-tight">Obras</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-[10px] font-medium uppercase tracking-tight">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium uppercase tracking-tight">Perfil</span>
+</a>
+</div>
+</nav>
+</body></html>

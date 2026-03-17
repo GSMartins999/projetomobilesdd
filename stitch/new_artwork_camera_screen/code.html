@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#ec5b13",
+              "background-light": "#f8f6f6",
+              "background-dark": "#221610",
+            },
+            fontFamily: {
+              "display": ["Public Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<title>Curata - Nova Obra</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display overflow-hidden">
+<!-- Viewfinder Container -->
+<div class="relative flex h-screen w-full flex-col bg-slate-900 overflow-hidden">
+<!-- Camera Viewfinder Mock (Full Screen Background) -->
+<div class="absolute inset-0 z-0 bg-cover bg-center opacity-80" data-alt="Blurred art gallery interior with paintings on white walls" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCcXPeEJ5EPdJOJC7cMnZBdLjOw74jEqfQUSP70EEiHdhf1cpNYsUCol6bDG1Qg0nXWFtUEXOyBl7cpLXHil6niTRUIr1ySIBTHtDKpRw1M5Grrbxvf7h-KdaAPRQWRuJLEbLBXUZ9V631HQkN6SBSbt5fxqZxEYh4hsKNVjA_9JKTNb5XZ828mwLSCJ08bQ-KbdTaCQA7aXDe1v4G36HvAmlwtSbySiRLkhae0Sg6y1uyacWI_ETVb1K9NuoUVKatkugB7IOb6fMhb')">
+<div class="absolute inset-0 bg-black/30"></div>
+</div>
+<!-- Overlay Content -->
+<div class="relative z-10 flex flex-col h-full">
+<!-- Top AppBar -->
+<div class="flex items-center p-4 justify-between">
+<button class="text-white bg-black/20 hover:bg-black/40 backdrop-blur-md p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined block">close</span>
+</button>
+<div class="w-10"></div> <!-- Spacer for balance -->
+</div>
+<!-- Title Section -->
+<div class="px-6 pt-4 text-center">
+<h3 class="text-white text-2xl font-bold leading-tight drop-shadow-lg">
+                    Fotografe a obra de arte
+                </h3>
+</div>
+<!-- Warning Banner -->
+<div class="p-4 mt-4 @container">
+<div class="flex flex-1 items-center justify-between gap-4 rounded-xl border border-primary/30 bg-black/40 backdrop-blur-xl p-5 border-l-4 border-l-primary">
+<div class="flex items-center gap-3">
+<div class="text-primary">
+<span class="material-symbols-outlined text-3xl">location_off</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-white text-base font-bold leading-tight">GPS indisponível</p>
+<p class="text-slate-200 text-sm font-normal leading-normal">Verifique sua conexão para geolocalização</p>
+</div>
+</div>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full border-none bg-slate-600/50 p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary">
+<div class="h-full w-[27px] rounded-full bg-white shadow-lg"></div>
+<input class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Spacer to push controls to bottom -->
+<div class="flex-grow"></div>
+<!-- GPS Info Cards -->
+<div class="flex flex-wrap gap-4 p-4 mb-4">
+<div class="flex min-w-[140px] flex-1 flex-col gap-1 rounded-xl p-4 bg-black/50 backdrop-blur-md border border-white/10">
+<p class="text-slate-300 text-xs font-medium uppercase tracking-wider">Coordenadas</p>
+<p class="text-white text-lg font-bold">--.---, --.---</p>
+</div>
+<div class="flex min-w-[140px] flex-1 flex-col gap-1 rounded-xl p-4 bg-black/50 backdrop-blur-md border border-white/10">
+<p class="text-slate-300 text-xs font-medium uppercase tracking-wider">Precisão</p>
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-primary animate-pulse"></span>
+<p class="text-white text-lg font-bold">Baixa</p>
+</div>
+</div>
+</div>
+<!-- Controls Section -->
+<div class="bg-gradient-to-t from-black/80 to-transparent pb-10 pt-6">
+<div class="flex items-center justify-around px-8">
+<!-- Gallery Button -->
+<button class="flex items-center justify-center rounded-full size-12 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all">
+<span class="material-symbols-outlined">image</span>
+</button>
+<!-- Shutter Button -->
+<button class="group flex items-center justify-center rounded-full size-24 border-4 border-white p-1 hover:scale-105 active:scale-95 transition-all">
+<div class="size-full rounded-full bg-white group-hover:bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-900 text-4xl font-bold">photo_camera</span>
+</div>
+</button>
+<!-- Flash Toggle -->
+<button class="flex items-center justify-center rounded-full size-12 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all">
+<span class="material-symbols-outlined">flash_off</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Viewfinder Corners Visual Decoration -->
+<div class="absolute inset-0 pointer-events-none border-[30px] border-transparent">
+<div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-white/60"></div>
+<div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-white/60"></div>
+<div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-white/60"></div>
+<div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-white/60"></div>
+</div>
+</div>
+</body></html>

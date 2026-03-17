@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Curata - Visualização de Relatório</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .pdf-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="flex items-center p-4 justify-between max-w-5xl mx-auto w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-100 hover:bg-primary/10 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined block">close</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-tight">Relatório — ART-2026-00123</h2>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined block">print</span>
+</button>
+<button class="p-2 hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined block">more_vert</span>
+</button>
+</div>
+</div>
+</header>
+<!-- PDF Viewer Container -->
+<main class="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col items-center bg-slate-200 dark:bg-slate-900/50">
+<!-- PDF Page Mockup -->
+<div class="w-full max-w-[800px] bg-white text-slate-900 pdf-shadow rounded-sm min-h-[1100px] p-12 mb-24 relative overflow-hidden">
+<!-- Header of PDF -->
+<div class="flex justify-between items-start border-b-2 border-primary pb-6 mb-8">
+<div>
+<h1 class="text-3xl font-extrabold text-primary mb-1">CURATA</h1>
+<p class="text-xs uppercase tracking-widest font-semibold text-slate-500">Inspeção Técnica de Ativos</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold">Relatório Nº: ART-2026-00123</p>
+<p class="text-sm text-slate-600">Emissão: 15 de Outubro de 2023</p>
+</div>
+</div>
+<!-- Content Section -->
+<section class="mb-10">
+<h3 class="text-xl font-bold mb-4 border-l-4 border-primary pl-3">Resumo Executivo</h3>
+<p class="text-sm leading-relaxed text-slate-700 mb-6">
+                    Este documento apresenta os resultados da inspeção técnica detalhada realizada no complexo industrial Alpha. A análise foca na conformidade estrutural e operacional dos sistemas de climatização e distribuição elétrica, conforme as normas NBR vigentes.
+                </p>
+<!-- Photo Grid in PDF -->
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="space-y-2">
+<div class="aspect-video bg-slate-100 rounded border border-slate-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Technical inspection of industrial equipment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-BcfYoC4xkmKa4iIcwazZJarzZlIG5qA6ZNmRPGkSO6dWc4QNS457qQduL82F1c_SYPlGoRmVlZfQSI_hDGkXtcgm-vaYyRTE3uQ25acHOpcpeo2zykx6DAVmvzkvcT3T4HnAOPuOKS-gg3moC6_Ky2sj0m11ypb1Hqlp8YlIxyQXO5rO4CTtrMczM2fx4Wcp3YkoPmPFXTSxlCUtRn_IFFfvWq8FiMUc2vO2IK2tmoa1OUwbL6rYz-rCSxTIlUlYe71PXQw-iJLR"/>
+</div>
+<p class="text-[10px] text-slate-500 italic">Fig 1.1: Painel de controle principal - Visão frontal</p>
+</div>
+<div class="space-y-2">
+<div class="aspect-video bg-slate-100 rounded border border-slate-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="High angle view of industrial floor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBldfzuJvW5ppz1b6ZUC0nhJDvzklFLdydT0e-EGI9WFEPUjdMnCHnVgKRT_PnUbPhRtUMQ4pRhzd1RKT3v-6cp2krjpmYVXrKs3qJtciNGcDShWaX2EiOjZdOSHHgmXyL8ZFPEaWUL9WmtlYQeeobYCI-fKgXQLhHDbBwyTIpRIW3b5TbA_45UvQ5ZoaHFn5eELrcISJthRbpx7W7qO_d4xtVd05M9NBr8WFdjmRPIjUhU7ghVA7FHsqEKAnKl_FCnwPglie656eu0"/>
+</div>
+<p class="text-[10px] text-slate-500 italic">Fig 1.2: Área de processamento - Setor Norte</p>
+</div>
+</div>
+<!-- Table in PDF -->
+<h3 class="text-xl font-bold mb-4 border-l-4 border-primary pl-3">Tabela de Conformidade</h3>
+<table class="w-full text-left text-sm border-collapse">
+<thead>
+<tr class="bg-slate-50">
+<th class="border border-slate-200 p-2 font-bold">Item</th>
+<th class="border border-slate-200 p-2 font-bold">Critério de Avaliação</th>
+<th class="border border-slate-200 p-2 font-bold text-center">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="border border-slate-200 p-2">1.1</td>
+<td class="border border-slate-200 p-2">Integridade do cabeamento primário</td>
+<td class="border border-slate-200 p-2 text-center text-green-600 font-bold">CONFORME</td>
+</tr>
+<tr>
+<td class="border border-slate-200 p-2">1.2</td>
+<td class="border border-slate-200 p-2">Vedação de dutos de ventilação</td>
+<td class="border border-slate-200 p-2 text-center text-amber-600 font-bold">ALERTA</td>
+</tr>
+<tr>
+<td class="border border-slate-200 p-2">1.3</td>
+<td class="border border-slate-200 p-2">Aterramento de equipamentos móveis</td>
+<td class="border border-slate-200 p-2 text-center text-green-600 font-bold">CONFORME</td>
+</tr>
+<tr>
+<td class="border border-slate-200 p-2">1.4</td>
+<td class="border border-slate-200 p-2">Sinalização de segurança de alta tensão</td>
+<td class="border border-slate-200 p-2 text-center text-red-600 font-bold">NÃO CONF.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- Signatures Footer -->
+<div class="absolute bottom-12 left-12 right-12 flex justify-between items-end border-t border-slate-100 pt-8">
+<div class="text-center">
+<div class="h-10 w-40 border-b border-slate-400 mx-auto mb-1"></div>
+<p class="text-[10px] font-bold">Eng. Ricardo Silva</p>
+<p class="text-[8px] text-slate-500 uppercase">CREA-SP 123456789</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-slate-400">Página 1 de 12</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Actions Bar -->
+<div class="fixed bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light/90 dark:via-background-dark/90 to-transparent">
+<div class="max-w-xl mx-auto flex flex-col sm:flex-row gap-3">
+<button class="flex-1 flex items-center justify-center gap-2 h-14 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/30 hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined">share</span>
+<span>Compartilhar</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-2 h-14 border-2 border-primary/50 text-primary bg-white/50 dark:bg-black/20 backdrop-blur-sm rounded-xl font-bold hover:bg-primary/5 active:scale-95 transition-all">
+<span class="material-symbols-outlined">download</span>
+<span>Salvar no dispositivo</span>
+</button>
+</div>
+</div>
+<!-- Page indicator floating element -->
+<div class="fixed bottom-24 right-4 md:right-8 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-medium border border-white/10 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">description</span>
+        1 / 12
+    </div>
+</body></html>
