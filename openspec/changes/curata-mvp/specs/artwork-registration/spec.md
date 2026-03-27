@@ -3,6 +3,8 @@
 ### Requirement: Cadastro de obra com câmera e GPS
 O sistema SHALL permitir registrar uma obra capturando foto com a câmera do dispositivo e obtendo coordenadas GPS automaticamente.
 
+> **Pré-condição:** permissões de câmera e localização devem estar concedidas. Ver cenários de permissão em [permissions/spec.md](../permissions/spec.md).
+
 #### Scenario: Cadastro completo online
 - **WHEN** usuário fotografa uma obra e preenche nome, tipo e estado de conservação
 - **THEN** sistema cria ARTWORK no SQLite com UUID, lat/lng, endereço por geocoding reverso e `updated_at` = horário da ação

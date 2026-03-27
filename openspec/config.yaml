@@ -47,7 +47,7 @@ context: |
   ## Convenções
   - Commits: Conventional Commits (feat, fix, chore, refactor, docs)
   - Nomenclatura: PascalCase para componentes/entidades, camelCase para funções/variáveis
-  - Testes: Jest para domain, RNTL (React Native Testing Library) para presentation/components, Maestro para E2E
+  - Testes: TDD obrigatório — ciclo Red-Green-Refactor. Jest (domain/data), RNTL + jest-expo (presentation), Maestro (E2E). Ver specs/testing-strategy/spec.md
 
   ## IDs de obras
   Formato: ART-YYYY-XXXXX (ex: ART-2026-00001)
@@ -71,3 +71,7 @@ rules:
     - Quebrar tasks em no máximo 2 horas de trabalho
     - Sempre indicar a camada da Clean Architecture afetada (domain/data/presentation/infrastructure)
     - Incluir critério de aceite testável
+    - "TDD obrigatório: toda task de implementação DEVE ser precedida de uma sub-task [TEST] correspondente"
+    - "Testes de domain (usecases, entities, schemas) usam Jest puro com mocks de repositório"
+    - "Testes de presentation (screens, components) usam RNTL + jest-expo preset"
+    - "Testes E2E usam Maestro; cobrir fluxo crítico: login → cadastrar obra → inspecionar → PDF"

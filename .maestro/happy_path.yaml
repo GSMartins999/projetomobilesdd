@@ -1,0 +1,28 @@
+appId: com.curata.mvp
+---
+- launchApp
+- tapOn: "Email"
+- inputText: "curador@test.com"
+- tapOn: "Senha"
+- inputText: "123456"
+- tapOn: "Entrar"
+- assertVisible: "Mapa"
+
+# Fluxo de Cadastro
+- tapOn: "+" # FAB
+- assertVisible: "Nova Obra"
+- tapOn: "Nome"
+- inputText: "Estátua da Liberdade"
+- tapOn: "Salvar"
+- assertVisible: "Obra salva com sucesso"
+
+# Fluxo de Inspeção
+- tapOn: "Inspecionar"
+- tapOn: "Condição Estrutural"
+- inputText: "Bom estado, sem trincas."
+- tapOn: "Salvar Inspeção"
+- assertVisible: "Inspeção registrada"
+
+# Geração de PDF
+- tapOn: "Gerar Relatório"
+- assertVisible: "Compartilhar"

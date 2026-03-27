@@ -1,0 +1,43 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "target": "ES6",
+        "lib": [
+            "ES2017",
+            "DOM"
+        ],
+        "module": "commonjs",
+        "jsx": "react-native",
+        "types": [
+            "jest",
+            "node"
+        ],
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "paths": {
+            "@domain/*": [
+                "./src/domain/*"
+            ],
+            "@data/*": [
+                "./src/data/*"
+            ],
+            "@presentation/*": [
+                "./src/presentation/*"
+            ],
+            "@infrastructure/*": [
+                "./src/infrastructure/*"
+            ],
+            "@assets/*": [
+                "./assets/*"
+            ]
+        }
+    },
+    "include": [
+        "src",
+        "app",
+        "*.ts",
+        "*.tsx"
+    ]
+}

@@ -1,0 +1,35 @@
+{
+    "common": {
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "error": "Erro",
+        "loading": "Carregando...",
+        "retry": "Tentar novamente"
+    },
+    "tabs": {
+        "map": "Mapa",
+        "list": "Lista",
+        "dashboard": "Dashboard",
+        "profile": "Perfil"
+    },
+    "auth": {
+        "login": "Entrar",
+        "logout": "Sair",
+        "email": "E-mail",
+        "password": "Senha",
+        "invalid_credentials": "E-mail ou senha inválidos"
+    },
+    "onboarding": {
+        "next": "Próximo",
+        "finish": "Começar",
+        "camera_permission": "Permissão de Câmera",
+        "location_permission": "Permissão de Localização"
+    },
+    "artwork": {
+        "new": "Nova Obra",
+        "name": "Nome da Obra",
+        "type": "Tipo",
+        "status": "Estado de Conservação",
+        "notes": "Notas"
+    }
+}

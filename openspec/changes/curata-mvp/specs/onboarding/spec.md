@@ -8,12 +8,16 @@ O sistema SHALL exibir fluxo de onboarding na primeira vez que o app é executad
 - **THEN** sistema exibe onboarding com 4 slides: propósito, permissão câmera, permissão localização, tutorial rápido
 
 #### Scenario: Permissão concedida
-- **WHEN** usuário concede permissão de câmera ou localização
-- **THEN** sistema prossegue para o próximo slide do onboarding
+- **DADO** que o usuário está no slide de permissão de câmera ou localização
+- **QUANDO** o usuário concede a permissão ao sistema operacional
+- **ENTÃO** sistema prossegue para o próximo slide do onboarding
 
 #### Scenario: Permissão negada
-- **WHEN** usuário nega permissão de câmera ou localização
-- **THEN** sistema informa que a funcionalidade ficará limitada e prossegue
+- **DADO** que o usuário está no slide de permissão de câmera ou localização
+- **QUANDO** o usuário nega a permissão ao sistema operacional
+- **ENTÃO** sistema informa que a funcionalidade ficará limitada e prossegue sem bloquear o fluxo
+
+> **Ver cenários detalhados de erro:** [permissions/spec.md](../permissions/spec.md)
 
 ### Requirement: Não repetir onboarding
 O sistema SHALL exibir o onboarding apenas uma vez. Reabertura do app SHALL ir direto para a tela principal.
