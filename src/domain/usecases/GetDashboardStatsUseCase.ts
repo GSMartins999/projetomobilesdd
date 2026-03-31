@@ -23,7 +23,8 @@ export class GetDashboardStatsUseCase {
                 good: 0,
                 fair: 0,
                 poor: 0,
-                urgent: 0
+                urgent: 0,
+                unknown: 0
             }
         };
 

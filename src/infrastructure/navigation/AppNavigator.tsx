@@ -1,7 +1,8 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text } from 'react-native';
 import { useAuth } from '../../infrastructure/auth/AuthContext';
 
 // Screens
@@ -15,13 +16,28 @@ import { InspectionFormScreen } from '../../presentation/screens/InspectionFormS
 import { InspectionHistoryScreen } from '../../presentation/screens/InspectionHistoryScreen';
 import { InspectionDetailScreen } from '../../presentation/screens/InspectionDetailScreen';
 import { OnboardingScreen } from '../../presentation/screens/OnboardingScreen';
+import { CameraScreen } from '../../presentation/screens/CameraScreen';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function MainTabNavigator() {
     return (
-        <Tab.Navigator screenOptions={{ headerShown: false }}>
+        <Tab.Navigator
+            screenOptions={({ route }) => ({
+                headerShown: false,
+                tabBarIcon: ({ color, size }) => {
+                    let icon = '📍';
+                    if (route.name === 'Mapa') icon = '🗺️';
+                    else if (route.name === 'Busca') icon = '🔍';
+                    else if (route.name === 'Dashboard') icon = '📊';
+                    else if (route.name === 'Perfil') icon = '👤';
+                    return <Text style={{ fontSize: size }}>{icon}</Text>;
+                },
+                tabBarActiveTintColor: '#2A4D69',
+                tabBarInactiveTintColor: '#999',
+            })}
+        >
             <Tab.Screen name="Mapa" component={MapScreen} />
             <Tab.Screen name="Busca" component={SearchScreen} />
             <Tab.Screen name="Dashboard" component={DashboardScreen} />
@@ -31,10 +47,11 @@ function MainTabNavigator() {
 }
 
 export function AppNavigator() {
-    const { isAuthenticated, user } = useAuth();
+    const { isAuthenticated, isLoading } = useAuth();
 
-    // Lógica de onboarding (simplificada para o exemplo, v2: checar flag no SecureStore)
-    const showOnboarding = isAuthenticated && user && !user.id; // Exemplo
+    if (isLoading) {
+        return null; // Splash screen would go here
+    }
 
     return (
         <NavigationContainer>
