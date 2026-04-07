@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '../../infrastructure/auth/AuthContext';
 
 // Screens
@@ -16,7 +16,11 @@ import { InspectionFormScreen } from '../../presentation/screens/InspectionFormS
 import { InspectionHistoryScreen } from '../../presentation/screens/InspectionHistoryScreen';
 import { InspectionDetailScreen } from '../../presentation/screens/InspectionDetailScreen';
 import { OnboardingScreen } from '../../presentation/screens/OnboardingScreen';
-import { CameraScreen } from '../../presentation/screens/CameraScreen';
+import { RegisterScreen } from '../../presentation/screens/RegisterScreen';
+import { ArtworkDetailScreen } from '../../presentation/screens/ArtworkDetailScreen';
+import { NotificationsScreen } from '../../presentation/screens/NotificationsScreen';
+import { ReportGeneratorScreen } from '../../presentation/screens/ReportGeneratorScreen';
+import { PdfPreviewScreen } from '../../presentation/screens/PdfPreviewScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -27,15 +31,27 @@ function MainTabNavigator() {
             screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarIcon: ({ color, size }) => {
-                    let icon = '📍';
-                    if (route.name === 'Mapa') icon = '🗺️';
-                    else if (route.name === 'Busca') icon = '🔍';
-                    else if (route.name === 'Dashboard') icon = '📊';
-                    else if (route.name === 'Perfil') icon = '👤';
-                    return <Text style={{ fontSize: size }}>{icon}</Text>;
+                    let iconName: keyof typeof MaterialIcons.glyphMap = 'location-on';
+                    if (route.name === 'Mapa') iconName = 'map';
+                    else if (route.name === 'Busca') iconName = 'search';
+                    else if (route.name === 'Dashboard') iconName = 'dashboard';
+                    else if (route.name === 'Perfil') iconName = 'person';
+                    return <MaterialIcons name={iconName} size={size} color={color} />;
                 },
-                tabBarActiveTintColor: '#2A4D69',
-                tabBarInactiveTintColor: '#999',
+                tabBarActiveTintColor: '#E8752A',
+                tabBarInactiveTintColor: '#B0A898',
+                tabBarStyle: {
+                    backgroundColor: '#FFFFFF',
+                    borderTopColor: '#F0E8E0',
+                    borderTopWidth: 1,
+                    paddingBottom: 6,
+                    paddingTop: 6,
+                    height: 60,
+                },
+                tabBarLabelStyle: {
+                    fontSize: 11,
+                    fontWeight: '600',
+                },
             })}
         >
             <Tab.Screen name="Mapa" component={MapScreen} />
@@ -57,7 +73,10 @@ export function AppNavigator() {
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 {!isAuthenticated ? (
-                    <Stack.Screen name="Login" component={LoginScreen} />
+                    <>
+                        <Stack.Screen name="Login" component={LoginScreen} />
+                        <Stack.Screen name="Register" component={RegisterScreen} />
+                    </>
                 ) : (
                     <>
                         <Stack.Screen name="Main" component={MainTabNavigator} />
@@ -65,6 +84,10 @@ export function AppNavigator() {
                         <Stack.Screen name="InspectionForm" component={InspectionFormScreen} options={{ presentation: 'modal' }} />
                         <Stack.Screen name="InspectionHistory" component={InspectionHistoryScreen} />
                         <Stack.Screen name="InspectionDetail" component={InspectionDetailScreen} />
+                        <Stack.Screen name="ArtworkDetail" component={ArtworkDetailScreen} />
+                        <Stack.Screen name="Notifications" component={NotificationsScreen} />
+                        <Stack.Screen name="ReportGenerator" component={ReportGeneratorScreen} />
+                        <Stack.Screen name="PdfPreview" component={PdfPreviewScreen} />
                     </>
                 )}
             </Stack.Navigator>

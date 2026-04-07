@@ -17,6 +17,16 @@
         "logout": "Sair",
         "email": "E-mail",
         "password": "Senha",
+        "name": "Nome",
+        "confirm_password": "Confirmar Senha",
+        "register": "Cadastrar",
+        "register_title": "Criar Conta",
+        "no_account": "Não tem uma conta?",
+        "already_have_account": "Já tem uma conta?",
+        "error_required": "Todos os campos são obrigatórios",
+        "password_mismatch": "As senhas não coincidem",
+        "password_too_short": "A senha deve ter no mínimo 6 caracteres",
+        "register_error": "Erro ao criar conta",
         "invalid_credentials": "E-mail ou senha inválidos"
     },
     "onboarding": {

@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     Alert
 } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import * as Camera from 'expo-camera';
 import * as Location from 'expo-location';
 import * as SecureStore from 'expo-secure-store';
@@ -22,6 +23,8 @@ interface Slide {
     title: string;
     description: string;
     type: 'welcome' | 'camera' | 'location' | 'finish';
+    icon: keyof typeof MaterialIcons.glyphMap;
+    actionLabel: string;
 }
 
 interface OnboardingScreenProps {
@@ -36,27 +39,27 @@ export function OnboardingScreen({ onFinish }: OnboardingScreenProps) {
     const slides: Slide[] = [
         {
             id: '1',
-            title: 'Bem-vindo ao Curata',
-            description: 'O seu sistema de gestão de patrimônio artístico público.',
-            type: 'welcome',
+            title: 'Fotografe obras de arte',
+            description: 'Precisamos de acesso à câmera para documentar obras em campo',
+            type: 'camera',
+            icon: 'photo-camera',
+            actionLabel: 'Permitir câmera',
         },
         {
             id: '2',
-            title: 'Câmera',
-            description: 'Precisamos da câmera para registrar fotos das obras e inspeções.',
-            type: 'camera',
+            title: 'Localize obras com precisão',
+            description: 'O GPS nos ajuda a mapear obras e detectar duplicatas automaticamente',
+            type: 'location',
+            icon: 'location-on',
+            actionLabel: 'Permitir localização',
         },
         {
             id: '3',
-            title: 'Localização',
-            description: 'Usamos o GPS para mapear as obras e georreferenciar as inspeções.',
-            type: 'location',
-        },
-        {
-            id: '4',
             title: 'Tudo pronto!',
-            description: 'Você já pode começar a curadoria do seu patrimônio.',
+            description: 'Você já pode começar a catalogar e descobrir novas obras de arte ao seu redor.',
             type: 'finish',
+            icon: 'check-circle',
+            actionLabel: 'Começar',
         },
     ];
 
@@ -97,21 +100,56 @@ export function OnboardingScreen({ onFinish }: OnboardingScreenProps) {
         }
     };
 
+    const handleSkip = async () => {
+        await requestNotificationPermission();
+        await finishOnboarding();
+    };
+
     const renderSlide = ({ item }: { item: Slide }) => {
         return (
             <View style={styles.slide}>
-                <Text style={styles.title}>{item.title}</Text>
-                <Text style={styles.description}>{item.description}</Text>
+                {/* Icon area */}
+                <View style={styles.iconArea}>
+                    <View style={styles.iconCircle}>
+                        <MaterialIcons name={item.icon} size={40} color="#E8752A" />
+                    </View>
+                </View>
 
+                {/* Text */}
+                <Text style={styles.slideTitle}>{item.title}</Text>
+                <Text style={styles.slideDescription}>{item.description}</Text>
+
+                {/* Permission button */}
                 {item.type === 'camera' && (
-                    <TouchableOpacity style={styles.permissionButton} onPress={requestCameraPermission}>
-                        <Text style={styles.buttonText}>Conceder Permissão de Câmera</Text>
+                    <TouchableOpacity
+                        style={styles.permissionButton}
+                        onPress={requestCameraPermission}
+                        activeOpacity={0.8}
+                    >
+                        <MaterialIcons name="photo-camera" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+                        <Text style={styles.permissionButtonText}>{item.actionLabel}</Text>
                     </TouchableOpacity>
                 )}
 
                 {item.type === 'location' && (
-                    <TouchableOpacity style={styles.permissionButton} onPress={requestLocationPermission}>
-                        <Text style={styles.buttonText}>Conceder Permissão de Localização</Text>
+                    <TouchableOpacity
+                        style={styles.permissionButton}
+                        onPress={requestLocationPermission}
+                        activeOpacity={0.8}
+                    >
+                        <MaterialIcons name="location-on" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+                        <Text style={styles.permissionButtonText}>{item.actionLabel}</Text>
+                    </TouchableOpacity>
+                )}
+
+                {item.type === 'finish' && (
+                    <TouchableOpacity
+                        style={styles.finishButton}
+                        onPress={handleNext}
+                        activeOpacity={0.8}
+                    >
+                        <Text style={styles.finishButtonText}>Começar</Text>
+                        <MaterialIcons name="arrow-forward" size={20} color="#FFFFFF" style={{ marginLeft: 8 }} />
                     </TouchableOpacity>
                 )}
             </View>
@@ -120,6 +158,13 @@ export function OnboardingScreen({ onFinish }: OnboardingScreenProps) {
 
     return (
         <View style={styles.container}>
+            {/* Skip button */}
+            {currentSlideIndex < slides.length - 1 && (
+                <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+                    <Text style={styles.skipText}>Pular</Text>
+                </TouchableOpacity>
+            )}
+
             <FlatList
                 ref={flatListRef}
                 data={slides}
@@ -131,27 +176,20 @@ export function OnboardingScreen({ onFinish }: OnboardingScreenProps) {
                     const index = Math.round(e.nativeEvent.contentOffset.x / width);
                     setCurrentSlideIndex(index);
                 }}
-                scrollEnabled={false} // Forçar uso dos botões/permissões
+                scrollEnabled={false}
             />
 
-            <View style={styles.footer}>
-                <View style={styles.indicatorContainer}>
-                    {slides.map((_, index) => (
-                        <View
-                            key={index}
-                            style={[
-                                styles.indicator,
-                                currentSlideIndex === index && styles.activeIndicator
-                            ]}
-                        />
-                    ))}
-                </View>
-
-                <TouchableOpacity style={styles.nextButton} onPress={handleNext} testID="next-button">
-                    <Text style={styles.nextButtonText}>
-                        {currentSlideIndex === slides.length - 1 ? 'Começar' : 'Próximo'}
-                    </Text>
-                </TouchableOpacity>
+            {/* Dot indicators */}
+            <View style={styles.indicatorContainer}>
+                {slides.map((_, index) => (
+                    <View
+                        key={index}
+                        style={[
+                            styles.indicator,
+                            currentSlideIndex === index && styles.activeIndicator,
+                        ]}
+                    />
+                ))}
             </View>
         </View>
     );
@@ -160,68 +198,102 @@ export function OnboardingScreen({ onFinish }: OnboardingScreenProps) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#F8F5F0',
+    },
+    skipButton: {
+        position: 'absolute',
+        top: 55,
+        right: 24,
+        zIndex: 10,
+    },
+    skipText: {
+        color: '#E8752A',
+        fontSize: 16,
+        fontWeight: '600',
     },
     slide: {
         width,
-        height: height * 0.8,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 40,
+        paddingHorizontal: 40,
+        paddingBottom: 80,
     },
-    title: {
-        fontSize: 28,
+    iconArea: {
+        width: 180,
+        height: 180,
+        borderRadius: 24,
+        backgroundColor: '#FDF0E6',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 32,
+    },
+    iconCircle: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        backgroundColor: '#F8F5F0',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    slideTitle: {
+        fontSize: 24,
         fontWeight: 'bold',
-        color: '#2A4D69',
-        marginBottom: 20,
+        color: '#1A1A2E',
         textAlign: 'center',
+        marginBottom: 12,
     },
-    description: {
-        fontSize: 18,
-        color: '#666',
+    slideDescription: {
+        fontSize: 16,
+        color: '#888',
         textAlign: 'center',
-        lineHeight: 26,
+        lineHeight: 24,
+        marginBottom: 32,
     },
-    footer: {
-        height: height * 0.2,
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingBottom: 40,
+    permissionButton: {
+        flexDirection: 'row',
+        backgroundColor: '#E8752A',
+        paddingVertical: 16,
+        paddingHorizontal: 32,
+        borderRadius: 12,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    permissionButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    finishButton: {
+        flexDirection: 'row',
+        backgroundColor: '#E8752A',
+        paddingVertical: 16,
+        paddingHorizontal: 32,
+        borderRadius: 12,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    finishButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     indicatorContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
+        paddingBottom: 50,
     },
     indicator: {
-        height: 10,
-        width: 10,
-        backgroundColor: '#ddd',
-        marginHorizontal: 5,
-        borderRadius: 5,
+        height: 8,
+        width: 8,
+        backgroundColor: '#D4C8BC',
+        marginHorizontal: 4,
+        borderRadius: 4,
     },
     activeIndicator: {
-        backgroundColor: '#2A4D69',
-        width: 25,
-    },
-    nextButton: {
-        backgroundColor: '#2A4D69',
-        padding: 15,
-        borderRadius: 8,
-        alignItems: 'center',
-    },
-    nextButtonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    permissionButton: {
-        marginTop: 30,
-        backgroundColor: '#4B86B4',
-        padding: 15,
-        borderRadius: 8,
-    },
-    buttonText: {
-        color: '#fff',
-        fontWeight: 'bold',
+        backgroundColor: '#E8752A',
+        width: 24,
     },
 });

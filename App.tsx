@@ -16,7 +16,7 @@ import { supabase } from './src/data/supabaseClient';
 import { ArtworkRepositoryImpl } from './src/data/repositories/ArtworkRepositoryImpl';
 import { InspectionRepositoryImpl } from './src/data/repositories/InspectionRepositoryImpl';
 import { PhotoRepositoryImpl } from './src/data/repositories/PhotoRepositoryImpl';
-import { AuthRepositoryImpl } from './src/data/repositories/AuthRepositoryImpl';
+import { MockAuthRepositoryImpl } from './src/data/repositories/MockAuthRepositoryImpl';
 import { SyncServiceImpl } from './src/data/services/SyncServiceImpl';
 
 export default function App() {
@@ -58,7 +58,7 @@ export default function App() {
     const artworkRepository = new ArtworkRepositoryImpl(db);
     const inspectionRepository = new InspectionRepositoryImpl(db);
     const photoRepository = new PhotoRepositoryImpl(db);
-    const authRepository = new AuthRepositoryImpl(supabase);
+    const authRepository = new MockAuthRepositoryImpl();
     const syncService = new SyncServiceImpl(
         artworkRepository,
         inspectionRepository,

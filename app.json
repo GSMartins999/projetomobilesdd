@@ -11,12 +11,10 @@
             "resizeMode": "contain",
             "backgroundColor": "#1a1a2e"
         },
-        "assetBundlePatterns": [
-            "**/*"
-        ],
         "ios": {
             "supportsTablet": false,
             "bundleIdentifier": "com.curata.app",
+            "newArchEnabled": true,
             "infoPlist": {
                 "NSCameraUsageDescription": "O Curata precisa da câmera para fotografar obras de arte em campo.",
                 "NSLocationWhenInUseUsageDescription": "O Curata usa a localização para registrar as coordenadas GPS das obras automaticamente.",
@@ -29,6 +27,7 @@
                 "backgroundColor": "#1a1a2e"
             },
             "package": "com.curata.app",
+            "newArchEnabled": true,
             "permissions": [
                 "CAMERA",
                 "ACCESS_FINE_LOCATION",

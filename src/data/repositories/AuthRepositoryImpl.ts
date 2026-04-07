@@ -29,6 +29,31 @@ export class AuthRepositoryImpl implements AuthRepository {
         return { user, token };
     }
 
+    async signUp(email: string, password: string, name: string): Promise<{ user: User; token: string }> {
+        const { data, error } = await this.supabase.auth.signUp({
+            email,
+            password,
+            options: { data: { name } },
+        });
+        if (error || !data.user || !data.session) {
+            throw new Error(error?.message || 'Erro ao criar conta');
+        }
+
+        const user: User = {
+            id: data.user.id,
+            name: name || data.user.email?.split('@')[0] || 'Gestor',
+            email: data.user.email!,
+            avatarUrl: null,
+            updatedAt: new Date().toISOString(),
+            syncedAt: new Date().toISOString(),
+        };
+
+        const token = data.session.access_token;
+        await SecureStore.setItemAsync(JWT_STORE_KEY, token);
+
+        return { user, token };
+    }
+
     async signOut(): Promise<void> {
         await this.supabase.auth.signOut();
         await SecureStore.deleteItemAsync(JWT_STORE_KEY);

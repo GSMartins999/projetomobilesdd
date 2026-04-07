@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useDI } from '../../infrastructure/di/DIContext';
 import { Inspection } from '../../domain/entities/Inspection';
+
+const statusColors: Record<string, { bg: string; text: string; label: string }> = {
+    good: { bg: '#ECFDF5', text: '#2D6A4F', label: 'Bom' },
+    fair: { bg: '#FEFCE8', text: '#D4883A', label: 'Regular' },
+    poor: { bg: '#FFF5EB', text: '#FB8500', label: 'Precário' },
+    urgent: { bg: '#FDF0F0', text: '#E63946', label: 'Urgente' },
+};
 
 export function InspectionHistoryScreen({ route, navigation }: any) {
     const { artworkId } = route.params;
@@ -18,30 +26,67 @@ export function InspectionHistoryScreen({ route, navigation }: any) {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.headerTitle}>Histórico de Inspeções</Text>
             <FlatList
                 data={inspections}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        style={styles.card}
-                        onPress={() => navigation.navigate('InspectionDetail', { inspectionId: item.id })}
-                    >
-                        <View>
-                            <Text style={styles.date}>{new Date(item.updatedAt).toLocaleDateString()}</Text>
-                            <Text style={styles.status}>{item.technicalForm.statusAtVisit}</Text>
-                        </View>
-                        <Text style={styles.urgency}>Urgência: {item.technicalForm.urgencyLevel}</Text>
-                    </TouchableOpacity>
-                )}
+                contentContainerStyle={styles.list}
+                renderItem={({ item }) => {
+                    const st = statusColors[item.technicalForm.statusAtVisit] || statusColors.fair;
+                    return (
+                        <TouchableOpacity
+                            style={styles.card}
+                            onPress={() => navigation.navigate('InspectionDetail', { inspectionId: item.id })}
+                            activeOpacity={0.7}
+                        >
+                            <View style={styles.cardLeft}>
+                                <Text style={styles.date}>
+                                    {new Date(item.updatedAt).toLocaleDateString('pt-BR')}
+                                </Text>
+                                <View style={[styles.statusBadge, { backgroundColor: st.bg }]}>
+                                    <Text style={[styles.statusText, { color: st.text }]}>{st.label}</Text>
+                                </View>
+                            </View>
+                            <View style={styles.urgencyContainer}>
+                                <Text style={styles.urgencyLabel}>Urgência</Text>
+                                <Text style={styles.urgencyValue}>{item.technicalForm.urgencyLevel}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    );
+                }}
+                ListEmptyComponent={
+                    <View style={styles.emptyContainer}>
+                        <MaterialIcons name="assignment" size={44} color="#B0A898" />
+                        <Text style={styles.emptyText}>Nenhuma inspeção registrada</Text>
+                    </View>
+                }
             />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#fff', padding: 10 },
-    card: { padding: 15, borderBottomWidth: 1, borderBottomColor: '#eee', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    date: { fontSize: 16, fontWeight: 'bold' },
-    status: { color: '#666', marginTop: 4 },
-    urgency: { fontSize: 12, color: '#f00' }
+    container: { flex: 1, backgroundColor: '#F8F5F0', paddingTop: 55 },
+    headerTitle: { fontSize: 22, fontWeight: 'bold', color: '#1A1A2E', paddingHorizontal: 20, marginBottom: 16 },
+    list: { paddingHorizontal: 20, paddingBottom: 20 },
+    card: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 14,
+        padding: 16,
+        marginBottom: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#F0E8E0',
+    },
+    cardLeft: { flex: 1 },
+    date: { fontSize: 16, fontWeight: 'bold', color: '#1A1A2E', marginBottom: 6 },
+    statusBadge: { alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6 },
+    statusText: { fontSize: 12, fontWeight: 'bold' },
+    urgencyContainer: { alignItems: 'center' },
+    urgencyLabel: { fontSize: 11, color: '#888', marginBottom: 2 },
+    urgencyValue: { fontSize: 22, fontWeight: 'bold', color: '#E63946' },
+    emptyContainer: { alignItems: 'center', marginTop: 60 },
+    emptyText: { fontSize: 16, color: '#888', marginTop: 12 },
 });

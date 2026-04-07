@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as FileSystem from 'expo-file-system';
 import { useTranslation } from 'react-i18next';
@@ -55,7 +56,7 @@ export function CameraScreen({ onCapture, onClose }: CameraScreenProps) {
             <CameraView style={styles.camera} ref={cameraRef}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                        <Text style={styles.closeButtonText}>X</Text>
+                        <MaterialIcons name="close" size={28} color="#FFF" />
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     button: {
-        backgroundColor: '#2A4D69',
+        backgroundColor: '#E8752A',
         padding: 15,
         borderRadius: 8,
         alignSelf: 'center',

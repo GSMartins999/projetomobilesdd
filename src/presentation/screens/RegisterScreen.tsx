@@ -15,26 +15,40 @@ import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-export function LoginScreen() {
+export function RegisterScreen() {
     const { t } = useTranslation();
-    const { login, isLoading } = useAuth();
-    const navigation = useNavigation<any>();
+    const { register } = useAuth();
+    const navigation = useNavigation();
 
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleLogin = async () => {
-        if (!email.trim() || !password.trim()) {
-            setError(t('auth.error_required', 'E-mail e senha são obrigatórios'));
+    const handleRegister = async () => {
+        if (!name.trim() || !email.trim() || !password.trim()) {
+            setError(t('auth.error_required', 'Todos os campos são obrigatórios'));
+            return;
+        }
+        if (password !== confirmPassword) {
+            setError(t('auth.password_mismatch', 'As senhas não coincidem'));
+            return;
+        }
+        if (password.length < 6) {
+            setError(t('auth.password_too_short', 'A senha deve ter no mínimo 6 caracteres'));
             return;
         }
         try {
             setError(null);
-            await login(email, password);
+            setIsLoading(true);
+            await register(email, password, name);
         } catch (err: any) {
-            setError(err.message || t('auth.invalid_credentials'));
+            setError(err.message || t('auth.register_error', 'Erro ao criar conta'));
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -47,17 +61,27 @@ export function LoginScreen() {
                 contentContainerStyle={styles.scrollContent}
                 keyboardShouldPersistTaps="handled"
             >
-                {/* Logo Area */}
-                <View style={styles.logoContainer}>
+                {/* Header */}
+                <View style={styles.headerContainer}>
                     <View style={styles.logoIcon}>
-                        <MaterialIcons name="palette" size={36} color="#E8752A" />
+                        <MaterialIcons name="palette" size={32} color="#E8752A" />
                     </View>
-                    <Text style={styles.title}>Curata</Text>
-                    <Text style={styles.subtitle}>Acesso ao sistema de conservação</Text>
+                    <Text style={styles.title}>{t('auth.register_title', 'Criar Conta')}</Text>
+                    <Text style={styles.subtitle}>Cadastre-se para começar a conservar</Text>
                 </View>
 
                 {/* Form */}
                 <View style={styles.form}>
+                    <Text style={styles.label}>{t('auth.name', 'Nome')}</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Seu nome completo"
+                        placeholderTextColor="#B0A898"
+                        value={name}
+                        onChangeText={setName}
+                        autoCapitalize="words"
+                    />
+
                     <Text style={styles.label}>{t('auth.email', 'E-mail')}</Text>
                     <TextInput
                         style={styles.input}
@@ -73,7 +97,7 @@ export function LoginScreen() {
                     <View style={styles.passwordContainer}>
                         <TextInput
                             style={styles.passwordInput}
-                            placeholder="Sua senha"
+                            placeholder="Mínimo 6 caracteres"
                             placeholderTextColor="#B0A898"
                             value={password}
                             onChangeText={setPassword}
@@ -91,39 +115,40 @@ export function LoginScreen() {
                         </TouchableOpacity>
                     </View>
 
+                    <Text style={styles.label}>{t('auth.confirm_password', 'Confirmar Senha')}</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Repita a senha"
+                        placeholderTextColor="#B0A898"
+                        value={confirmPassword}
+                        onChangeText={setConfirmPassword}
+                        secureTextEntry={!showPassword}
+                    />
+
                     {error && <Text style={styles.errorText}>{error}</Text>}
 
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={handleLogin}
+                        onPress={handleRegister}
                         disabled={isLoading}
                         activeOpacity={0.8}
                     >
                         {isLoading ? (
                             <ActivityIndicator color="#fff" />
                         ) : (
-                            <Text style={styles.buttonText}>{t('auth.login', 'Entrar')}</Text>
+                            <Text style={styles.buttonText}>{t('auth.register', 'Cadastrar')}</Text>
                         )}
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.forgotButton}>
-                        <Text style={styles.forgotText}>Esqueceu sua senha?</Text>
-                    </TouchableOpacity>
-
                     <TouchableOpacity
-                        style={styles.registerLink}
-                        onPress={() => navigation.navigate('Register')}
+                        style={styles.loginLink}
+                        onPress={() => navigation.goBack()}
                     >
-                        <Text style={styles.registerText}>
-                            {t('auth.no_account', 'Não tem uma conta?')}{' '}
-                            <Text style={styles.registerBold}>{t('auth.register', 'Cadastrar')}</Text>
+                        <Text style={styles.loginText}>
+                            {t('auth.already_have_account', 'Já tem uma conta?')}{' '}
+                            <Text style={styles.loginBold}>{t('auth.login', 'Entrar')}</Text>
                         </Text>
                     </TouchableOpacity>
-                </View>
-
-                {/* Footer */}
-                <View style={styles.footer}>
-                    <Text style={styles.footerText}>CURATA • CONSERVAÇÃO DE ARTE</Text>
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>
@@ -141,27 +166,27 @@ const styles = StyleSheet.create({
         paddingHorizontal: 28,
         paddingVertical: 40,
     },
-    logoContainer: {
+    headerContainer: {
         alignItems: 'center',
-        marginBottom: 40,
+        marginBottom: 32,
     },
     logoIcon: {
-        width: 80,
-        height: 80,
-        borderRadius: 20,
+        width: 70,
+        height: 70,
+        borderRadius: 18,
         backgroundColor: '#F5EDE3',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 16,
+        marginBottom: 14,
     },
     title: {
-        fontSize: 32,
+        fontSize: 28,
         fontWeight: 'bold',
         color: '#1A1A2E',
         marginBottom: 8,
     },
     subtitle: {
-        fontSize: 16,
+        fontSize: 15,
         color: '#888',
     },
     form: {
@@ -172,7 +197,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#1A1A2E',
         marginBottom: 8,
-        marginTop: 16,
+        marginTop: 14,
     },
     input: {
         backgroundColor: '#FFFFFF',
@@ -219,34 +244,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 17,
     },
-    forgotButton: {
-        alignItems: 'center',
-        marginTop: 16,
-    },
-    forgotText: {
-        color: '#E8752A',
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    registerLink: {
+    loginLink: {
         alignItems: 'center',
         marginTop: 20,
     },
-    registerText: {
+    loginText: {
         color: '#888',
         fontSize: 14,
     },
-    registerBold: {
+    loginBold: {
         color: '#E8752A',
         fontWeight: 'bold',
-    },
-    footer: {
-        alignItems: 'center',
-        marginTop: 40,
-    },
-    footerText: {
-        fontSize: 12,
-        color: '#B0A898',
-        letterSpacing: 2,
     },
 });
