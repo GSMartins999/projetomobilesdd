@@ -1,0 +1,25 @@
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# Build artifacts
+coverage/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test output
+test_output.txt
+
+# IDE
+.idea/
+.vscode/

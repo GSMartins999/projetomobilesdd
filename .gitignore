@@ -1,1 +1,15 @@
-node_modules
+node_modules/
+
+# Expo
+.expo/
+
+# Build artifacts
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
