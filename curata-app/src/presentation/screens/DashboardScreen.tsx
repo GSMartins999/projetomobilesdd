@@ -30,6 +30,7 @@ export function DashboardScreen() {
                 <Text style={styles.headerTitle}>Meu Mapa de Obras</Text>
                 <View style={styles.headerIcons}>
                     <TouchableOpacity
+                        testID="notification-button"
                         style={styles.notificationBadge}
                         onPress={() => navigation.navigate('Notifications')}
                     >
@@ -48,7 +49,7 @@ export function DashboardScreen() {
                     {isOnline ? 'Conectado' : 'Offline'}
                 </Text>
                 {stats.totalUnsynced > 0 && (
-                    <TouchableOpacity onPress={triggerSync} disabled={isSyncing}>
+                    <TouchableOpacity testID="sync-button" onPress={triggerSync} disabled={isSyncing}>
                         <Text style={styles.syncAction}>
                             {isSyncing ? 'Sincronizando...' : `Sincronizar ${stats.totalUnsynced}`}
                         </Text>

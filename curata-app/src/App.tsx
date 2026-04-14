@@ -18,6 +18,7 @@ import { InspectionRepositoryImpl } from './data/repositories/InspectionReposito
 import { PhotoRepositoryImpl } from './data/repositories/PhotoRepositoryImpl';
 import { MockAuthRepositoryImpl } from './data/repositories/MockAuthRepositoryImpl';
 import { SyncServiceImpl } from './data/services/SyncServiceImpl';
+import { CameraServiceImpl } from './infrastructure/services/CameraServiceImpl';
 
 export default function App() {
     const [isReady, setIsReady] = useState(false);
@@ -65,6 +66,7 @@ export default function App() {
         photoRepository,
         supabase
     );
+    const cameraService = new CameraServiceImpl();
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
@@ -75,6 +77,7 @@ export default function App() {
                     photoRepository,
                     authRepository,
                     syncService,
+                    cameraService,
                 }}>
                     <AuthProvider>
                         <SyncProvider>

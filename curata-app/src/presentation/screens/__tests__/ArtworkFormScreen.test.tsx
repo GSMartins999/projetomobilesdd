@@ -10,6 +10,8 @@ import { Alert } from 'react-native';
 const mockRepository: any = {
     save: jest.fn().mockResolvedValue(undefined),
     findNearby: jest.fn().mockResolvedValue([]),
+    findAll: jest.fn().mockResolvedValue([]),
+    findById: jest.fn().mockResolvedValue({ id: '1', name: 'Mona Lisa', conservationStatus: 'good' }),
 };
 
 const mockNavigate = jest.fn();
@@ -52,7 +54,13 @@ describe('ArtworkFormScreen', () => {
     });
 
     it('should show alert if nearby artwork is detected', async () => {
-        mockRepository.findNearby.mockResolvedValueOnce([{ id: '1', name: 'Mona Lisa' }]);
+        mockRepository.findAll.mockResolvedValueOnce([{
+            id: '1',
+            name: 'Mona Lisa',
+            latitude: -23.55052,
+            longitude: -46.633308,
+            deletedAt: null
+        }]);
 
         render(<ArtworkFormScreen {...mockProps} />, { wrapper: TestWrapper });
 

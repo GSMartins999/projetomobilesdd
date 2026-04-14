@@ -128,6 +128,7 @@ export function RegisterScreen() {
                     {error && <Text style={styles.errorText}>{error}</Text>}
 
                     <TouchableOpacity
+                        testID="register-button"
                         style={styles.button}
                         onPress={handleRegister}
                         disabled={isLoading}

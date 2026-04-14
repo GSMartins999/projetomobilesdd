@@ -11,7 +11,7 @@ const mockArtworks = [
 ];
 
 const mockRepository: any = {
-    search: jest.fn().mockResolvedValue(mockArtworks),
+    findAll: jest.fn().mockResolvedValue(mockArtworks),
 };
 
 const mockNavigate = jest.fn();
@@ -40,7 +40,7 @@ describe('SearchScreen', () => {
         render(<SearchScreen {...mockProps} />, { wrapper: TestWrapper });
 
         // Wait for it to be called
-        await waitFor(() => expect(mockRepository.search).toHaveBeenCalled());
+        await waitFor(() => expect(mockRepository.findAll).toHaveBeenCalled());
 
         // Use findBy to wait for the element to appear
         const mona = await screen.findByText(/Mona Lisa/i);
@@ -52,10 +52,15 @@ describe('SearchScreen', () => {
 
         await screen.findByText(/Mona Lisa/i);
 
-        const searchInput = screen.getByPlaceholderText(/Buscar/i);
+        const searchInput = screen.getByPlaceholderText(/Pesquisar/i);
 
         await act(async () => {
             fireEvent.changeText(searchInput, 'David');
+        });
+
+        // SearchScreen triggers search on onSubmitEditing
+        await act(async () => {
+            fireEvent(searchInput, 'submitEditing');
         });
 
         await waitFor(() => {

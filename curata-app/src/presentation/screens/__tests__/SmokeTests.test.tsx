@@ -54,6 +54,12 @@ const mockDIValues: any = {
     syncService: {
         sync: jest.fn().mockResolvedValue(undefined),
     },
+    cameraService: {
+        requestPermissions: jest.fn().mockResolvedValue(true),
+        takePicture: jest.fn().mockResolvedValue({ uri: 'fake-uri' }),
+        processImage: jest.fn().mockResolvedValue({ uri: 'fake-uri' }),
+        setCameraRef: jest.fn(),
+    },
 };
 
 const mockRoute = { params: {} };

@@ -37,6 +37,7 @@ export function InspectionFormScreen({ navigation, route }: any) {
         () => 'device-1'
     );
 
+    const [inspectionId] = useState(() => Math.random().toString(36).substr(2, 9));
     const [structuralCondition, setStructuralCondition] = useState('');
     const [surfaceCondition, setSurfaceCondition] = useState('');
     const [urgencyLevel, setUrgencyLevel] = useState<number>(3);
@@ -51,6 +52,9 @@ export function InspectionFormScreen({ navigation, route }: any) {
             return;
         }
         navigation.navigate('Camera', {
+            artworkId,
+            inspectionId,
+            label: 'front', // v1 default
             onCapture: (uri: string) => {
                 setPhotos([...photos, { localPath: uri, label: 'front' }]);
             }
@@ -163,7 +167,16 @@ export function InspectionFormScreen({ navigation, route }: any) {
             <Text style={styles.label}>Fotos ({photos.length}/10)</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photoRow}>
                 {photos.map((p, i) => (
-                    <Image key={i} source={{ uri: p.localPath }} style={styles.photoThumb} />
+                    <View key={i} style={styles.photoWrapper}>
+                        <Image source={{ uri: p.localPath }} style={styles.photoThumb} />
+                        <TouchableOpacity
+                            style={styles.removePhotoBtn}
+                            onPress={() => setPhotos(photos.filter((_, idx) => idx !== i))}
+                            testID={`remove-photo-${i}`}
+                        >
+                            <MaterialIcons name="close" size={16} color="#FFF" />
+                        </TouchableOpacity>
+                    </View>
                 ))}
                 <TouchableOpacity style={styles.addPhotoBtn} onPress={handleAddPhoto}>
                     <MaterialIcons name="photo-camera" size={24} color="#D4883A" />
@@ -235,6 +248,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     addPhotoText: { fontSize: 10, color: '#B0A898', marginTop: 4 },
+    photoWrapper: { position: 'relative', marginRight: 10 },
+    removePhotoBtn: {
+        position: 'absolute',
+        top: -5,
+        right: -5,
+        backgroundColor: 'rgba(230, 57, 70, 0.9)',
+        borderRadius: 12,
+        width: 24,
+        height: 24,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1,
+    },
     errorText: { color: '#E63946', marginTop: 12, textAlign: 'center', fontSize: 13 },
     saveButton: {
         flexDirection: 'row',

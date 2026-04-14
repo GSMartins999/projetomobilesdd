@@ -10,6 +10,7 @@ const mockInspectionRepo: any = {
 };
 const mockArtworkRepo: any = {
     update: jest.fn().mockResolvedValue(undefined),
+    findById: jest.fn().mockResolvedValue({ id: 'artwork-123', name: 'Mona Lisa', conservationStatus: 'fair' }),
 };
 const mockPhotoRepo: any = {
     save: jest.fn().mockResolvedValue(undefined),
@@ -80,7 +81,7 @@ describe('InspectionFormScreen', () => {
         });
     });
 
-    it('should navigate to camera for photo capture', async () => {
+    it('should navigate to camera for photo capture with correct params', async () => {
         render(<InspectionFormScreen {...mockProps} />, { wrapper: TestWrapper });
 
         const photoButton = await screen.findByText('Adicionar');
@@ -89,6 +90,42 @@ describe('InspectionFormScreen', () => {
             fireEvent.press(photoButton);
         });
 
-        expect(mockNavigate).toHaveBeenCalledWith('Camera', expect.any(Object));
+        expect(mockNavigate).toHaveBeenCalledWith('Camera', expect.objectContaining({
+            artworkId: 'artwork-123',
+            inspectionId: expect.any(String),
+            onCapture: expect.any(Function)
+        }));
+    });
+
+    it('should allow removing a photo from the list', async () => {
+        render(<InspectionFormScreen {...mockProps} />, { wrapper: TestWrapper });
+
+        // 1. Abrir câmera
+        const photoButton = await screen.findByText('Adicionar');
+        await act(async () => {
+            fireEvent.press(photoButton);
+        });
+
+        // 2. Simular a captura de uma foto via callback do navigation
+        const [navCall] = mockNavigate.mock.calls.filter(c => c[0] === 'Camera');
+        expect(navCall).toBeTruthy();
+
+        if (navCall && navCall[1].onCapture) {
+            await act(async () => {
+                navCall[1].onCapture('new-photo-uri');
+            });
+        }
+
+        // 3. Verifica se a foto apareceu (Thumb) via testID
+        const removeButton = await screen.findByTestId('remove-photo-0');
+        expect(removeButton).toBeTruthy();
+
+        // Remover a foto
+        await act(async () => {
+            fireEvent.press(screen.getByTestId('remove-photo-0'));
+        });
+
+        // Verifica se a foto sumiu
+        expect(screen.queryByTestId('remove-photo-0')).toBeNull();
     });
 });

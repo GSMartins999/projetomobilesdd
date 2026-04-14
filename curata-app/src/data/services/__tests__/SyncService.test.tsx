@@ -1,11 +1,17 @@
 import { SyncServiceImpl } from '../SyncServiceImpl';
 import { AuthProvider, useAuth } from '../../../infrastructure/auth/AuthContext';
 import { DIProvider } from '../../../infrastructure/di/DIContext';
+import * as FileSystem from 'expo-file-system';
+
+jest.mock('expo-file-system', () => ({
+    readAsStringAsync: jest.fn().mockResolvedValue('fakebase64'),
+    EncodingType: { Base64: 'base64' },
+}));
 
 const makeMockRepos = () => ({
     artwork: { findUnsynced: jest.fn().mockResolvedValue([]), save: jest.fn(), update: jest.fn(), findById: jest.fn() },
-    inspection: { findUnsynced: jest.fn().mockResolvedValue([]), save: jest.fn(), update: jest.fn() },
-    photo: { findUnsyncedPhotos: jest.fn().mockResolvedValue([]), save: jest.fn(), update: jest.fn(), updateUploadStatus: jest.fn() },
+    inspection: { findUnsynced: jest.fn().mockResolvedValue([]), save: jest.fn(), update: jest.fn(), findById: jest.fn() },
+    photo: { findUnsyncedPhotos: jest.fn().mockResolvedValue([]), save: jest.fn(), update: jest.fn(), updateUploadStatus: jest.fn(), findById: jest.fn(), findUnsynced: jest.fn().mockResolvedValue([]) },
 });
 
 // A better Supabase mock that doesn't hang await
@@ -98,5 +104,94 @@ describe('SyncServiceImpl', () => {
 
         const result = await syncService.sync();
         expect(result.errors).toContain('Fatal error');
+    });
+
+    it('deve lidar com falha no download de tabela', async () => {
+        const repos = makeMockRepos();
+        mockSupabase.gt.mockResolvedValueOnce({ data: null, error: { message: 'DL Failed' } });
+
+        const syncService = new SyncServiceImpl(
+            repos.artwork as any,
+            repos.inspection as any,
+            repos.photo as any,
+            mockSupabase as any
+        );
+
+        const result = await syncService.sync();
+        expect(result.errors.length).toBeGreaterThan(0);
+        expect(result.errors[0]).toContain('Download artworks failed: DL Failed');
+    });
+
+    it('deve baixar remoteData se local não existir', async () => {
+        const repos = makeMockRepos();
+        const serverArtwork = { id: 'sNew', name: 'New Remote', updated_at: '2026-03-27' };
+
+        mockSupabase.gt.mockResolvedValueOnce({ data: [serverArtwork], error: null });
+        repos.artwork.findById.mockResolvedValue(null);
+
+        const syncService = new SyncServiceImpl(
+            repos.artwork as any,
+            repos.inspection as any,
+            repos.photo as any,
+            mockSupabase as any
+        );
+
+        await syncService.sync();
+        expect(repos.artwork.save).toHaveBeenCalled();
+    });
+
+    it('não deve atualizar local se remoto não for mais novo', async () => {
+        const repos = makeMockRepos();
+        const serverArtwork = { id: 's1', name: 'Obra Remota', updated_at: '2020-03-27' };
+        const localArtwork = { id: 's1', name: 'Obra Local', updatedAt: '2026-03-27' };
+
+        mockSupabase.gt.mockResolvedValue({ data: [serverArtwork], error: null });
+        repos.artwork.findById.mockResolvedValue(localArtwork);
+
+        const syncService = new SyncServiceImpl(
+            repos.artwork as any,
+            repos.inspection as any,
+            repos.photo as any,
+            mockSupabase as any
+        );
+
+        await syncService.sync();
+        expect(repos.artwork.save).not.toHaveBeenCalled();
+    });
+
+    it('deve lidar com falha no upload de foto individual', async () => {
+        const repos = makeMockRepos();
+        repos.photo.findUnsyncedPhotos.mockResolvedValue([{ id: 'p1', localPath: 'err', artworkId: 'a1' }]);
+        (FileSystem.readAsStringAsync as jest.Mock).mockRejectedValueOnce(new Error('File access error'));
+
+        const syncService = new SyncServiceImpl(
+            repos.artwork as any,
+            repos.inspection as any,
+            repos.photo as any,
+            mockSupabase as any
+        );
+
+        const result = await syncService.sync();
+        expect(result.errors.length).toBeGreaterThan(0);
+        expect(result.errors[0]).toContain('Photo upload failed');
+    });
+
+    it('deve atualizar local se remoto for mais novo que local', async () => {
+        const repos = makeMockRepos();
+        const serverArtwork = { id: 's1', name: 'Obra Remota', updated_at: '2026-03-27' };
+        const localArtwork = { id: 's1', name: 'Obra Local', updatedAt: '2020-03-27' };
+
+        mockSupabase.gt.mockResolvedValue({ data: [serverArtwork], error: null });
+        repos.artwork.findById.mockResolvedValue(localArtwork);
+
+        const syncService = new SyncServiceImpl(
+            repos.artwork as any,
+            repos.inspection as any,
+            repos.photo as any,
+            mockSupabase as any
+        );
+
+        await syncService.sync();
+        expect(repos.artwork.save).toHaveBeenCalledWith(serverArtwork);
     });
 });

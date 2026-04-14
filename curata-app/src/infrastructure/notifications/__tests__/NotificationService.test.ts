@@ -20,6 +20,15 @@ describe('NotificationService', () => {
         await setupNotifications();
         expect(Notifications.setNotificationHandler).toHaveBeenCalled();
 
+        // Test the handler callback
+        const handler = (Notifications.setNotificationHandler as jest.Mock).mock.calls[0][0];
+        const result = await handler.handleNotification();
+        expect(result).toEqual({
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: false,
+        });
+
         if (Platform.OS === 'android') {
             expect(Notifications.setNotificationChannelAsync).toHaveBeenCalledWith('default', expect.any(Object));
         }
@@ -63,5 +72,15 @@ describe('NotificationService', () => {
 
         const result = await requestNotificationPermission();
         expect(result).toBe(false);
+    });
+
+    it('should setup notification channel on Android', async () => {
+        const originalOS = Platform.OS;
+        (Platform as any).OS = 'android';
+
+        await setupNotifications();
+        expect(Notifications.setNotificationChannelAsync).toHaveBeenCalledWith('default', expect.any(Object));
+
+        (Platform as any).OS = originalOS;
     });
 });

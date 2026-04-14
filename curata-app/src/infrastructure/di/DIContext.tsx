@@ -1,9 +1,7 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { ArtworkRepository } from '../../domain/repositories/ArtworkRepository';
-import { InspectionRepository } from '../../domain/repositories/InspectionRepository';
-import { PhotoRepository } from '../../domain/repositories/PhotoRepository';
 import { AuthRepository } from '../../domain/repositories/AuthRepository';
 import { SyncService } from '../../domain/services/SyncService';
+import { CameraService } from '../../domain/services/CameraService';
 
 interface DIContextType {
     artworkRepository: ArtworkRepository;
@@ -11,6 +9,7 @@ interface DIContextType {
     photoRepository: PhotoRepository;
     authRepository: AuthRepository;
     syncService: SyncService;
+    cameraService: CameraService;
 }
 
 const DIContext = createContext<DIContextType | null>(null);
@@ -29,6 +28,7 @@ export const useInspectionRepository = () => useDI().inspectionRepository;
 export const usePhotoRepository = () => useDI().photoRepository;
 export const useAuthRepository = () => useDI().authRepository;
 export const useSyncService = () => useDI().syncService;
+export const useCameraService = () => useDI().cameraService;
 
 export function DIProvider({ children, values }: { children: ReactNode; values: DIContextType }) {
     return <DIContext.Provider value={values}>{children}</DIContext.Provider>;

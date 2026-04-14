@@ -94,6 +94,7 @@ export function LoginScreen() {
                     {error && <Text style={styles.errorText}>{error}</Text>}
 
                     <TouchableOpacity
+                        testID="login-button"
                         style={styles.button}
                         onPress={handleLogin}
                         disabled={isLoading}

@@ -78,9 +78,9 @@ describe('LoginScreen', () => {
 
     it('should call login function and handle success', async () => {
         mockLogin.mockResolvedValueOnce({ user: { id: '1', email: 'test@example.com' } });
-        const { findByText, getByPlaceholderText } = render(<LoginScreen />, { wrapper: TestWrapper });
+        const { findByTestId, getByPlaceholderText } = render(<LoginScreen />, { wrapper: TestWrapper });
 
-        const loginButton = await findByText('Entrar');
+        const loginButton = await findByTestId('login-button');
 
         fireEvent.changeText(getByPlaceholderText('seu@email.com'), 'test@example.com');
         fireEvent.changeText(getByPlaceholderText('Sua senha'), 'password');

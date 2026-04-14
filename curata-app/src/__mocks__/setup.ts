@@ -42,10 +42,21 @@ jest.mock('expo-location', () => ({
 }));
 
 // Mock expo-camera
-jest.mock('expo-camera', () => ({
-    requestCameraPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
-    useCameraPermissions: jest.fn().mockReturnValue([{ status: 'granted' }, jest.fn()]),
-}));
+jest.mock('expo-camera', () => {
+    const React = require('react');
+    const { View } = require('react-native');
+    const MockCameraView = (props: any) => React.createElement(View, props);
+    return {
+        CameraView: MockCameraView,
+        requestCameraPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
+        useCameraPermissions: jest.fn().mockReturnValue([{ status: 'granted' }, jest.fn()]),
+        Camera: {
+            requestCameraPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
+            getCameraPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
+            Constants: { Type: { back: 'back', front: 'front' } },
+        }
+    };
+});
 
 // Mock expo-notifications
 jest.mock('expo-notifications', () => ({

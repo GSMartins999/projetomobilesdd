@@ -83,16 +83,16 @@ describe('RegisterScreen', () => {
 
     it('should call register function on success', async () => {
         mockRegister.mockResolvedValueOnce({ user: { id: '1', email: 'john@example.com' } });
-        const { findByText, getByText, getByPlaceholderText } = render(<RegisterScreen />, { wrapper: TestWrapper });
+        const { findByTestId, getByText, getByPlaceholderText } = render(<RegisterScreen />, { wrapper: TestWrapper });
 
-        await findByText('Cadastrar');
+        const registerBtn = await findByTestId('register-button');
 
         fireEvent.changeText(getByPlaceholderText('Seu nome completo'), 'John Doe');
         fireEvent.changeText(getByPlaceholderText('seu@email.com'), 'john@example.com');
         fireEvent.changeText(getByPlaceholderText('Mínimo 6 caracteres'), 'password123');
         fireEvent.changeText(getByPlaceholderText('Repita a senha'), 'password123');
 
-        fireEvent.press(getByText('Cadastrar'));
+        fireEvent.press(registerBtn);
 
         await waitFor(() => {
             expect(mockRegister).toHaveBeenCalledWith('john@example.com', 'password123', 'John Doe');

@@ -21,6 +21,7 @@ import { ArtworkDetailScreen } from '../../presentation/screens/ArtworkDetailScr
 import { NotificationsScreen } from '../../presentation/screens/NotificationsScreen';
 import { ReportGeneratorScreen } from '../../presentation/screens/ReportGeneratorScreen';
 import { PdfPreviewScreen } from '../../presentation/screens/PdfPreviewScreen';
+import { CameraScreen } from '../../presentation/screens/CameraScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -82,6 +83,7 @@ export function AppNavigator() {
                         <Stack.Screen name="Main" component={MainTabNavigator} />
                         <Stack.Screen name="ArtworkForm" component={ArtworkFormScreen} options={{ presentation: 'modal' }} />
                         <Stack.Screen name="InspectionForm" component={InspectionFormScreen} options={{ presentation: 'modal' }} />
+                        <Stack.Screen name="Camera" component={CameraScreen} options={{ presentation: 'fullScreenModal' }} />
                         <Stack.Screen name="InspectionHistory" component={InspectionHistoryScreen} />
                         <Stack.Screen name="InspectionDetail" component={InspectionDetailScreen} />
                         <Stack.Screen name="ArtworkDetail" component={ArtworkDetailScreen} />
