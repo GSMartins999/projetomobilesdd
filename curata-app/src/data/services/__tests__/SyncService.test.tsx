@@ -194,4 +194,32 @@ describe('SyncServiceImpl', () => {
         await syncService.sync();
         expect(repos.artwork.save).toHaveBeenCalledWith(serverArtwork);
     });
+
+    it('não deve fazer nada se não houver registros não sincronizados', async () => {
+        const repos = makeMockRepos();
+        repos.artwork.findUnsynced.mockResolvedValue([]);
+        const syncService = new SyncServiceImpl(repos.artwork as any, repos.inspection as any, repos.photo as any, mockSupabase as any);
+        await syncService.sync();
+        expect(mockSupabase.from).toHaveBeenCalledWith('artworks');
+    });
+
+    it('deve lidar com falha no upload de foto para o Supabase', async () => {
+        const repos = makeMockRepos();
+        repos.photo.findUnsyncedPhotos.mockResolvedValue([{ id: 'p1', localPath: 'img', artworkId: 'a1' }]);
+        (FileSystem.readAsStringAsync as jest.Mock).mockResolvedValue('base64');
+        
+        // Mock error return from storage.upload
+        mockSupabase.storage.upload.mockResolvedValueOnce({ data: null, error: { message: 'Storage Full' } });
+
+        const syncService = new SyncServiceImpl(
+            repos.artwork as any,
+            repos.inspection as any,
+            repos.photo as any,
+            mockSupabase as any
+        );
+
+        const result = await syncService.sync();
+        expect(result.errors.length).toBeGreaterThan(0);
+        expect(result.errors[0]).toContain('Photo upload failed (p1): Storage Full');
+    });
 });

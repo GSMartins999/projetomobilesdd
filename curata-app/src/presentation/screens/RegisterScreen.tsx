@@ -104,6 +104,7 @@ export function RegisterScreen() {
                             secureTextEntry={!showPassword}
                         />
                         <TouchableOpacity
+                            testID="password-visibility-toggle"
                             style={styles.eyeButton}
                             onPress={() => setShowPassword(!showPassword)}
                         >

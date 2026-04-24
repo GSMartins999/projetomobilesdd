@@ -103,6 +103,7 @@ export function MapScreen({ navigation }: any) {
                 style={styles.fab}
                 onPress={() => navigation.navigate('ArtworkForm')}
                 activeOpacity={0.8}
+                testID="map-fab"
             >
                 <MaterialIcons name="add" size={32} color="#FFFFFF" />
             </TouchableOpacity>

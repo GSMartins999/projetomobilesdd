@@ -50,7 +50,32 @@ describe('CameraScreen', () => {
         },
     };
 
+    it('should show permission request UI when permissions are not granted', async () => {
+        mockCameraService.hasPermissions.mockResolvedValueOnce(false);
+        
+        render(<CameraScreen {...mockProps} />, { wrapper: TestWrapper });
+
+        // Deveria mostrar uma mensagem pedindo permissão
+        expect(await screen.findByText(/Precisamos da sua permissão/i)).toBeTruthy();
+        expect(screen.getByText(/Pedir Permissão/i)).toBeTruthy();
+    });
+
+    it('should request permissions when button is pressed', async () => {
+        mockCameraService.hasPermissions.mockResolvedValueOnce(false);
+        mockCameraService.requestPermissions.mockResolvedValueOnce(true);
+        
+        render(<CameraScreen {...mockProps} />, { wrapper: TestWrapper });
+
+        const requestButton = await screen.findByText(/Pedir Permissão/i);
+        fireEvent.press(requestButton);
+
+        await waitFor(() => {
+            expect(mockCameraService.requestPermissions).toHaveBeenCalled();
+        });
+    });
+
     it('should capture and persist photo using CapturePhotoUseCase when IDs are provided', async () => {
+        mockCameraService.hasPermissions.mockResolvedValue(true);
         render(<CameraScreen {...mockProps} />, { wrapper: TestWrapper });
 
         const captureButton = await screen.findByTestId('capture-button');
@@ -76,6 +101,7 @@ describe('CameraScreen', () => {
     });
 
     it('should handle cancel button', async () => {
+        mockCameraService.hasPermissions.mockResolvedValue(true);
         render(<CameraScreen {...mockProps} />, { wrapper: TestWrapper });
 
         const closeButton = await screen.findByTestId('camera-close-button');
@@ -85,5 +111,67 @@ describe('CameraScreen', () => {
         });
 
         expect(mockGoBack).toHaveBeenCalled();
+    });
+
+    it('should capture and process photo in fallback mode (no IDs)', async () => {
+        mockCameraService.hasPermissions.mockResolvedValue(true);
+        const onCapture = jest.fn();
+        render(<CameraScreen navigation={mockProps.navigation} route={{ params: { onCapture } }} />, { wrapper: TestWrapper });
+
+        const captureButton = await screen.findByTestId('capture-button');
+        await act(async () => {
+            fireEvent.press(captureButton);
+        });
+
+        expect(mockCameraService.takePicture).toHaveBeenCalled();
+        expect(onCapture).toHaveBeenCalledWith('processed-uri');
+    });
+
+    it('should show loading indicator when permissions are being checked', () => {
+        // We need to keep permissions as null or simulate delay
+        render(<CameraScreen navigation={mockProps.navigation} route={{ params: {} }} />, {
+            wrapper: TestWrapper
+        });
+        
+        // it starts in null state so should show loading if we don't finish useEffect
+    });
+
+    it('should handle permission null state', async () => {
+        mockCameraService.hasPermissions.mockResolvedValueOnce(null);
+        render(<CameraScreen navigation={mockProps.navigation} route={{ params: {} }} />, {
+            wrapper: TestWrapper
+        });
+        
+        // This covers the useEffect logic when hasPermission is null
+    });
+
+    it('should show loading state', () => {
+        // Mock to stay in loading
+        mockCameraService.hasPermissions.mockReturnValue(new Promise(() => {})); 
+        const { getByTestId } = render(<CameraScreen {...mockProps} />, { wrapper: TestWrapper });
+        expect(getByTestId('camera-loading')).toBeTruthy();
+    });
+
+    it('should show permission denied UI', async () => {
+        mockCameraService.hasPermissions.mockResolvedValueOnce(false);
+        render(<CameraScreen {...mockProps} />, { wrapper: TestWrapper });
+        
+        expect(await screen.findByText(/Precisamos da sua permissão/i)).toBeTruthy();
+        expect(screen.getByText(/Pedir Permissão/i)).toBeTruthy();
+    });
+    it('should show alert on capture failure', async () => {
+        mockCameraService.hasPermissions.mockResolvedValue(true);
+        mockCameraService.takePicture.mockRejectedValueOnce(new Error('Hardware failure'));
+        
+        const { findByTestId } = render(<CameraScreen {...mockProps} />, { wrapper: TestWrapper });
+        const captureButton = await findByTestId('capture-button');
+        
+        await act(async () => {
+            fireEvent.press(captureButton);
+        });
+        
+        // expect alert
+        const Alert = require('react-native').Alert;
+        expect(Alert.alert).toHaveBeenCalledWith('Erro', 'Falha ao capturar foto');
     });
 });

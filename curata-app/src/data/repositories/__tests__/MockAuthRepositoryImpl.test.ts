@@ -51,4 +51,14 @@ describe('MockAuthRepositoryImpl', () => {
     it('getTokenExpiresAt deve retornar null se deslogado', async () => {
         expect(await repository.getTokenExpiresAt()).toBeNull();
     });
+
+    it('signIn deve usar fallback de nome se email for estranho', async () => {
+        const result = await repository.signIn('@sememail', 'p');
+        expect(result.user.name).toBe('Gestor');
+    });
+
+    it('signUp deve usar fallback de nome se name e email forem vazios', async () => {
+        const result = await repository.signUp('', 'p', '');
+        expect(result.user.name).toBe('Gestor');
+    });
 });

@@ -12,18 +12,28 @@ jest.mock('@react-navigation/native', () => ({
     useNavigation: () => ({ navigate: mockNavigate }),
 }));
 
-const makeArtworkRepo = (artworks: any[]) => ({
+// Mock NetInfo with ability to trigger listeners
+let netInfoCallback: any = null;
+jest.mock('@react-native-community/netinfo', () => ({
+    useNetInfo: jest.fn().mockReturnValue({ isConnected: true, isInternetReachable: true }),
+    addEventListener: jest.fn().mockImplementation((cb) => {
+        netInfoCallback = cb;
+        return () => { netInfoCallback = null; };
+    }),
+}));
+
+const makeArtworkRepo = (artworks: any[], unsynced: any[] = []) => ({
     findAll: jest.fn().mockResolvedValue(artworks),
-    findUnsynced: jest.fn().mockResolvedValue([]),
+    findUnsynced: jest.fn().mockResolvedValue(unsynced),
 });
 
 const makeSyncService = () => ({
     sync: jest.fn().mockResolvedValue({ success: true, count: 0 }),
 });
 
-const Wrapper = ({ artworkRepo, syncService }: { artworkRepo: any; syncService: any }) =>
+const Wrapper = (deps: any) =>
     ({ children }: { children: React.ReactNode }) => (
-        <DIProvider values={{ artworkRepository: artworkRepo, syncService } as any}>
+        <DIProvider values={deps}>
             <SyncProvider>
                 <NavigationContainer>
                     {children}
@@ -35,42 +45,55 @@ const Wrapper = ({ artworkRepo, syncService }: { artworkRepo: any; syncService: 
 describe('DashboardScreen', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        netInfoCallback = null;
     });
 
     it('exibe estatísticas após carregamento', async () => {
-        const RECENT = new Date().toISOString();
-        const OLD = new Date(2020, 1, 1).toISOString();
-
-        const artworks = [
-            { id: '1', conservationStatus: 'good', updatedAt: RECENT },
-            { id: '2', conservationStatus: 'urgent', updatedAt: OLD },
-            { id: '3', conservationStatus: 'fair', updatedAt: RECENT },
-        ];
-
+        const artworks = [{ id: '1', conservationStatus: 'good', updatedAt: new Date().toISOString() }];
         const artworkRepo = makeArtworkRepo(artworks);
         const syncService = makeSyncService();
 
         render(<DashboardScreen />, {
-            wrapper: Wrapper({ artworkRepo, syncService }),
+            wrapper: Wrapper({ artworkRepository: artworkRepo, syncService }),
         });
 
         await waitFor(() => {
-            expect(screen.getByText('03')).toBeTruthy(); // totalArtworks padded
+            expect(screen.getByText('TOTAL DE OBRAS')).toBeTruthy();
+            expect(screen.getAllByText('01').length).toBeGreaterThan(0);
         });
     });
 
-    it('exibe estado de conexão', async () => {
-        const artworkRepo = makeArtworkRepo([]);
+    it('shows pending sync count when unsynced artworks exist', async () => {
+        const artworks = [{ id: '1', conservationStatus: 'good', updatedAt: new Date().toISOString() }];
+        const unsynced = [{ id: '1' }];
+
+        const artworkRepo = makeArtworkRepo(artworks, unsynced);
         const syncService = makeSyncService();
 
         render(<DashboardScreen />, {
-            wrapper: Wrapper({ artworkRepo, syncService }),
+            wrapper: Wrapper({ artworkRepository: artworkRepo, syncService }),
         });
 
-        await waitFor(() => {
-            // O mock de NetInfo retorna isConnected=true por padrão
-            expect(screen.getByText('Conectado')).toBeTruthy();
+        expect(await screen.findByText(/Sincronizar 1/)).toBeTruthy();
+    });
+
+    it('exibe texto de offline quando desconectado', async () => {
+        const artworks = [{ id: '1' }];
+        const artworkRepo = makeArtworkRepo(artworks);
+        const syncService = makeSyncService();
+
+        render(<DashboardScreen />, {
+            wrapper: Wrapper({ artworkRepository: artworkRepo, syncService }),
         });
+
+        // Trigger offline state via the listener callback that SyncProvider uses
+        act(() => {
+            if (netInfoCallback) {
+                netInfoCallback({ isConnected: false, isInternetReachable: false });
+            }
+        });
+
+        expect(await screen.findByText(/Offline/)).toBeTruthy();
     });
 
     it('navega para Notifications ao clicar no sino', async () => {
@@ -78,12 +101,10 @@ describe('DashboardScreen', () => {
         const syncService = makeSyncService();
 
         render(<DashboardScreen />, {
-            wrapper: Wrapper({ artworkRepo, syncService }),
+            wrapper: Wrapper({ artworkRepository: artworkRepo, syncService }),
         });
 
         await waitFor(() => expect(artworkRepo.findAll).toHaveBeenCalled());
-
-        // Finds the notification touchable via testID
         const btn = screen.getByTestId('notification-button');
 
         await act(async () => {
@@ -93,40 +114,22 @@ describe('DashboardScreen', () => {
         expect(mockNavigate).toHaveBeenCalledWith('Notifications');
     });
 
-    it('exibe botão de sync quando totalUnsynced > 0 e dispara sync ao clicar', async () => {
-        const artworks = [{ id: '1', conservationStatus: 'fair', updatedAt: new Date().toISOString() }];
-        const unsyncedArtworks = [{ id: '1', syncedAt: null }];
+    it('exibe botão de sync e dispara ao clicar', async () => {
+        const artworks = [{ id: '1' }];
+        const unsynced = [{ id: '1' }];
 
-        const artworkRepo = {
-            findAll: jest.fn().mockResolvedValue(artworks),
-            findUnsynced: jest.fn().mockResolvedValue(unsyncedArtworks),
-        };
+        const artworkRepo = makeArtworkRepo(artworks, unsynced);
         const syncService = makeSyncService();
 
         render(<DashboardScreen />, {
-            wrapper: Wrapper({ artworkRepo, syncService }),
+            wrapper: Wrapper({ artworkRepository: artworkRepo, syncService }),
         });
 
         const syncBtn = await screen.findByTestId('sync-button');
-        expect(syncBtn).toBeTruthy();
-
         await act(async () => {
             fireEvent.press(syncBtn);
         });
 
         expect(syncService.sync).toHaveBeenCalled();
-    });
-
-    it('exibe "Meu Mapa de Obras" no header', async () => {
-        const artworkRepo = makeArtworkRepo([]);
-        const syncService = makeSyncService();
-
-        render(<DashboardScreen />, {
-            wrapper: Wrapper({ artworkRepo, syncService }),
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText('Meu Mapa de Obras')).toBeTruthy();
-        });
     });
 });

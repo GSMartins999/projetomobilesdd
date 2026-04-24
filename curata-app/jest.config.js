@@ -17,7 +17,6 @@ module.exports = {
         '^@presentation/(.*)$': '<rootDir>/src/presentation/$1',
         '^@infrastructure/(.*)$': '<rootDir>/src/infrastructure/$1',
     },
-    // testPathPattern: undefined,
     collectCoverageFrom: [
         'src/**/*.{ts,tsx}',
         '!src/**/*.d.ts',
@@ -29,10 +28,11 @@ module.exports = {
         '!src/infrastructure/navigation/AppNavigator.tsx',
     ],
     coverageThreshold: {
-        'src/domain/**': { lines: 80, functions: 80 },
-        'src/data/**': { lines: 80, functions: 80 },
-        'src/infrastructure/**': { lines: 80, functions: 80 },
-        'src/presentation/**': { lines: 40, functions: 20 },
+        global: {
+            statements: 80,
+            branches: 80,
+            functions: 80,
+            lines: 80,
+        }
     },
-    // testEnvironment: 'node',
 };

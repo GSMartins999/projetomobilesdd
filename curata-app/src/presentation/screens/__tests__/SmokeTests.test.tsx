@@ -55,6 +55,7 @@ const mockDIValues: any = {
         sync: jest.fn().mockResolvedValue(undefined),
     },
     cameraService: {
+        hasPermissions: jest.fn().mockResolvedValue(true),
         requestPermissions: jest.fn().mockResolvedValue(true),
         takePicture: jest.fn().mockResolvedValue({ uri: 'fake-uri' }),
         processImage: jest.fn().mockResolvedValue({ uri: 'fake-uri' }),
@@ -88,7 +89,7 @@ describe('Presentation Smoke Tests', () => {
 
     it('ArtworkDetailScreen renders', () => { render(<Wrapper><ArtworkDetailScreen route={mockRouteWithId as any} /></Wrapper>); });
     it('ArtworkFormScreen renders', () => { render(<Wrapper><ArtworkFormScreen route={mockRoute as any} /></Wrapper>); });
-    it('CameraScreen renders', () => { render(<Wrapper><CameraScreen onCapture={() => { }} onClose={() => { }} /></Wrapper>); });
+    it('CameraScreen renders', () => { render(<Wrapper><CameraScreen route={mockRoute as any} navigation={{}} onCapture={() => { }} onClose={() => { }} /></Wrapper>); });
     it('InspectionDetailScreen renders', () => { render(<Wrapper><InspectionDetailScreen route={mockRouteWithId as any} /></Wrapper>); });
     it('InspectionFormScreen renders', () => { render(<Wrapper><InspectionFormScreen route={mockRouteWithId as any} /></Wrapper>); });
     it('InspectionHistoryScreen renders', () => { render(<Wrapper><InspectionHistoryScreen route={mockRouteWithId as any} /></Wrapper>); });

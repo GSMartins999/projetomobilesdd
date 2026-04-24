@@ -18,11 +18,21 @@ export function CameraScreen({ navigation, route, ...props }: any) {
 
     const cameraRef = useRef<CameraView>(null);
     const [isCapturing, setIsCapturing] = useState(false);
+    const [hasPermission, setHasPermission] = useState<boolean | null>(null);
 
     // Params de navegação
-    const { artworkId, inspectionId, label = 'front' } = route.params || {};
+    const { artworkId, inspectionId, label = 'front' } = route?.params || {};
     const onCapture = props.onCapture || route?.params?.onCapture;
     const onClose = props.onClose || route?.params?.onClose || (() => navigation?.goBack());
+
+    // Verifica permissões ao montar
+    useEffect(() => {
+        async function checkPermissions() {
+            const granted = await cameraService.hasPermissions();
+            setHasPermission(granted);
+        }
+        checkPermissions();
+    }, []);
 
     // Sincroniza o ref da câmera com o serviço
     useEffect(() => {
@@ -31,8 +41,13 @@ export function CameraScreen({ navigation, route, ...props }: any) {
         }
     }, [cameraRef.current]);
 
+    const requestPermission = async () => {
+        const granted = await cameraService.requestPermissions();
+        setHasPermission(granted);
+    };
+
     const takePicture = async () => {
-        if (isCapturing) return;
+        if (isCapturing || !hasPermission) return;
         setIsCapturing(true);
         try {
             // Se tivermos os IDs necessários, usamos o UseCase para persistência total
@@ -65,6 +80,25 @@ export function CameraScreen({ navigation, route, ...props }: any) {
             setIsCapturing(false);
         }
     };
+
+    if (hasPermission === null) {
+        return <View style={styles.container} testID="camera-loading" />;
+    }
+
+    if (hasPermission === false) {
+        return (
+            <View style={styles.permissionContainer}>
+                <MaterialIcons name="camera-alt" size={64} color="#E8752A" />
+                <Text style={styles.message}>Precisamos da sua permissão para acessar a câmera</Text>
+                <TouchableOpacity style={styles.button} onPress={requestPermission}>
+                    <Text style={styles.buttonText}>Pedir Permissão</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.button, { marginTop: 10, backgroundColor: 'transparent' }]} onPress={onClose}>
+                    <Text style={[styles.buttonText, { color: '#E8752A' }]}>Cancelar</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -144,5 +178,12 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         fontWeight: 'bold',
+    },
+    permissionContainer: {
+        flex: 1,
+        backgroundColor: '#F8F5F0',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
     },
 });

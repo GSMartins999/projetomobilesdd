@@ -17,15 +17,30 @@ jest.mock('@expo/vector-icons', () => {
 });
 
 // Mock react-i18next
+const mockI18nInstance = {
+    language: 'pt-BR',
+    changeLanguage: jest.fn((lng: string) => {
+        mockI18nInstance.language = lng;
+    }),
+};
+
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (key: string, defaultValue?: string) => defaultValue || key,
-        i18n: {
-            language: 'pt-BR',
-            changeLanguage: jest.fn(),
-        },
+        i18n: mockI18nInstance,
     }),
+    initReactI18next: {
+        type: '3rdParty',
+        init: jest.fn(),
+    },
 }));
+
+// Mock Alert
+jest.mock('react-native', () => {
+    const RN = jest.requireActual('react-native');
+    RN.Alert.alert = jest.fn();
+    return RN;
+});
 
 // Mock expo-location
 jest.mock('expo-location', () => ({

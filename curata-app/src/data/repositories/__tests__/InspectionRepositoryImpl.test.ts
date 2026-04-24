@@ -68,4 +68,10 @@ describe('InspectionRepositoryImpl', () => {
         await repository.softDelete('101');
         expect(mockDb.update).toHaveBeenCalledWith(inspections);
     });
+
+    it('findById deve retornar null se não encontrar', async () => {
+        (mockDb.select() as any).mockResolvedValue([]);
+        const result = await repository.findById('999');
+        expect(result).toBeNull();
+    });
 });

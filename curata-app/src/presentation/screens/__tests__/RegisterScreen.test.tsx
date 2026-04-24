@@ -108,12 +108,11 @@ describe('RegisterScreen', () => {
         expect(mockGoBack).toHaveBeenCalled();
     });
 
-    it('should handle registration errors', async () => {
-        mockRegister.mockRejectedValueOnce(new Error('Email already in use'));
+    it('should handle registration internal errors with message', async () => {
+        mockRegister.mockRejectedValueOnce(new Error('Internal DB Error'));
         const { findByText, getByText, getByPlaceholderText } = render(<RegisterScreen />, { wrapper: TestWrapper });
 
         await findByText('Cadastrar');
-
         fireEvent.changeText(getByPlaceholderText('Seu nome completo'), 'John Doe');
         fireEvent.changeText(getByPlaceholderText('seu@email.com'), 'john@example.com');
         fireEvent.changeText(getByPlaceholderText('Mínimo 6 caracteres'), 'password123');
@@ -121,8 +120,36 @@ describe('RegisterScreen', () => {
 
         fireEvent.press(getByText('Cadastrar'));
 
-        await waitFor(() => {
-            expect(getByText('Email already in use')).toBeTruthy();
-        });
+        expect(await findByText('Internal DB Error')).toBeTruthy();
+    });
+
+    it('should handle registration internal errors without message', async () => {
+        mockRegister.mockRejectedValueOnce({ }); // Error without message
+        const { findByText, getByText, getByPlaceholderText } = render(<RegisterScreen />, { wrapper: TestWrapper });
+
+        await findByText('Cadastrar');
+        fireEvent.changeText(getByPlaceholderText('Seu nome completo'), 'John Doe');
+        fireEvent.changeText(getByPlaceholderText('seu@email.com'), 'john@example.com');
+        fireEvent.changeText(getByPlaceholderText('Mínimo 6 caracteres'), 'password123');
+        fireEvent.changeText(getByPlaceholderText('Repita a senha'), 'password123');
+
+        fireEvent.press(getByText('Cadastrar'));
+
+        expect(await findByText('Erro ao criar conta')).toBeTruthy();
+    });
+
+    it('should toggle password visibility', async () => {
+        const { findByPlaceholderText, getByTestId, findByTestId } = render(<RegisterScreen />, { wrapper: TestWrapper });
+        
+        const passwordInput = await findByPlaceholderText('Mínimo 6 caracteres');
+        expect(passwordInput.props.secureTextEntry).toBe(true);
+
+        const toggleBtn = await findByTestId('password-visibility-toggle');
+        fireEvent.press(toggleBtn);
+
+        expect(passwordInput.props.secureTextEntry).toBe(false);
+
+        fireEvent.press(toggleBtn);
+        expect(passwordInput.props.secureTextEntry).toBe(true);
     });
 });

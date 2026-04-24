@@ -53,16 +53,18 @@ describe('LoginScreen', () => {
     });
 
     it('should toggle password visibility', () => {
-        const { getByPlaceholderText, getByTestId, queryByTestId } = render(<LoginScreen />, { wrapper: TestWrapper });
+        const { getByPlaceholderText, getByTestId } = render(<LoginScreen />, { wrapper: TestWrapper });
         const passwordInput = getByPlaceholderText('Sua senha');
 
         expect(passwordInput.props.secureTextEntry).toBe(true);
 
-        const toggleButton = getByPlaceholderText('Sua senha').parent?.children[1]; // Find the eye button
-        // Since it's a MaterialIcons inside TouchableOpacity, we find the button by its role or custom testID if we added one. 
-        // For now, I'll rely on finding by Text or finding the button.
+        const toggleButton = getByTestId('password-toggle');
+        fireEvent.press(toggleButton);
 
-        // Let's add testID in the screen if needed, but I'll try to find it via touchable.
+        expect(passwordInput.props.secureTextEntry).toBe(false);
+
+        fireEvent.press(toggleButton);
+        expect(passwordInput.props.secureTextEntry).toBe(true);
     });
 
     it('should show error when email or password is empty', async () => {
@@ -92,7 +94,7 @@ describe('LoginScreen', () => {
         });
     });
 
-    it('should navigate to register screen', async () => {
+    it('navigates to the register screen when "Cadastrar" is pressed', async () => {
         const { findByText } = render(<LoginScreen />, { wrapper: TestWrapper });
         const registerLink = await findByText('Cadastrar');
 

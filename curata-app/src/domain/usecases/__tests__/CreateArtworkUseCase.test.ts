@@ -119,4 +119,21 @@ describe('CreateArtworkUseCase', () => {
         });
         expect(result.nearbyArtworks).toHaveLength(0);
     });
+
+    it('deve usar o provedor de data padrão se nenhum for passado no construtor', async () => {
+        const repo = makeMockRepository();
+        const useCase = new CreateArtworkUseCase(
+            repo,
+            () => FIXED_DEVICE_ID,
+            () => FIXED_UUID
+            // não passamos o quarto parâmetro (now)
+        );
+        const result = await useCase.execute({
+            name: 'Obra Data Padrão',
+            type: 'painting',
+            conservationStatus: 'good'
+        });
+        expect(result.artwork.updatedAt).toBeDefined();
+        expect(typeof result.artwork.updatedAt).toBe('string');
+    });
 });

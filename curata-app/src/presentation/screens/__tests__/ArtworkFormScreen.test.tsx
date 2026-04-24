@@ -8,8 +8,8 @@ import { Alert } from 'react-native';
 
 // Mocks
 const mockRepository: any = {
-    save: jest.fn().mockResolvedValue(undefined),
-    findNearby: jest.fn().mockResolvedValue([]),
+    save: jest.fn().mockResolvedValue({ error: null }),
+    findNearby: jest.fn().mockResolvedValue({ data: [], error: null }),
     findAll: jest.fn().mockResolvedValue([]),
     findById: jest.fn().mockResolvedValue({ id: '1', name: 'Mona Lisa', conservationStatus: 'good' }),
 };
@@ -74,9 +74,10 @@ describe('ArtworkFormScreen', () => {
     });
 
     it('should validate required fields', async () => {
-        const { getByText, findByText } = render(<ArtworkFormScreen {...mockProps} />, { wrapper: TestWrapper });
+        const { getByText, findByText, queryByText } = render(<ArtworkFormScreen {...mockProps} />, { wrapper: TestWrapper });
 
         const saveButton = await findByText('Salvar Obra');
+        
         fireEvent.press(saveButton);
 
         await waitFor(() => {
@@ -110,5 +111,21 @@ describe('ArtworkFormScreen', () => {
         fireEvent.press(photoButton);
 
         expect(mockNavigate).toHaveBeenCalledWith('Camera', expect.any(Object));
+    });
+
+    it('should handle save error', async () => {
+        mockRepository.save.mockRejectedValueOnce(new Error('Database error'));
+        const { getByPlaceholderText, getByText, findByText } = render(<ArtworkFormScreen {...mockProps} />, { wrapper: TestWrapper });
+
+        await findByText('Salvar Obra');
+        fireEvent.changeText(getByPlaceholderText('Nome da obra'), 'Nova Escultura');
+        
+        await act(async () => {
+            fireEvent.press(getByText('Salvar Obra'));
+        });
+
+        await waitFor(() => {
+            expect(getByText('Database error')).toBeTruthy();
+        });
     });
 });

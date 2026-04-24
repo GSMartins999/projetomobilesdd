@@ -1,6 +1,6 @@
-import { AuthRepository } from '../../domain/repositories/AuthRepository';
+import { AuthRepository } from '../../repositories/AuthRepository';
 import { LoginUseCase } from '../LoginUseCase';
-import { User } from '../../domain/entities/User';
+import { User } from '../../entities/User';
 
 const mockUser: User = {
     id: 'u1',
@@ -13,6 +13,7 @@ const mockUser: User = {
 
 const makeMockAuthRepository = (): jest.Mocked<AuthRepository> => ({
     signIn: jest.fn(),
+    signUp: jest.fn(),
     signOut: jest.fn(),
     getCurrentUser: jest.fn(),
     refreshToken: jest.fn(),
@@ -52,5 +53,11 @@ describe('LoginUseCase', () => {
 
         await expect(useCase.execute('email@test.com', ''))
             .rejects.toThrow('E-mail e senha são obrigatórios');
+    });
+
+    it('deve usar mensagem de erro padrão se erro não tiver mensagem', async () => {
+        authRepository.signIn.mockRejectedValue({}); // erro sem .message
+        await expect(useCase.execute('a@b.com', 'p'))
+            .rejects.toThrow('Erro ao realizar login');
     });
 });

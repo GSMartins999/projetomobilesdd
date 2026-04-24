@@ -82,6 +82,7 @@ export function LoginScreen() {
                         <TouchableOpacity
                             style={styles.eyeButton}
                             onPress={() => setShowPassword(!showPassword)}
+                            testID="password-toggle"
                         >
                             <MaterialIcons
                                 name={showPassword ? 'visibility-off' : 'visibility'}

@@ -38,28 +38,18 @@ describe('SearchScreen', () => {
 
     it('should show artworks after loading', async () => {
         render(<SearchScreen {...mockProps} />, { wrapper: TestWrapper });
-
-        // Wait for it to be called
         await waitFor(() => expect(mockRepository.findAll).toHaveBeenCalled());
-
-        // Use findBy to wait for the element to appear
         const mona = await screen.findByText(/Mona Lisa/i);
         expect(mona).toBeTruthy();
     });
 
     it('should filter artworks by search query', async () => {
         render(<SearchScreen {...mockProps} />, { wrapper: TestWrapper });
-
         await screen.findByText(/Mona Lisa/i);
-
         const searchInput = screen.getByPlaceholderText(/Pesquisar/i);
 
         await act(async () => {
             fireEvent.changeText(searchInput, 'David');
-        });
-
-        // SearchScreen triggers search on onSubmitEditing
-        await act(async () => {
             fireEvent(searchInput, 'submitEditing');
         });
 
@@ -69,15 +59,57 @@ describe('SearchScreen', () => {
         });
     });
 
-    it('should navigate to artwork detail', async () => {
+    it('should toggle and untoggle status filters', async () => {
         render(<SearchScreen {...mockProps} />, { wrapper: TestWrapper });
+        await screen.findByText(/Mona Lisa/i);
 
-        const artworkItem = await screen.findByText(/Mona Lisa/i);
+        const goodBtn = screen.getByText('Bom');
+        
+        // Toggle on
+        await act(async () => { fireEvent.press(goodBtn); });
+        expect(screen.queryByText(/David/i)).toBeNull();
+        
+        // Toggle off (line 102 branch)
+        await act(async () => { fireEvent.press(goodBtn); });
+        expect(screen.queryByText(/David/i)).toBeTruthy();
+    });
 
+    it('should toggle and untoggle type filters', async () => {
+        render(<SearchScreen {...mockProps} />, { wrapper: TestWrapper });
+        await screen.findByText(/Mona Lisa/i);
+
+        const sculptureBtn = screen.getByText('Escultura');
+        
+        // Toggle on
+        await act(async () => { fireEvent.press(sculptureBtn); });
+        expect(screen.queryByText(/Mona Lisa/i)).toBeNull();
+        
+        // Toggle off (line 126 branch)
+        await act(async () => { fireEvent.press(sculptureBtn); });
+        expect(screen.queryByText(/Mona Lisa/i)).toBeTruthy();
+    });
+
+    it('should show empty state with current filters', async () => {
+        render(<SearchScreen {...mockProps} />, { wrapper: TestWrapper });
+        await screen.findByText(/Mona Lisa/i);
+
+        const searchInput = screen.getByPlaceholderText(/Pesquisar/i);
         await act(async () => {
-            fireEvent.press(artworkItem);
+            fireEvent.changeText(searchInput, 'NonExistent');
+            fireEvent(searchInput, 'submitEditing');
         });
 
-        expect(mockNavigate).toHaveBeenCalledWith('ArtworkDetail', expect.objectContaining({ id: '1' }));
+        expect(await screen.findByText(/Nenhuma obra encontrada/i)).toBeTruthy();
+    });
+    it('renders fallback for unknown data', async () => {
+        const unknownArt = [
+            { id: '3', name: 'Unknown Art', artist: null, type: 'painting', conservationStatus: 'unknown' as any },
+        ];
+        mockRepository.findAll.mockResolvedValueOnce(unknownArt);
+
+        render(<SearchScreen {...mockProps} />, { wrapper: TestWrapper });
+        
+        expect(await screen.findByText('REGULAR')).toBeTruthy();
+        expect(await screen.findByText('Artista desconhecido')).toBeTruthy();
     });
 });

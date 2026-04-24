@@ -111,6 +111,21 @@ describe('AuthRepositoryImpl', () => {
             const result = await repo.signIn('noname@curata.app', 'p');
             expect(result.user.name).toBe('noname'); // split('@')[0]
         });
+
+        it('deve usar Gestor como fallback se email e name forem nulos', async () => {
+            const supabase = makeMockSupabase({
+                signInWithPassword: jest.fn().mockResolvedValue({
+                    data: {
+                        user: { id: 'u1', email: null, user_metadata: {} },
+                        session: { access_token: 'tok' },
+                    },
+                    error: null,
+                }),
+            });
+            const repo = new AuthRepositoryImpl(supabase as any);
+            const result = await repo.signIn('test@test.com', 'p');
+            expect(result.user.name).toBe('Gestor');
+        });
     });
 
     describe('signUp', () => {
@@ -168,6 +183,17 @@ describe('AuthRepositoryImpl', () => {
 
             const user = await repo.getCurrentUser();
             expect(user).toBeNull();
+        });
+
+        it('deve usar fallback no getCurrentUser se metadata for vazia', async () => {
+            const supabase = makeMockSupabase({
+                getUser: jest.fn().mockResolvedValue({
+                    data: { user: { id: 'u1', email: 'user@test.com', user_metadata: {} } }
+                }),
+            });
+            const repo = new AuthRepositoryImpl(supabase as any);
+            const user = await repo.getCurrentUser();
+            expect(user?.name).toBe('user');
         });
     });
 

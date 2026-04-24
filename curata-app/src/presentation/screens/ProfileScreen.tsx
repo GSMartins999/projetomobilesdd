@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -98,7 +98,16 @@ export function ProfileScreen() {
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.menuItem} onPress={logout}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => {
+                Alert.alert(
+                    t('profile.logout_title', 'Sair da conta'),
+                    t('profile.logout_confirm', 'Tem certeza que deseja sair?'),
+                    [
+                        { text: t('common.cancel', 'Cancelar'), style: 'cancel' },
+                        { text: t('common.logout', 'Sair'), style: 'destructive', onPress: logout }
+                    ]
+                );
+            }}>
                 <View style={[styles.menuIconBg, { backgroundColor: '#FDF0F0' }]}>
                     <MaterialIcons name="logout" size={22} color="#E63946" />
                 </View>

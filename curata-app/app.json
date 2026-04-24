@@ -1,73 +1,76 @@
 {
-    "expo": {
-        "name": "Curata",
-        "slug": "curata",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/icon.png",
-        "userInterfaceStyle": "light",
-        "splash": {
-            "image": "./assets/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#1a1a2e"
-        },
-        "ios": {
-            "supportsTablet": false,
-            "bundleIdentifier": "com.curata.app",
-            "newArchEnabled": true,
-            "infoPlist": {
-                "NSCameraUsageDescription": "O Curata precisa da câmera para fotografar obras de arte em campo.",
-                "NSLocationWhenInUseUsageDescription": "O Curata usa a localização para registrar as coordenadas GPS das obras automaticamente.",
-                "NSLocationAlwaysAndWhenInUseUsageDescription": "O Curata usa a localização para registrar as coordenadas GPS das obras automaticamente."
-            }
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#1a1a2e"
-            },
-            "package": "com.curata.app",
-            "newArchEnabled": true,
-            "permissions": [
-                "CAMERA",
-                "ACCESS_FINE_LOCATION",
-                "ACCESS_COARSE_LOCATION",
-                "READ_EXTERNAL_STORAGE",
-                "WRITE_EXTERNAL_STORAGE",
-                "RECEIVE_BOOT_COMPLETED",
-                "VIBRATE"
-            ]
-        },
-        "web": {
-            "favicon": "./assets/favicon.png"
-        },
-        "plugins": [
-            "expo-secure-store",
-            [
-                "expo-camera",
-                {
-                    "cameraPermission": "O Curata precisa da câmera para fotografar obras de arte em campo."
-                }
-            ],
-            [
-                "expo-location",
-                {
-                    "locationAlwaysAndWhenInUsePermission": "O Curata usa a localização para registrar as coordenadas GPS das obras automaticamente."
-                }
-            ],
-            [
-                "expo-notifications",
-                {
-                    "icon": "./assets/notification-icon.png",
-                    "color": "#1a1a2e"
-                }
-            ]
-        ],
-        "scheme": "curata",
-        "extra": {
-            "eas": {
-                "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
-            }
+  "expo": {
+    "name": "Curata",
+    "slug": "curata",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a1a2e"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.curata.app",
+      "newArchEnabled": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "O Curata precisa da câmera para fotografar obras de arte em campo.",
+        "NSLocationWhenInUseUsageDescription": "O Curata usa a localização para registrar as coordenadas GPS das obras automaticamente.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "O Curata usa a localização para registrar as coordenadas GPS das obras automaticamente."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a1a2e"
+      },
+      "package": "com.curata.app",
+      "newArchEnabled": true,
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "O Curata precisa da câmera para fotografar obras de arte em campo."
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "O Curata usa a localização para registrar as coordenadas GPS das obras automaticamente."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#1a1a2e"
+        }
+      ],
+      "expo-localization",
+      "expo-sharing",
+      "expo-sqlite"
+    ],
+    "scheme": "curata",
+    "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      }
     }
+  }
 }

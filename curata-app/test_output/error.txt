@@ -1,0 +1,199 @@
+
+> curata@1.0.0 test
+> jest --watchAll=false --testPathPattern=ArtworkDetailScreen.test.tsx
+
+  console.warn
+    SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/AppAndFlow/react-native-safe-area-context
+
+    [0m [90m 3 |[39m jest[33m.[39mspyOn(console[33m,[39m [32m'warn'[39m)[33m.[39mmockImplementation((msg) [33m=>[39m {
+     [90m 4 |[39m     [36mif[39m (msg[33m?[39m[33m.[39mincludes([32m'Warning:'[39m) [33m||[39m msg[33m?[39m[33m.[39mincludes([32m'componentWillMount'[39m)) [36mreturn[39m[33m;[39m
+    [31m[1m>[22m[39m[90m 5 |[39m     originalWarn(msg)[33m;[39m
+     [90m   |[39m     [31m[1m^[22m[39m
+     [90m 6 |[39m })[33m;[39m
+     [90m 7 |[39m
+     [90m 8 |[39m jest[33m.[39mmock([32m'@expo/vector-icons'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at console.originalWarn (src/__mocks__/setup.ts:5:5)
+      at warn (node_modules/react-native/Libraries/Utilities/warnOnce.js:27:11)
+      at Object.warnOnce [as SafeAreaView] (node_modules/react-native/index.js:98:5)
+      at SafeAreaView (src/presentation/screens/ArtworkDetailScreen.tsx:55:22)
+      at Object.react_stack_bottom_frame (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:15670:20)
+      at renderWithHooks (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:4863:22)
+      at updateFunctionComponent (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7018:19)
+      at beginWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:8499:18)
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at performUnitOfWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13224:22)
+      at workLoopSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13068:41)
+      at renderRootSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13049:11)
+      at performWorkOnRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12181:11)
+      at performWorkOnRootViaSchedulerTask (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2908:7)
+      at Immediate.performWorkUntilDeadline [as _onImmediate] (node_modules/scheduler/cjs/scheduler.native.development.js:45:48)
+
+FAIL src/presentation/screens/__tests__/ArtworkDetailScreen.test.tsx
+  ArtworkDetailScreen
+    × renders loading state initially then shows artwork (406 ms)
+    √ handles no inspections state (54 ms)
+    √ navigates to InspectionForm (56 ms)
+
+  ● ArtworkDetailScreen › renders loading state initially then shows artwork
+
+    Unable to find an element with text: PINTURA
+
+    [36m<View>[39m
+      [36m<RCTScrollView>[39m
+        [36m<View>[39m
+          [36m<View>[39m
+            [36m<Image />[39m
+            [36m<View />[39m
+            [36m<RCTSafeAreaView>[39m
+              [36m<View[39m
+                [33maccessible[39m=[32m{true}[39m
+              [36m>[39m
+                [36m<View />[39m
+              [36m</View>[39m
+              [36m<View>[39m
+                [36m<View[39m
+                  [33maccessible[39m=[32m{true}[39m
+                [36m>[39m
+                  [36m<View />[39m
+                [36m</View>[39m
+                [36m<View[39m
+                  [33maccessible[39m=[32m{true}[39m
+                [36m>[39m
+                  [36m<View />[39m
+                [36m</View>[39m
+              [36m</View>[39m
+            [36m</RCTSafeAreaView>[39m
+            [36m<View>[39m
+              [36m<View>[39m
+                [36m<Text>[39m
+                  [0mGOOD[0m
+                [36m</Text>[39m
+              [36m</View>[39m
+              [36m<Text>[39m
+                [0mID: [0m
+                [0mART-1[0m
+              [36m</Text>[39m
+            [36m</View>[39m
+          [36m</View>[39m
+          [36m<View>[39m
+            [36m<Text>[39m
+              [0mMona Lisa[0m
+            [36m</Text>[39m
+            [36m<View>[39m
+              [36m<View />[39m
+              [36m<Text>[39m
+                [0mEndereço não informado[0m
+              [36m</Text>[39m
+            [36m</View>[39m
+            [36m<View>[39m
+              [36m<View>[39m
+                [36m<View>[39m
+                  [36m<View />[39m
+                [36m</View>[39m
+                [36m<Text>[39m
+                  [0mTIPO[0m
+                [36m</Text>[39m
+                [36m<Text>[39m
+                  [0mpainting[0m
+                [36m</Text>[39m
+              [36m</View>[39m
+              [36m<View>[39m
+                [36m<View>[39m
+                  [36m<View />[39m
+                [36m</View>[39m
+                [36m<Text>[39m
+                  [0mCRIADA[0m
+                [36m</Text>[39m
+                [36m<Text>[39m
+                  [0mJan 2024[0m
+                [36m</Text>[39m
+              [36m</View>[39m
+              [36m<View>[39m
+                [36m<View>[39m
+                  [36m<View />[39m
+                [36m</View>[39m
+                [36m<Text>[39m
+                  [0mINSPETOR[0m
+                [36m</Text>[39m
+                [36m<Text>[39m
+                  [0mDr. Arantes[0m
+                [36m</Text>[39m
+              [36m</View>[39m
+            [36m</View>[39m
+            [36m<View>[39m
+              [36m<Text>[39m
+                [0mInspeções Recentes[0m
+              [36m</Text>[39m
+              [36m<View[39m
+                [33maccessible[39m=[32m{true}[39m
+              [36m>[39m
+                [36m<Text>[39m
+                  [0mVer todas[0m
+                [36m</Text>[39m
+              [36m</View>[39m
+            [36m</View>[39m
+            [36m<View>[39m
+              [36m<View>[39m
+                [36m<View />[39m
+                [36m<View>[39m
+                  [36m<View />[39m
+                [36m</View>[39m
+                [36m<View[39m
+                  [33maccessible[39m=[32m{true}[39m
+                [36m>[39m
+                  [36m<View>[39m
+                    [36m<Text>[39m
+                      [0mInspeção Periódica[0m
+                    [36m</Text>[39m
+                    [36m<Text>[39m
+                      [0m24 DE ABR.[0m
+                    [36m</Text>[39m
+                  [36m</View>[39m
+                  [36m<Text>[39m
+                    [0mOk[0m
+                  [36m</Text>[39m
+                [36m</View>[39m
+              [36m</View>[39m
+            [36m</View>[39m
+            [36m<View />[39m
+          [36m</View>[39m
+        [36m</View>[39m
+      [36m</RCTScrollView>[39m
+      [36m<View>[39m
+        [36m<View[39m
+          [33maccessible[39m=[32m{true}[39m
+        [36m>[39m
+          [36m<View />[39m
+          [36m<Text>[39m
+            [0mNova Inspeção[0m
+          [36m</Text>[39m
+        [36m</View>[39m
+        [36m<View[39m
+          [33maccessible[39m=[32m{true}[39m
+        [36m>[39m
+          [36m<View />[39m
+          [36m<Text>[39m
+            [0mGerar Relatório[0m
+          [36m</Text>[39m
+        [36m</View>[39m
+      [36m</View>[39m
+    [36m</View>[39m
+
+    [0m [90m 41 |[39m
+     [90m 42 |[39m         [36mawait[39m findByText([32m'Mona Lisa'[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 43 |[39m         expect(getByText([32m'PINTURA'[39m))[33m.[39mtoBeTruthy()[33m;[39m [90m// the type might be rendered[39m
+     [90m    |[39m                [31m[1m^[22m[39m
+     [90m 44 |[39m     })[33m;[39m
+     [90m 45 |[39m
+     [90m 46 |[39m     it([32m'handles no inspections state'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at Object.getByText (src/presentation/screens/__tests__/ArtworkDetailScreen.test.tsx:43:16)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 2 passed, 3 total
+Snapshots:   0 total
+Time:        1.82 s, estimated 2 s
+Ran all test suites matching /ArtworkDetailScreen.test.tsx/i.

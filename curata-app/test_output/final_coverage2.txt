@@ -1,0 +1,1152 @@
+
+> curata@1.0.0 test:coverage
+> jest --coverage --forceExit
+
+PASS src/presentation/screens/__tests__/InspectionHistoryScreen.test.tsx
+PASS src/presentation/screens/__tests__/ProfileScreen.test.tsx
+PASS src/presentation/screens/__tests__/MapScreen.test.tsx
+  ● Console
+
+    console.warn
+      SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/AppAndFlow/react-native-safe-area-context
+
+    [0m [90m 3 |[39m jest[33m.[39mspyOn(console[33m,[39m [32m'warn'[39m)[33m.[39mmockImplementation((msg) [33m=>[39m {
+     [90m 4 |[39m     [36mif[39m (msg[33m?[39m[33m.[39mincludes([32m'Warning:'[39m) [33m||[39m msg[33m?[39m[33m.[39mincludes([32m'componentWillMount'[39m)) [36mreturn[39m[33m;[39m
+    [31m[1m>[22m[39m[90m 5 |[39m     originalWarn(msg)[33m;[39m
+     [90m   |[39m     [31m[1m^[22m[39m
+     [90m 6 |[39m })[33m;[39m
+     [90m 7 |[39m
+     [90m 8 |[39m jest[33m.[39mmock([32m'@expo/vector-icons'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at console.originalWarn (src/__mocks__/setup.ts:5:5)
+      at warn (node_modules/react-native/Libraries/Utilities/warnOnce.js:27:11)
+      at Object.warnOnce [as SafeAreaView] (node_modules/react-native/index.js:98:5)
+      at SafeAreaView (src/presentation/screens/MapScreen.tsx:35:10)
+      at Object.react_stack_bottom_frame (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:15670:20)
+      at renderWithHooks (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:4863:22)
+      at updateFunctionComponent (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7018:19)
+      at beginWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:8499:18)
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at performUnitOfWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13224:22)
+      at workLoopSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13068:41)
+      at renderRootSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13049:11)
+      at performWorkOnRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12181:11)
+      at performWorkOnRootViaSchedulerTask (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2908:7)
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at actImplementation (node_modules/@testing-library/react-native/src/act.ts:30:25)
+      at renderWithAct (node_modules/@testing-library/react-native/src/render-act.ts:13:11)
+      at renderInternal (node_modules/@testing-library/react-native/src/render.tsx:69:33)
+      at renderInternal (node_modules/@testing-library/react-native/src/render.tsx:44:10)
+      at Object.<anonymous> (src/presentation/screens/__tests__/MapScreen.test.tsx:31:38)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at Object.<anonymous> (node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12)
+
+PASS src/presentation/screens/__tests__/PdfPreviewScreen.test.tsx
+  ● Console
+
+    console.warn
+      SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/AppAndFlow/react-native-safe-area-context
+
+    [0m [90m 3 |[39m jest[33m.[39mspyOn(console[33m,[39m [32m'warn'[39m)[33m.[39mmockImplementation((msg) [33m=>[39m {
+     [90m 4 |[39m     [36mif[39m (msg[33m?[39m[33m.[39mincludes([32m'Warning:'[39m) [33m||[39m msg[33m?[39m[33m.[39mincludes([32m'componentWillMount'[39m)) [36mreturn[39m[33m;[39m
+    [31m[1m>[22m[39m[90m 5 |[39m     originalWarn(msg)[33m;[39m
+     [90m   |[39m     [31m[1m^[22m[39m
+     [90m 6 |[39m })[33m;[39m
+     [90m 7 |[39m
+     [90m 8 |[39m jest[33m.[39mmock([32m'@expo/vector-icons'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at console.originalWarn (src/__mocks__/setup.ts:5:5)
+      at warn (node_modules/react-native/Libraries/Utilities/warnOnce.js:27:11)
+      at Object.warnOnce [as SafeAreaView] (node_modules/react-native/index.js:98:5)
+      at SafeAreaView (src/presentation/screens/PdfPreviewScreen.tsx:17:10)
+      at Object.react_stack_bottom_frame (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:15670:20)
+      at renderWithHooks (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:4863:22)
+      at updateFunctionComponent (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7018:19)
+      at beginWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:8499:18)
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at performUnitOfWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13224:22)
+      at workLoopSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13068:41)
+      at renderRootSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13049:11)
+      at performWorkOnRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12181:11)
+      at performWorkOnRootViaSchedulerTask (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2908:7)
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at actImplementation (node_modules/@testing-library/react-native/src/act.ts:30:25)
+      at renderWithAct (node_modules/@testing-library/react-native/src/render-act.ts:13:11)
+      at renderInternal (node_modules/@testing-library/react-native/src/render.tsx:69:33)
+      at renderInternal (node_modules/@testing-library/react-native/src/render.tsx:44:10)
+      at Object.<anonymous> (src/presentation/screens/__tests__/PdfPreviewScreen.test.tsx:18:37)
+
+PASS src/presentation/screens/__tests__/ReportGeneratorScreen.test.tsx
+  ● Console
+
+    console.warn
+      SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/AppAndFlow/react-native-safe-area-context
+
+    [0m [90m 3 |[39m jest[33m.[39mspyOn(console[33m,[39m [32m'warn'[39m)[33m.[39mmockImplementation((msg) [33m=>[39m {
+     [90m 4 |[39m     [36mif[39m (msg[33m?[39m[33m.[39mincludes([32m'Warning:'[39m) [33m||[39m msg[33m?[39m[33m.[39mincludes([32m'componentWillMount'[39m)) [36mreturn[39m[33m;[39m
+    [31m[1m>[22m[39m[90m 5 |[39m     originalWarn(msg)[33m;[39m
+     [90m   |[39m     [31m[1m^[22m[39m
+     [90m 6 |[39m })[33m;[39m
+     [90m 7 |[39m
+     [90m 8 |[39m jest[33m.[39mmock([32m'@expo/vector-icons'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at console.originalWarn (src/__mocks__/setup.ts:5:5)
+      at warn (node_modules/react-native/Libraries/Utilities/warnOnce.js:27:11)
+      at Object.warnOnce [as SafeAreaView] (node_modules/react-native/index.js:98:5)
+      at SafeAreaView (src/presentation/screens/ReportGeneratorScreen.tsx:28:10)
+      at Object.react_stack_bottom_frame (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:15670:20)
+      at renderWithHooks (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:4863:22)
+      at updateFunctionComponent (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7018:19)
+      at beginWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:8499:18)
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at performUnitOfWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13224:22)
+      at workLoopSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13068:41)
+      at renderRootSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13049:11)
+      at performWorkOnRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12181:11)
+      at performWorkOnRootViaSchedulerTask (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2908:7)
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at actImplementation (node_modules/@testing-library/react-native/src/act.ts:30:25)
+      at renderWithAct (node_modules/@testing-library/react-native/src/render-act.ts:13:11)
+      at renderInternal (node_modules/@testing-library/react-native/src/render.tsx:69:33)
+      at renderInternal (node_modules/@testing-library/react-native/src/render.tsx:44:10)
+      at Object.<anonymous> (src/presentation/screens/__tests__/ReportGeneratorScreen.test.tsx:22:37)
+
+PASS src/presentation/screens/__tests__/SearchScreen.test.tsx
+PASS src/presentation/screens/__tests__/ArtworkDetailScreen.test.tsx
+  ● Console
+
+    console.warn
+      SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/AppAndFlow/react-native-safe-area-context
+
+    [0m [90m 3 |[39m jest[33m.[39mspyOn(console[33m,[39m [32m'warn'[39m)[33m.[39mmockImplementation((msg) [33m=>[39m {
+     [90m 4 |[39m     [36mif[39m (msg[33m?[39m[33m.[39mincludes([32m'Warning:'[39m) [33m||[39m msg[33m?[39m[33m.[39mincludes([32m'componentWillMount'[39m)) [36mreturn[39m[33m;[39m
+    [31m[1m>[22m[39m[90m 5 |[39m     originalWarn(msg)[33m;[39m
+     [90m   |[39m     [31m[1m^[22m[39m
+     [90m 6 |[39m })[33m;[39m
+     [90m 7 |[39m
+     [90m 8 |[39m jest[33m.[39mmock([32m'@expo/vector-icons'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at console.originalWarn (src/__mocks__/setup.ts:5:5)
+      at warn (node_modules/react-native/Libraries/Utilities/warnOnce.js:27:11)
+      at Object.warnOnce [as SafeAreaView] (node_modules/react-native/index.js:98:5)
+      at SafeAreaView (src/presentation/screens/ArtworkDetailScreen.tsx:55:22)
+      at Object.react_stack_bottom_frame (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:15670:20)
+      at renderWithHooks (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:4863:22)
+      at updateFunctionComponent (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7018:19)
+      at beginWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:8499:18)
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at performUnitOfWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13224:22)
+      at workLoopSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13068:41)
+      at renderRootSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13049:11)
+      at performWorkOnRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12181:11)
+      at performWorkOnRootViaSchedulerTask (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2908:7)
+      at Immediate.performWorkUntilDeadline [as _onImmediate] (node_modules/scheduler/cjs/scheduler.native.development.js:45:48)
+
+PASS src/data/repositories/__tests__/ArtworkRepositoryImpl.test.ts
+PASS src/presentation/screens/__tests__/OnboardingScreen.test.tsx
+PASS src/presentation/screens/__tests__/LoginScreen.test.tsx
+  ● Console
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+PASS src/presentation/screens/__tests__/RegisterScreen.test.tsx
+PASS src/data/db/__tests__/Client.test.ts
+  ● Console
+
+    console.log
+      [Database] Inicializando banco de dados...
+
+      at log (src/data/db/client.ts:15:13)
+
+    console.log
+      [Database] Tabelas criadas/verificadas com sucesso.
+
+      at log (src/data/db/client.ts:72:13)
+
+PASS src/presentation/screens/__tests__/InspectionFormScreen.test.tsx
+PASS src/presentation/screens/__tests__/ArtworkFormScreen.test.tsx
+PASS src/presentation/screens/__tests__/DashboardScreen.test.tsx
+PASS src/presentation/screens/__tests__/CameraScreen.test.tsx
+PASS src/presentation/screens/__tests__/SmokeTests.test.tsx
+  ● Console
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to DashboardScreen inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 17 |[39m             [36mconst[39m useCase [33m=[39m [36mnew[39m [33mGetDashboardStatsUseCase[39m(artworkRepository)[33m;[39m
+     [90m 18 |[39m             [36mconst[39m data [33m=[39m [36mawait[39m useCase[33m.[39mexecute()[33m;[39m
+    [31m[1m>[22m[39m[90m 19 |[39m             setStats(data)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 20 |[39m         }
+     [90m 21 |[39m         load()[33m;[39m
+     [90m 22 |[39m     }[33m,[39m [isSyncing])[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setStats (src/presentation/screens/DashboardScreen.tsx:19:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to SearchScreen inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 45 |[39m             conservationStatus[33m:[39m selectedStatus [33m||[39m undefined[33m,[39m
+     [90m 46 |[39m         })[33m;[39m
+    [31m[1m>[22m[39m[90m 47 |[39m         setResults(data)[33m;[39m
+     [90m    |[39m         [31m[1m^[22m[39m
+     [90m 48 |[39m     }[33m;[39m
+     [90m 49 |[39m
+     [90m 50 |[39m     useEffect(() [33m=>[39m {[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setResults (src/presentation/screens/SearchScreen.tsx:47:9)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.warn
+      SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/AppAndFlow/react-native-safe-area-context
+
+    [0m [90m 3 |[39m jest[33m.[39mspyOn(console[33m,[39m [32m'warn'[39m)[33m.[39mmockImplementation((msg) [33m=>[39m {
+     [90m 4 |[39m     [36mif[39m (msg[33m?[39m[33m.[39mincludes([32m'Warning:'[39m) [33m||[39m msg[33m?[39m[33m.[39mincludes([32m'componentWillMount'[39m)) [36mreturn[39m[33m;[39m
+    [31m[1m>[22m[39m[90m 5 |[39m     originalWarn(msg)[33m;[39m
+     [90m   |[39m     [31m[1m^[22m[39m
+     [90m 6 |[39m })[33m;[39m
+     [90m 7 |[39m
+     [90m 8 |[39m jest[33m.[39mmock([32m'@expo/vector-icons'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at console.originalWarn (src/__mocks__/setup.ts:5:5)
+      at warn (node_modules/react-native/Libraries/Utilities/warnOnce.js:27:11)
+      at Object.warnOnce [as SafeAreaView] (node_modules/react-native/index.js:98:5)
+      at SafeAreaView (src/presentation/screens/NotificationsScreen.tsx:70:10)
+      at Object.react_stack_bottom_frame (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:15670:20)
+      at renderWithHooks (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:4863:22)
+      at updateFunctionComponent (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7018:19)
+      at beginWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:8499:18)
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at performUnitOfWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13224:22)
+      at workLoopSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13068:41)
+      at renderRootSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13049:11)
+      at performWorkOnRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12181:11)
+      at performWorkOnRootViaSchedulerTask (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2908:7)
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at actImplementation (node_modules/@testing-library/react-native/src/act.ts:30:25)
+      at renderWithAct (node_modules/@testing-library/react-native/src/render-act.ts:13:11)
+      at renderInternal (node_modules/@testing-library/react-native/src/render.tsx:69:33)
+      at renderInternal (node_modules/@testing-library/react-native/src/render.tsx:44:10)
+      at Object.<anonymous> (src/presentation/screens/__tests__/SmokeTests.test.tsx:84:53)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to ArtworkFormScreen inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 53 |[39m             [36mif[39m (status [33m===[39m [32m'granted'[39m) {
+     [90m 54 |[39m                 [36mconst[39m loc [33m=[39m [36mawait[39m [33mLocation[39m[33m.[39mgetCurrentPositionAsync({})[33m;[39m
+    [31m[1m>[22m[39m[90m 55 |[39m                 setLocation(loc)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 56 |[39m                 [36mconst[39m addr [33m=[39m [36mawait[39m geocodingService[33m.[39mreverseGeocode(loc[33m.[39mcoords[33m.[39mlatitude[33m,[39m loc[33m.[39mcoords[33m.[39mlongitude)[33m;[39m
+     [90m 57 |[39m                 setAddress(addr)[33m;[39m
+     [90m 58 |[39m                 [36mconst[39m nearby [33m=[39m [36mawait[39m duplicateDetectionUseCase[33m.[39mexecute(loc[33m.[39mcoords[33m.[39mlatitude[33m,[39m loc[33m.[39mcoords[33m.[39mlongitude)[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setLocation (src/presentation/screens/ArtworkFormScreen.tsx:55:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to ArtworkFormScreen inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 55 |[39m                 setLocation(loc)[33m;[39m
+     [90m 56 |[39m                 [36mconst[39m addr [33m=[39m [36mawait[39m geocodingService[33m.[39mreverseGeocode(loc[33m.[39mcoords[33m.[39mlatitude[33m,[39m loc[33m.[39mcoords[33m.[39mlongitude)[33m;[39m
+    [31m[1m>[22m[39m[90m 57 |[39m                 setAddress(addr)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 58 |[39m                 [36mconst[39m nearby [33m=[39m [36mawait[39m duplicateDetectionUseCase[33m.[39mexecute(loc[33m.[39mcoords[33m.[39mlatitude[33m,[39m loc[33m.[39mcoords[33m.[39mlongitude)[33m;[39m
+     [90m 59 |[39m                 [36mif[39m (nearby[33m.[39mlength [33m>[39m [35m0[39m) {
+     [90m 60 |[39m                     [33mAlert[39m[33m.[39malert([0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setAddress (src/presentation/screens/ArtworkFormScreen.tsx:57:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to InspectionHistoryScreen inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 20 |[39m         [36masync[39m [36mfunction[39m load() {
+     [90m 21 |[39m             [36mconst[39m data [33m=[39m [36mawait[39m inspectionRepository[33m.[39mfindByArtworkId(artworkId)[33m;[39m
+    [31m[1m>[22m[39m[90m 22 |[39m             setInspections(data[33m.[39msort((a[33m,[39m b) [33m=>[39m [36mnew[39m [33mDate[39m(b[33m.[39mupdatedAt)[33m.[39mgetTime() [33m-[39m [36mnew[39m [33mDate[39m(a[33m.[39mupdatedAt)[33m.[39mgetTime()))[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 23 |[39m         }
+     [90m 24 |[39m         load()[33m;[39m
+     [90m 25 |[39m     }[33m,[39m [artworkId])[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setInspections (src/presentation/screens/InspectionHistoryScreen.tsx:22:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to MapScreen inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 21 |[39m         [36masync[39m [36mfunction[39m init() {
+     [90m 22 |[39m             [36mconst[39m data [33m=[39m [36mawait[39m artworkRepository[33m.[39mfindAll()[33m;[39m
+    [31m[1m>[22m[39m[90m 23 |[39m             setArtworks(data)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 24 |[39m
+     [90m 25 |[39m             [36mconst[39m { status } [33m=[39m [36mawait[39m [33mLocation[39m[33m.[39mrequestForegroundPermissionsAsync()[33m;[39m
+     [90m 26 |[39m             [36mif[39m (status [33m===[39m [32m'granted'[39m) {[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setArtworks (src/presentation/screens/MapScreen.tsx:23:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to MapScreen inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 26 |[39m             [36mif[39m (status [33m===[39m [32m'granted'[39m) {
+     [90m 27 |[39m                 [36mconst[39m loc [33m=[39m [36mawait[39m [33mLocation[39m[33m.[39mgetCurrentPositionAsync({})[33m;[39m
+    [31m[1m>[22m[39m[90m 28 |[39m                 setUserLocation({ lat[33m:[39m loc[33m.[39mcoords[33m.[39mlatitude[33m,[39m lng[33m:[39m loc[33m.[39mcoords[33m.[39mlongitude })[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 29 |[39m             }
+     [90m 30 |[39m         }
+     [90m 31 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setUserLocation (src/presentation/screens/MapScreen.tsx:28:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+    console.error
+      An update to AuthProvider inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+    [0m [90m 36 |[39m                 console[33m.[39merror([32m'[AuthContext] Error recovery session:'[39m[33m,[39m error)[33m;[39m
+     [90m 37 |[39m             } [36mfinally[39m {
+    [31m[1m>[22m[39m[90m 38 |[39m                 setIsLoading([36mfalse[39m)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 39 |[39m             }
+     [90m 40 |[39m         }
+     [90m 41 |[39m         init()[33m;[39m[0m
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14402:19
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14401:9)
+      at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12086:9)
+      at dispatchSetStateInternal (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6208:13)
+      at dispatchSetState (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6165:7)
+      at setIsLoading (src/infrastructure/auth/AuthContext.tsx:38:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+PASS src/domain/schemas/__tests__/InspectionFormSchema.test.tsx
+PASS src/data/repositories/__tests__/PhotoRepositoryImpl.test.ts
+PASS src/infrastructure/auth/__tests__/AuthContext.test.tsx
+PASS src/domain/usecases/__tests__/GenerateReportUseCase.test.ts
+  ● Console
+
+    console.error
+      [GenerateReportUseCase] Error generating PDF: Error: Print error
+          at Object.<anonymous> (C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\domain\usecases\__tests__\GenerateReportUseCase.test.ts:106:69)
+          at Generator.next (<anonymous>)
+          at asyncGeneratorStep (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\@babel\runtime\helpers\asyncToGenerator.js:3:17)
+          at _next (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\@babel\runtime\helpers\asyncToGenerator.js:17:9)
+          at C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\@babel\runtime\helpers\asyncToGenerator.js:22:7
+          at new Promise (<anonymous>)
+          at Object.<anonymous> (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\@babel\runtime\helpers\asyncToGenerator.js:14:12)
+          at Promise.then.completed (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\utils.js:298:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\utils.js:231:10)
+          at _callCircusTest (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\run.js:316:40)
+          at processTicksAndRejections (node:internal/process/task_queues:95:5)
+          at _runTest (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\run.js:252:3)
+          at _runTestsForDescribeBlock (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\run.js:126:9)
+          at _runTestsForDescribeBlock (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\run.js:121:9)
+          at run (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\run.js:71:3)
+          at runAndTransformResultsToJestFormat (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+          at jestAdapter (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+          at runTestInternal (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-runner\build\runTest.js:367:16)
+          at runTest (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-runner\build\runTest.js:444:34)
+          at Object.worker (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-runner\build\testWorker.js:106:12)
+
+    [0m [90m 40 |[39m             [36mawait[39m [33mSharing[39m[33m.[39mshareAsync(uri[33m,[39m { [33mUTI[39m[33m:[39m [32m'.pdf'[39m[33m,[39m mimeType[33m:[39m [32m'application/pdf'[39m })[33m;[39m
+     [90m 41 |[39m         } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 42 |[39m             console[33m.[39merror([32m'[GenerateReportUseCase] Error generating PDF:'[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m                     [31m[1m^[22m[39m
+     [90m 43 |[39m             [36mthrow[39m [36mnew[39m [33mError[39m([32m'Falha ao gerar relatório PDF'[39m)[33m;[39m
+     [90m 44 |[39m         }
+     [90m 45 |[39m     }[0m
+
+      at GenerateReportUseCase.error (src/domain/usecases/GenerateReportUseCase.ts:42:21)
+          at Generator.throw (<anonymous>)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _throw (node_modules/@babel/runtime/helpers/asyncToGenerator.js:20:9)
+
+    console.error
+      [GenerateReportUseCase] Error generating PDF: Error: Share error
+          at Object.<anonymous> (C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\domain\usecases\__tests__\GenerateReportUseCase.test.ts:113:65)
+          at Generator.next (<anonymous>)
+          at asyncGeneratorStep (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\@babel\runtime\helpers\asyncToGenerator.js:3:17)
+          at _next (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\@babel\runtime\helpers\asyncToGenerator.js:17:9)
+          at C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\@babel\runtime\helpers\asyncToGenerator.js:22:7
+          at new Promise (<anonymous>)
+          at Object.<anonymous> (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\@babel\runtime\helpers\asyncToGenerator.js:14:12)
+          at Promise.then.completed (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\utils.js:298:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\utils.js:231:10)
+          at _callCircusTest (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\run.js:316:40)
+          at processTicksAndRejections (node:internal/process/task_queues:95:5)
+          at _runTest (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\run.js:252:3)
+          at _runTestsForDescribeBlock (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\run.js:126:9)
+          at _runTestsForDescribeBlock (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\run.js:121:9)
+          at run (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\run.js:71:3)
+          at runAndTransformResultsToJestFormat (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+          at jestAdapter (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+          at runTestInternal (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-runner\build\runTest.js:367:16)
+          at runTest (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-runner\build\runTest.js:444:34)
+          at Object.worker (C:\Users\giova\Desktop\projetomobilesdd\curata-app\node_modules\jest-runner\build\testWorker.js:106:12)
+
+    [0m [90m 40 |[39m             [36mawait[39m [33mSharing[39m[33m.[39mshareAsync(uri[33m,[39m { [33mUTI[39m[33m:[39m [32m'.pdf'[39m[33m,[39m mimeType[33m:[39m [32m'application/pdf'[39m })[33m;[39m
+     [90m 41 |[39m         } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 42 |[39m             console[33m.[39merror([32m'[GenerateReportUseCase] Error generating PDF:'[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m                     [31m[1m^[22m[39m
+     [90m 43 |[39m             [36mthrow[39m [36mnew[39m [33mError[39m([32m'Falha ao gerar relatório PDF'[39m)[33m;[39m
+     [90m 44 |[39m         }
+     [90m 45 |[39m     }[0m
+
+      at GenerateReportUseCase.error (src/domain/usecases/GenerateReportUseCase.ts:42:21)
+          at Generator.throw (<anonymous>)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _throw (node_modules/@babel/runtime/helpers/asyncToGenerator.js:20:9)
+
+PASS src/domain/usecases/__tests__/CreateInspectionUseCase.test.ts
+PASS src/presentation/screens/__tests__/InspectionDetailScreen.test.tsx
+PASS src/data/repositories/__tests__/MockAuthRepositoryImpl.test.ts
+PASS src/infrastructure/sync/__tests__/SyncContext.test.tsx
+PASS src/infrastructure/di/__tests__/DIContext.test.tsx
+PASS src/data/services/__tests__/SyncService.test.tsx
+PASS src/domain/usecases/__tests__/GetDashboardStatsUseCase.test.ts
+PASS src/domain/usecases/__tests__/CapturePhotoUseCase.test.ts
+PASS src/data/repositories/__tests__/AuthRepositoryImpl.test.ts
+PASS src/infrastructure/services/__tests__/GeocodingService.test.ts
+PASS src/infrastructure/notifications/__tests__/NotificationService.test.ts
+PASS src/domain/usecases/__tests__/CreateArtworkUseCase.test.ts
+PASS src/infrastructure/services/__tests__/CameraService.test.ts
+PASS src/data/repositories/__tests__/InspectionRepositoryImpl.test.ts
+PASS src/data/db/__tests__/Schema.test.ts
+PASS src/domain/usecases/__tests__/LoginUseCase.test.ts
+PASS src/domain/usecases/__tests__/LogoutUseCase.test.ts
+PASS src/domain/usecases/__tests__/DuplicateDetectionUseCase.test.ts
+PASS src/domain/usecases/__tests__/SearchArtworksUseCase.test.ts
+PASS src/data/repositories/__tests__/mockDb.ts
+PASS src/presentation/screens/__tests__/NotificationsScreen.test.tsx
+  ● Console
+
+    console.warn
+      SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/AppAndFlow/react-native-safe-area-context
+
+    [0m [90m 3 |[39m jest[33m.[39mspyOn(console[33m,[39m [32m'warn'[39m)[33m.[39mmockImplementation((msg) [33m=>[39m {
+     [90m 4 |[39m     [36mif[39m (msg[33m?[39m[33m.[39mincludes([32m'Warning:'[39m) [33m||[39m msg[33m?[39m[33m.[39mincludes([32m'componentWillMount'[39m)) [36mreturn[39m[33m;[39m
+    [31m[1m>[22m[39m[90m 5 |[39m     originalWarn(msg)[33m;[39m
+     [90m   |[39m     [31m[1m^[22m[39m
+     [90m 6 |[39m })[33m;[39m
+     [90m 7 |[39m
+     [90m 8 |[39m jest[33m.[39mmock([32m'@expo/vector-icons'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at console.originalWarn (src/__mocks__/setup.ts:5:5)
+      at warn (node_modules/react-native/Libraries/Utilities/warnOnce.js:27:11)
+      at Object.warnOnce [as SafeAreaView] (node_modules/react-native/index.js:98:5)
+      at SafeAreaView (src/presentation/screens/NotificationsScreen.tsx:70:10)
+      at Object.react_stack_bottom_frame (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:15670:20)
+      at renderWithHooks (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:4863:22)
+      at updateFunctionComponent (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7018:19)
+      at beginWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:8499:18)
+      at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13)
+      at performUnitOfWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13224:22)
+      at workLoopSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13068:41)
+      at renderRootSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13049:11)
+      at performWorkOnRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12181:11)
+      at performWorkOnRootViaSchedulerTask (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2908:7)
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at actImplementation (node_modules/@testing-library/react-native/src/act.ts:30:25)
+      at renderWithAct (node_modules/@testing-library/react-native/src/render-act.ts:13:11)
+      at renderInternal (node_modules/@testing-library/react-native/src/render.tsx:69:33)
+      at renderInternal (node_modules/@testing-library/react-native/src/render.tsx:44:10)
+      at Object.<anonymous> (src/presentation/screens/__tests__/NotificationsScreen.test.tsx:22:51)
+
+----------------------------------|---------|----------|---------|---------|------------------------------
+File                              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s            
+----------------------------------|---------|----------|---------|---------|------------------------------
+All files                         |    89.5 |    81.31 |   87.03 |   89.89 |                              
+ src                              |       0 |        0 |       0 |       0 |                              
+  App.tsx                         |       0 |        0 |       0 |       0 | 24-93                        
+ src/data/db                      |     100 |      100 |     100 |     100 |                              
+  client.ts                       |     100 |      100 |     100 |     100 |                              
+ src/data/repositories            |   98.98 |    81.48 |     100 |     100 |                              
+  ArtworkRepositoryImpl.ts        |     100 |      100 |     100 |     100 |                              
+  AuthRepositoryImpl.ts           |     100 |    84.61 |     100 |     100 | 19,39-44,68                  
+  InspectionRepositoryImpl.ts     |   91.66 |       50 |     100 |     100 | 21                           
+  MockAuthRepositoryImpl.ts       |     100 |    66.66 |     100 |     100 | 22-41                        
+  PhotoRepositoryImpl.ts          |     100 |      100 |     100 |     100 |                              
+ src/data/services                |   94.73 |    78.57 |     100 |     100 |                              
+  SyncServiceImpl.ts              |   94.73 |    78.57 |     100 |     100 | 48,66,89                     
+ src/domain/entities              |       0 |        0 |       0 |       0 |                              
+  Artwork.ts                      |       0 |        0 |       0 |       0 |                              
+  Inspection.ts                   |       0 |        0 |       0 |       0 |                              
+  User.ts                         |       0 |        0 |       0 |       0 |                              
+ src/domain/repositories          |       0 |        0 |       0 |       0 |                              
+  ArtworkRepository.ts            |       0 |        0 |       0 |       0 |                              
+  AuthRepository.ts               |       0 |        0 |       0 |       0 |                              
+  InspectionRepository.ts         |       0 |        0 |       0 |       0 |                              
+  PhotoRepository.ts              |       0 |        0 |       0 |       0 |                              
+ src/domain/schemas               |     100 |      100 |     100 |     100 |                              
+  InspectionFormSchema.ts         |     100 |      100 |     100 |     100 |                              
+ src/domain/services              |       0 |        0 |       0 |       0 |                              
+  CameraService.ts                |       0 |        0 |       0 |       0 |                              
+  SyncService.ts                  |       0 |        0 |       0 |       0 |                              
+ src/domain/usecases              |     100 |    98.55 |     100 |     100 |                              
+  CapturePhotoUseCase.ts          |     100 |      100 |     100 |     100 |                              
+  CreateArtworkUseCase.ts         |     100 |      100 |     100 |     100 |                              
+  CreateInspectionUseCase.ts      |     100 |      100 |     100 |     100 |                              
+  DuplicateDetectionUseCase.ts    |     100 |      100 |     100 |     100 |                              
+  GenerateReportUseCase.ts        |     100 |      100 |     100 |     100 |                              
+  GetDashboardStatsUseCase.ts     |     100 |      100 |     100 |     100 |                              
+  LoginUseCase.ts                 |     100 |    83.33 |     100 |     100 | 15                           
+  LogoutUseCase.ts                |     100 |      100 |     100 |     100 |                              
+  SearchArtworksUseCase.ts        |     100 |      100 |     100 |     100 |                              
+ src/infrastructure/auth          |     100 |      100 |     100 |     100 |                              
+  AuthContext.tsx                 |     100 |      100 |     100 |     100 |                              
+ src/infrastructure/di            |     100 |      100 |     100 |     100 |                              
+  DIContext.tsx                   |     100 |      100 |     100 |     100 |                              
+ src/infrastructure/notifications |     100 |      100 |     100 |     100 |                              
+  NotificationService.ts          |     100 |      100 |     100 |     100 |                              
+ src/infrastructure/services      |     100 |      100 |     100 |     100 |                              
+  CameraServiceImpl.ts            |     100 |      100 |     100 |     100 |                              
+  GeocodingService.ts             |     100 |      100 |     100 |     100 |                              
+ src/infrastructure/sync          |     100 |      100 |     100 |     100 |                              
+  SyncContext.tsx                 |     100 |      100 |     100 |     100 |                              
+ src/presentation/screens         |   85.31 |    75.82 |   76.63 |   85.95 |                              
+  ArtworkDetailScreen.tsx         |   78.26 |    85.71 |      50 |   80.95 | 58-121,143,179               
+  ArtworkFormScreen.tsx           |   95.34 |     87.5 |      90 |   95.34 | 64,92                        
+  CameraScreen.tsx                |   79.41 |    68.18 |     100 |   81.25 | 51-54,62-63                  
+  DashboardScreen.tsx             |     100 |       70 |     100 |     100 | 47-49,54                     
+  InspectionDetailScreen.tsx      |   68.75 |    33.33 |      75 |   66.66 | 17-19,27-61                  
+  InspectionFormScreen.tsx        |   87.23 |    90.47 |    87.5 |   88.37 | 36,51-52,84,147              
+  InspectionHistoryScreen.tsx     |   93.33 |       50 |   85.71 |     100 | 35                           
+  LoginScreen.tsx                 |   94.73 |    78.57 |      75 |   94.73 | 84                           
+  MapScreen.tsx                   |   94.44 |    76.92 |   83.33 |   94.44 | 104                          
+  NotificationsScreen.tsx         |   91.66 |      100 |      75 |   91.66 | 72                           
+  OnboardingScreen.tsx            |   56.75 |    61.11 |   55.55 |   55.55 | 67-72,81,86-90,95-99,176-177 
+  PdfPreviewScreen.tsx            |      60 |      100 |   33.33 |      60 | 19-45                        
+  ProfileScreen.tsx               |    87.5 |    78.57 |      75 |    87.5 | 55                           
+  RegisterScreen.tsx              |   96.66 |    84.21 |      75 |   96.66 | 108                          
+  ReportGeneratorScreen.tsx       |   81.81 |      100 |   66.66 |   81.81 | 30,100                       
+  SearchScreen.tsx                |   92.59 |    54.16 |      80 |   92.59 | 102,126                      
+----------------------------------|---------|----------|---------|---------|------------------------------
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\ProfileScreen.tsx" coverage threshold for functions (80%) not met: 75%
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\PdfPreviewScreen.tsx" coverage threshold for lines (80%) not met: 60%
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\PdfPreviewScreen.tsx" coverage threshold for functions (80%) not met: 33.33%
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\ReportGeneratorScreen.tsx" coverage threshold for functions (80%) not met: 66.66%
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\ArtworkDetailScreen.tsx" coverage threshold for functions (80%) not met: 50%
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\OnboardingScreen.tsx" coverage threshold for lines (80%) not met: 55.55%
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\OnboardingScreen.tsx" coverage threshold for functions (80%) not met: 55.55%
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\LoginScreen.tsx" coverage threshold for functions (80%) not met: 75%
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\RegisterScreen.tsx" coverage threshold for functions (80%) not met: 75%
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\InspectionDetailScreen.tsx" coverage threshold for lines (80%) not met: 66.66%
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\InspectionDetailScreen.tsx" coverage threshold for functions (80%) not met: 75%
+Jest: "C:\Users\giova\Desktop\projetomobilesdd\curata-app\src\presentation\screens\NotificationsScreen.tsx" coverage threshold for functions (80%) not met: 75%
+
+Test Suites: 42 passed, 42 total
+Tests:       203 passed, 203 total
+Snapshots:   0 total
+Time:        6.818 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

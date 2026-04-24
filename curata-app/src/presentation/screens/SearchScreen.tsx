@@ -49,7 +49,7 @@ export function SearchScreen({ navigation }: any) {
 
     useEffect(() => {
         handleSearch();
-    }, [selectedType, selectedStatus]);
+    }, [query, selectedType, selectedStatus]);
 
     const statusFilters: { key: ConservationStatus; label: string }[] = [
         { key: 'urgent', label: 'Urgente' },
@@ -145,7 +145,7 @@ export function SearchScreen({ navigation }: any) {
                 contentContainerStyle={styles.resultsList}
                 renderItem={({ item }) => {
                     const status = statusColors[item.conservationStatus] || statusColors.fair;
-                    const label = statusLabels[item.conservationStatus] || item.conservationStatus;
+                    const label = statusLabels[item.conservationStatus] || 'REGULAR';
                     return (
                         <TouchableOpacity
                             style={styles.resultCard}

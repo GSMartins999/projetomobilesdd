@@ -1,5 +1,5 @@
 export type ConservationStatus = 'good' | 'fair' | 'poor' | 'urgent' | 'unknown';
-export type ArtworkType = 'painting' | 'sculpture' | 'mural' | 'tile' | 'relief' | 'other';
+export type ArtworkType = 'painting' | 'sculpture' | 'mural' | 'tile' | 'relief' | 'monument' | 'other';
 
 export interface Artwork {
     id: string;                      // UUID gerado no dispositivo
