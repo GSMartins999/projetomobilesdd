@@ -9,7 +9,7 @@ import {
     Alert
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import * as Camera from 'expo-camera';
+import { useCameraPermissions } from 'expo-camera';
 import * as Location from 'expo-location';
 import * as SecureStore from 'expo-secure-store';
 import * as Notifications from 'expo-notifications';
@@ -35,6 +35,7 @@ export function OnboardingScreen({ onFinish }: OnboardingScreenProps) {
     const { t } = useTranslation();
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const flatListRef = useRef<FlatList>(null);
+    const [, requestCameraPermissionAsync] = useCameraPermissions();
 
     const slides: Slide[] = [
         {
@@ -83,8 +84,8 @@ export function OnboardingScreen({ onFinish }: OnboardingScreenProps) {
     };
 
     const requestCameraPermission = async () => {
-        const { status } = await Camera.requestCameraPermissionsAsync();
-        if (status !== 'granted') {
+        const result = await requestCameraPermissionAsync();
+        if (result?.status !== 'granted') {
             Alert.alert('Permissão Negada', 'A câmera é necessária para o funcionamento do app.');
         } else {
             handleNext();

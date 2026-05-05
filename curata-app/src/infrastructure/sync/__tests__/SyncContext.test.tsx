@@ -19,6 +19,8 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 describe('SyncContext', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        // Reset env para URL placeholder (padrão de dev)
+        process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://placeholder.supabase.co';
     });
 
     it('should initialize with online status', async () => {
@@ -27,6 +29,7 @@ describe('SyncContext', () => {
     });
 
     it('should handle connectivity changes and auto-sync', async () => {
+        process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://real-project.supabase.co';
         const { result } = renderHook(() => useSync(), { wrapper });
 
         const handler = (NetInfo.addEventListener as jest.Mock).mock.calls[0][0];
@@ -48,6 +51,7 @@ describe('SyncContext', () => {
     });
 
     it('should trigger manual sync', async () => {
+        process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://real-project.supabase.co';
         mockSyncService.sync.mockResolvedValueOnce({ success: true, count: 5 });
         const { result } = renderHook(() => useSync(), { wrapper });
 
@@ -60,6 +64,7 @@ describe('SyncContext', () => {
     });
 
     it('should handle sync error gracefully', async () => {
+        process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://real-project.supabase.co';
         mockSyncService.sync.mockRejectedValueOnce(new Error('Sync failed'));
         const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
 
@@ -90,5 +95,36 @@ describe('SyncContext', () => {
         });
 
         expect(mockSyncService.sync).not.toHaveBeenCalled();
+    });
+
+    it('não deve chamar sync quando URL do Supabase é placeholder', async () => {
+        process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://placeholder.supabase.co';
+        const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+        const { result } = renderHook(() => useSync(), { wrapper });
+
+        await act(async () => {
+            await result.current.triggerSync();
+        });
+
+        expect(mockSyncService.sync).not.toHaveBeenCalled();
+        expect(consoleSpy).toHaveBeenCalledWith(
+            expect.stringContaining('[SyncContext] Supabase não configurado')
+        );
+
+        consoleSpy.mockRestore();
+    });
+
+    it('deve chamar sync quando URL do Supabase é real', async () => {
+        process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://real-project.supabase.co';
+        mockSyncService.sync.mockResolvedValueOnce({ success: true, count: 0 });
+
+        const { result } = renderHook(() => useSync(), { wrapper });
+
+        await act(async () => {
+            await result.current.triggerSync();
+        });
+
+        expect(mockSyncService.sync).toHaveBeenCalledTimes(1);
     });
 });

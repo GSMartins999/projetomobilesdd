@@ -1,33 +1,44 @@
-import { Camera } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { CameraService, PhotoCaptureResult } from '../../domain/services/CameraService';
 
 export class CameraServiceImpl implements CameraService {
-    private cameraRef: any = null;
+    private cameraRef: CameraView | null = null;
 
-    setCameraRef(ref: any) {
+    setCameraRef(ref: CameraView | null) {
         this.cameraRef = ref;
     }
 
     async hasPermissions(): Promise<boolean> {
-        const { status } = await Camera.getCameraPermissionsAsync();
+        // useCameraPermissions é um hook — não pode ser chamado aqui.
+        // Usamos a API imperativa do módulo expo-modules-core via getCameraPermissionsAsync
+        // que ainda está disponível fora de componentes React.
+        const { Camera } = await import('expo-camera');
+        const { status } = await (Camera as any).getCameraPermissionsAsync?.() ??
+            { status: 'undetermined' };
         return status === 'granted';
     }
 
     async requestPermissions(): Promise<boolean> {
-        const { status } = await Camera.requestCameraPermissionsAsync();
+        const { Camera } = await import('expo-camera');
+        const { status } = await (Camera as any).requestCameraPermissionsAsync?.() ??
+            { status: 'denied' };
         return status === 'granted';
     }
 
     async takePicture(): Promise<PhotoCaptureResult> {
         if (!this.cameraRef) {
-            throw new Error('Câmera não inicializada. Certifique-se de que o componente Camera está montado.');
+            throw new Error('Câmera não inicializada. Certifique-se de que o componente Câmera está montado.');
         }
 
         const result = await this.cameraRef.takePictureAsync({
             quality: 0.8,
             skipProcessing: false,
         });
+
+        if (!result) {
+            throw new Error('Falha ao capturar foto.');
+        }
 
         return {
             uri: result.uri,
@@ -37,10 +48,9 @@ export class CameraServiceImpl implements CameraService {
     }
 
     async processImage(uri: string): Promise<PhotoCaptureResult> {
-        // REQ: Mandatory image compression (1200px max width/height)
         const result = await ImageManipulator.manipulateAsync(
             uri,
-            [{ resize: { width: 1200 } }], // ImageManipulator handles aspect ratio
+            [{ resize: { width: 1200 } }],
             { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
         );
 

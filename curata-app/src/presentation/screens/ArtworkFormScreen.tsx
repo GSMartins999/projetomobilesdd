@@ -7,8 +7,11 @@ import {
     ScrollView,
     StyleSheet,
     Image,
-    Alert
+    Alert,
+    KeyboardAvoidingView,
+    Platform
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import * as Location from 'expo-location';
@@ -27,6 +30,7 @@ const statusOptions: { key: ConservationStatus; label: string; color: string; bg
 
 export function ArtworkFormScreen({ navigation, route }: any) {
     const { t } = useTranslation();
+    const insets = useSafeAreaInsets();
     const { artworkRepository } = useDI();
 
     const createArtworkUseCase = new CreateArtworkUseCase(
@@ -94,7 +98,16 @@ export function ArtworkFormScreen({ navigation, route }: any) {
     };
 
     return (
-        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <KeyboardAvoidingView
+            style={{ flex: 1, backgroundColor: '#F8F5F0' }}
+            behavior="padding"
+        >
+            <ScrollView 
+                style={[styles.container, { paddingTop: insets.top + 12 }]} 
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 40) }}
+                keyboardShouldPersistTaps="handled"
+            >
             <Text style={styles.headerTitle}>Nova Obra</Text>
 
             <Text style={styles.label}>{t('artwork.name', 'Nome da Obra')}</Text>
@@ -167,12 +180,13 @@ export function ArtworkFormScreen({ navigation, route }: any) {
             </TouchableOpacity>
 
             <View style={{ height: 40 }} />
-        </ScrollView>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, paddingHorizontal: 20, paddingTop: 55, backgroundColor: '#F8F5F0' },
+    container: { flex: 1, paddingHorizontal: 20, backgroundColor: '#F8F5F0' },
     headerTitle: { fontSize: 22, fontWeight: 'bold', color: '#1A1A2E', marginBottom: 20 },
     label: { fontSize: 14, fontWeight: '600', color: '#1A1A2E', marginBottom: 8, marginTop: 16 },
     input: {

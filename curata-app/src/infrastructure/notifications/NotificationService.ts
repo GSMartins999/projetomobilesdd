@@ -1,4 +1,5 @@
 import * as Notifications from 'expo-notifications';
+import { SchedulableTriggerInputTypes } from 'expo-notifications';
 import { Platform } from 'react-native';
 
 export async function setupNotifications() {
@@ -7,6 +8,8 @@ export async function setupNotifications() {
             shouldShowAlert: true,
             shouldPlaySound: true,
             shouldSetBadge: false,
+            shouldShowBanner: true,
+            shouldShowList: true,
         }),
     });
 
@@ -28,6 +31,7 @@ export async function scheduleInspectionReminder(artworkName: string) {
             data: { type: 'inspection_reminder' },
         },
         trigger: {
+            type: SchedulableTriggerInputTypes.TIME_INTERVAL,
             seconds: 60 * 60 * 24 * 30, // 30 dias
             repeats: false,
         },

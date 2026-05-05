@@ -10,6 +10,7 @@ import {
     Platform,
     ScrollView,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { useNavigation } from '@react-navigation/native';
@@ -19,6 +20,7 @@ export function LoginScreen() {
     const { t } = useTranslation();
     const { login, isLoading } = useAuth();
     const navigation = useNavigation<any>();
+    const insets = useSafeAreaInsets();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -39,96 +41,102 @@ export function LoginScreen() {
     };
 
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
-            <ScrollView
-                contentContainerStyle={styles.scrollContent}
-                keyboardShouldPersistTaps="handled"
+        <View style={styles.container}>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior="padding"
             >
-                {/* Logo Area */}
-                <View style={styles.logoContainer}>
-                    <View style={styles.logoIcon}>
-                        <MaterialIcons name="palette" size={36} color="#E8752A" />
+                <ScrollView
+                    contentContainerStyle={[
+                        styles.scrollContent,
+                        { paddingTop: insets.top + 20, paddingBottom: Math.max(insets.bottom + 20, 40) }
+                    ]}
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                >
+                    {/* Logo Area */}
+                    <View style={styles.logoContainer}>
+                        <View style={styles.logoIcon}>
+                            <MaterialIcons name="palette" size={36} color="#E8752A" />
+                        </View>
+                        <Text style={styles.title}>Curata</Text>
+                        <Text style={styles.subtitle}>Acesso ao sistema de conservação</Text>
                     </View>
-                    <Text style={styles.title}>Curata</Text>
-                    <Text style={styles.subtitle}>Acesso ao sistema de conservação</Text>
-                </View>
 
-                {/* Form */}
-                <View style={styles.form}>
-                    <Text style={styles.label}>{t('auth.email', 'E-mail')}</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="seu@email.com"
-                        placeholderTextColor="#B0A898"
-                        value={email}
-                        onChangeText={setEmail}
-                        autoCapitalize="none"
-                        keyboardType="email-address"
-                    />
-
-                    <Text style={styles.label}>{t('auth.password', 'Senha')}</Text>
-                    <View style={styles.passwordContainer}>
+                    {/* Form */}
+                    <View style={styles.form}>
+                        <Text style={styles.label}>{t('auth.email', 'E-mail')}</Text>
                         <TextInput
-                            style={styles.passwordInput}
-                            placeholder="Sua senha"
+                            style={styles.input}
+                            placeholder="seu@email.com"
                             placeholderTextColor="#B0A898"
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry={!showPassword}
+                            value={email}
+                            onChangeText={setEmail}
+                            autoCapitalize="none"
+                            keyboardType="email-address"
                         />
-                        <TouchableOpacity
-                            style={styles.eyeButton}
-                            onPress={() => setShowPassword(!showPassword)}
-                            testID="password-toggle"
-                        >
-                            <MaterialIcons
-                                name={showPassword ? 'visibility-off' : 'visibility'}
-                                size={22}
-                                color="#B0A898"
+
+                        <Text style={styles.label}>{t('auth.password', 'Senha')}</Text>
+                        <View style={styles.passwordContainer}>
+                            <TextInput
+                                style={styles.passwordInput}
+                                placeholder="Sua senha"
+                                placeholderTextColor="#B0A898"
+                                value={password}
+                                onChangeText={setPassword}
+                                secureTextEntry={!showPassword}
                             />
+                            <TouchableOpacity
+                                style={styles.eyeButton}
+                                onPress={() => setShowPassword(!showPassword)}
+                                testID="password-toggle"
+                            >
+                                <MaterialIcons
+                                    name={showPassword ? 'visibility-off' : 'visibility'}
+                                    size={22}
+                                    color="#B0A898"
+                                />
+                            </TouchableOpacity>
+                        </View>
+
+                        {error && <Text style={styles.errorText}>{error}</Text>}
+
+                        <TouchableOpacity
+                            testID="login-button"
+                            style={styles.button}
+                            onPress={handleLogin}
+                            disabled={isLoading}
+                            activeOpacity={0.8}
+                        >
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.buttonText}>{t('auth.login', 'Entrar')}</Text>
+                            )}
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.forgotButton}>
+                            <Text style={styles.forgotText}>Esqueceu sua senha?</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.registerLink}
+                            onPress={() => navigation.navigate('Register')}
+                        >
+                            <Text style={styles.registerText}>
+                                {t('auth.no_account', 'Não tem uma conta?')}{' '}
+                                <Text style={styles.registerBold}>{t('auth.register', 'Cadastrar')}</Text>
+                            </Text>
                         </TouchableOpacity>
                     </View>
 
-                    {error && <Text style={styles.errorText}>{error}</Text>}
-
-                    <TouchableOpacity
-                        testID="login-button"
-                        style={styles.button}
-                        onPress={handleLogin}
-                        disabled={isLoading}
-                        activeOpacity={0.8}
-                    >
-                        {isLoading ? (
-                            <ActivityIndicator color="#fff" />
-                        ) : (
-                            <Text style={styles.buttonText}>{t('auth.login', 'Entrar')}</Text>
-                        )}
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.forgotButton}>
-                        <Text style={styles.forgotText}>Esqueceu sua senha?</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.registerLink}
-                        onPress={() => navigation.navigate('Register')}
-                    >
-                        <Text style={styles.registerText}>
-                            {t('auth.no_account', 'Não tem uma conta?')}{' '}
-                            <Text style={styles.registerBold}>{t('auth.register', 'Cadastrar')}</Text>
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
-                {/* Footer */}
-                <View style={styles.footer}>
-                    <Text style={styles.footerText}>CURATA • CONSERVAÇÃO DE ARTE</Text>
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+                    {/* Footer */}
+                    <View style={styles.footer}>
+                        <Text style={styles.footerText}>CURATA • CONSERVAÇÃO DE ARTE</Text>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </View>
     );
 }
 
@@ -141,7 +149,6 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         justifyContent: 'center',
         paddingHorizontal: 28,
-        paddingVertical: 40,
     },
     logoContainer: {
         alignItems: 'center',

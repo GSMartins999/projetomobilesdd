@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Image } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDI } from '../../infrastructure/di/DIContext';
 import { Inspection, Photo } from '../../domain/entities/Inspection';
@@ -7,6 +8,7 @@ import { Inspection, Photo } from '../../domain/entities/Inspection';
 export function InspectionDetailScreen({ route }: any) {
     const { inspectionId } = route.params;
     const { inspectionRepository, photoRepository } = useDI();
+    const insets = useSafeAreaInsets();
     const [inspection, setInspection] = useState<Inspection | null>(null);
     const [photos, setPhotos] = useState<Photo[]>([]);
 
@@ -25,7 +27,7 @@ export function InspectionDetailScreen({ route }: any) {
     if (!inspection) return <View style={styles.container} />;
 
     return (
-        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <ScrollView style={[styles.container, { paddingTop: insets.top + 12 }]} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 40) }}>
             <Text style={styles.headerTitle}>Detalhes da Inspeção</Text>
             <View style={styles.dateRow}>
                 <MaterialIcons name="calendar-today" size={16} color="#888" />
@@ -74,7 +76,7 @@ export function InspectionDetailScreen({ route }: any) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#F8F5F0', paddingHorizontal: 20, paddingTop: 55 },
+    container: { flex: 1, backgroundColor: '#F8F5F0', paddingHorizontal: 20 },
     headerTitle: { fontSize: 22, fontWeight: 'bold', color: '#1A1A2E', marginBottom: 8 },
     dateRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 24 },
     date: { fontSize: 14, color: '#888' },

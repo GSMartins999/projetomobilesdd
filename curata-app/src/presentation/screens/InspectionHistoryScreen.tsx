@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDI } from '../../infrastructure/di/DIContext';
 import { Inspection } from '../../domain/entities/Inspection';
@@ -14,6 +15,7 @@ const statusColors: Record<string, { bg: string; text: string; label: string }> 
 export function InspectionHistoryScreen({ route, navigation }: any) {
     const { artworkId } = route.params;
     const { inspectionRepository } = useDI();
+    const insets = useSafeAreaInsets();
     const [inspections, setInspections] = useState<Inspection[]>([]);
 
     useEffect(() => {
@@ -25,12 +27,12 @@ export function InspectionHistoryScreen({ route, navigation }: any) {
     }, [artworkId]);
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { paddingTop: insets.top + 12 }]}>
             <Text style={styles.headerTitle}>Histórico de Inspeções</Text>
             <FlatList
                 data={inspections}
                 keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.list}
+                contentContainerStyle={[styles.list, { paddingBottom: Math.max(insets.bottom + 20, 40) }]}
                 renderItem={({ item }) => {
                     const st = statusColors[item.technicalForm.statusAtVisit] || statusColors.fair;
                     return (
@@ -66,7 +68,7 @@ export function InspectionHistoryScreen({ route, navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#F8F5F0', paddingTop: 55 },
+    container: { flex: 1, backgroundColor: '#F8F5F0' },
     headerTitle: { fontSize: 22, fontWeight: 'bold', color: '#1A1A2E', paddingHorizontal: 20, marginBottom: 16 },
     list: { paddingHorizontal: 20, paddingBottom: 20 },
     card: {

@@ -1,7 +1,9 @@
 import React from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '../../infrastructure/auth/AuthContext';
 
@@ -27,6 +29,8 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function MainTabNavigator() {
+    const insets = useSafeAreaInsets();
+    
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -45,9 +49,9 @@ function MainTabNavigator() {
                     backgroundColor: '#FFFFFF',
                     borderTopColor: '#F0E8E0',
                     borderTopWidth: 1,
-                    paddingBottom: 6,
+                    paddingBottom: Math.max(insets.bottom, 6),
                     paddingTop: 6,
-                    height: 60,
+                    height: 60 + insets.bottom,
                 },
                 tabBarLabelStyle: {
                     fontSize: 11,
@@ -67,8 +71,13 @@ export function AppNavigator() {
     const { isAuthenticated, isLoading } = useAuth();
 
     if (isLoading) {
-        return null; // Splash screen would go here
+        return (
+            <View style={styles.loadingContainer} testID="app-loading-indicator">
+                <ActivityIndicator size="large" color="#2A4D69" />
+            </View>
+        );
     }
+
 
     return (
         <NavigationContainer>
@@ -83,7 +92,7 @@ export function AppNavigator() {
                         <Stack.Screen name="Main" component={MainTabNavigator} />
                         <Stack.Screen name="ArtworkForm" component={ArtworkFormScreen} options={{ presentation: 'modal' }} />
                         <Stack.Screen name="InspectionForm" component={InspectionFormScreen} options={{ presentation: 'modal' }} />
-                        <Stack.Screen name="Camera" component={CameraScreen} options={{ presentation: 'fullScreenModal' }} />
+                        <Stack.Screen name="Camera" component={CameraScreen} options={{ presentation: 'modal' }} />
                         <Stack.Screen name="InspectionHistory" component={InspectionHistoryScreen} />
                         <Stack.Screen name="InspectionDetail" component={InspectionDetailScreen} />
                         <Stack.Screen name="ArtworkDetail" component={ArtworkDetailScreen} />
@@ -96,3 +105,12 @@ export function AppNavigator() {
         </NavigationContainer>
     );
 }
+
+const styles = StyleSheet.create({
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f8f9fa',
+    },
+});

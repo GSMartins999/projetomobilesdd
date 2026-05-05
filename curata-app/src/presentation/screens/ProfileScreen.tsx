@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -7,15 +8,16 @@ import { useTranslation } from 'react-i18next';
 export function ProfileScreen() {
     const { user, logout } = useAuth();
     const { t, i18n } = useTranslation();
+    const insets = useSafeAreaInsets();
 
     const changeLanguage = (lng: string) => {
         i18n.changeLanguage(lng);
     };
 
     return (
-        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <ScrollView style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 100) }}>
             {/* Header */}
-            <View style={styles.headerBar}>
+            <View style={[styles.headerBar, { paddingTop: insets.top + 12 }]}>
                 <Text style={styles.headerTitle}>Perfil</Text>
                 <TouchableOpacity>
                     <MaterialIcons name="settings" size={24} color="#1A1A2E" />
@@ -131,7 +133,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingTop: 55,
         paddingBottom: 16,
     },
     headerTitle: {

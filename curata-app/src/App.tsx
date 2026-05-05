@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -23,6 +23,21 @@ import { CameraServiceImpl } from './infrastructure/services/CameraServiceImpl';
 export default function App() {
     const [isReady, setIsReady] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Instâncias criadas UMA VEZ e estáveis entre re-renders.
+    // useRef garante que não são recriadas a cada ciclo de renderização,
+    // preservando o estado interno (ex: sessão do MockAuthRepositoryImpl).
+    const artworkRepository = useRef(new ArtworkRepositoryImpl(db)).current;
+    const inspectionRepository = useRef(new InspectionRepositoryImpl(db)).current;
+    const photoRepository = useRef(new PhotoRepositoryImpl(db)).current;
+    const authRepository = useRef(new MockAuthRepositoryImpl()).current;
+    const syncService = useRef(new SyncServiceImpl(
+        artworkRepository,
+        inspectionRepository,
+        photoRepository,
+        supabase
+    )).current;
+    const cameraService = useRef(new CameraServiceImpl()).current;
 
     useEffect(() => {
         async function bootstrap() {
@@ -54,19 +69,6 @@ export default function App() {
             </View>
         );
     }
-
-    // Criar instâncias dos repositórios
-    const artworkRepository = new ArtworkRepositoryImpl(db);
-    const inspectionRepository = new InspectionRepositoryImpl(db);
-    const photoRepository = new PhotoRepositoryImpl(db);
-    const authRepository = new MockAuthRepositoryImpl();
-    const syncService = new SyncServiceImpl(
-        artworkRepository,
-        inspectionRepository,
-        photoRepository,
-        supabase
-    );
-    const cameraService = new CameraServiceImpl();
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>

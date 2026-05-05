@@ -10,6 +10,7 @@ import {
     Platform,
     ScrollView,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { useNavigation } from '@react-navigation/native';
@@ -19,6 +20,7 @@ export function RegisterScreen() {
     const { t } = useTranslation();
     const { register } = useAuth();
     const navigation = useNavigation();
+    const insets = useSafeAreaInsets();
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -53,107 +55,113 @@ export function RegisterScreen() {
     };
 
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
-            <ScrollView
-                contentContainerStyle={styles.scrollContent}
-                keyboardShouldPersistTaps="handled"
+        <View style={styles.container}>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior="padding"
             >
-                {/* Header */}
-                <View style={styles.headerContainer}>
-                    <View style={styles.logoIcon}>
-                        <MaterialIcons name="palette" size={32} color="#E8752A" />
+                <ScrollView
+                    contentContainerStyle={[
+                        styles.scrollContent,
+                        { paddingTop: insets.top + 20, paddingBottom: Math.max(insets.bottom + 20, 40) }
+                    ]}
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                >
+                    {/* Header */}
+                    <View style={styles.headerContainer}>
+                        <View style={styles.logoIcon}>
+                            <MaterialIcons name="palette" size={32} color="#E8752A" />
+                        </View>
+                        <Text style={styles.title}>{t('auth.register_title', 'Criar Conta')}</Text>
+                        <Text style={styles.subtitle}>Cadastre-se para começar a conservar</Text>
                     </View>
-                    <Text style={styles.title}>{t('auth.register_title', 'Criar Conta')}</Text>
-                    <Text style={styles.subtitle}>Cadastre-se para começar a conservar</Text>
-                </View>
 
-                {/* Form */}
-                <View style={styles.form}>
-                    <Text style={styles.label}>{t('auth.name', 'Nome')}</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Seu nome completo"
-                        placeholderTextColor="#B0A898"
-                        value={name}
-                        onChangeText={setName}
-                        autoCapitalize="words"
-                    />
-
-                    <Text style={styles.label}>{t('auth.email', 'E-mail')}</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="seu@email.com"
-                        placeholderTextColor="#B0A898"
-                        value={email}
-                        onChangeText={setEmail}
-                        autoCapitalize="none"
-                        keyboardType="email-address"
-                    />
-
-                    <Text style={styles.label}>{t('auth.password', 'Senha')}</Text>
-                    <View style={styles.passwordContainer}>
+                    {/* Form */}
+                    <View style={styles.form}>
+                        <Text style={styles.label}>{t('auth.name', 'Nome')}</Text>
                         <TextInput
-                            style={styles.passwordInput}
-                            placeholder="Mínimo 6 caracteres"
+                            style={styles.input}
+                            placeholder="Seu nome completo"
                             placeholderTextColor="#B0A898"
-                            value={password}
-                            onChangeText={setPassword}
+                            value={name}
+                            onChangeText={setName}
+                            autoCapitalize="words"
+                        />
+
+                        <Text style={styles.label}>{t('auth.email', 'E-mail')}</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="seu@email.com"
+                            placeholderTextColor="#B0A898"
+                            value={email}
+                            onChangeText={setEmail}
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                        />
+
+                        <Text style={styles.label}>{t('auth.password', 'Senha')}</Text>
+                        <View style={styles.passwordContainer}>
+                            <TextInput
+                                style={styles.passwordInput}
+                                placeholder="Mínimo 6 caracteres"
+                                placeholderTextColor="#B0A898"
+                                value={password}
+                                onChangeText={setPassword}
+                                secureTextEntry={!showPassword}
+                            />
+                            <TouchableOpacity
+                                testID="password-visibility-toggle"
+                                style={styles.eyeButton}
+                                onPress={() => setShowPassword(!showPassword)}
+                            >
+                                <MaterialIcons
+                                    name={showPassword ? 'visibility-off' : 'visibility'}
+                                    size={22}
+                                    color="#B0A898"
+                                />
+                            </TouchableOpacity>
+                        </View>
+
+                        <Text style={styles.label}>{t('auth.confirm_password', 'Confirmar Senha')}</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Repita a senha"
+                            placeholderTextColor="#B0A898"
+                            value={confirmPassword}
+                            onChangeText={setConfirmPassword}
                             secureTextEntry={!showPassword}
                         />
+
+                        {error && <Text style={styles.errorText}>{error}</Text>}
+
                         <TouchableOpacity
-                            testID="password-visibility-toggle"
-                            style={styles.eyeButton}
-                            onPress={() => setShowPassword(!showPassword)}
+                            testID="register-button"
+                            style={styles.button}
+                            onPress={handleRegister}
+                            disabled={isLoading}
+                            activeOpacity={0.8}
                         >
-                            <MaterialIcons
-                                name={showPassword ? 'visibility-off' : 'visibility'}
-                                size={22}
-                                color="#B0A898"
-                            />
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.buttonText}>{t('auth.register', 'Cadastrar')}</Text>
+                            )}
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.loginLink}
+                            onPress={() => navigation.goBack()}
+                        >
+                            <Text style={styles.loginText}>
+                                {t('auth.already_have_account', 'Já tem uma conta?')}{' '}
+                                <Text style={styles.loginBold}>{t('auth.login', 'Entrar')}</Text>
+                            </Text>
                         </TouchableOpacity>
                     </View>
-
-                    <Text style={styles.label}>{t('auth.confirm_password', 'Confirmar Senha')}</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Repita a senha"
-                        placeholderTextColor="#B0A898"
-                        value={confirmPassword}
-                        onChangeText={setConfirmPassword}
-                        secureTextEntry={!showPassword}
-                    />
-
-                    {error && <Text style={styles.errorText}>{error}</Text>}
-
-                    <TouchableOpacity
-                        testID="register-button"
-                        style={styles.button}
-                        onPress={handleRegister}
-                        disabled={isLoading}
-                        activeOpacity={0.8}
-                    >
-                        {isLoading ? (
-                            <ActivityIndicator color="#fff" />
-                        ) : (
-                            <Text style={styles.buttonText}>{t('auth.register', 'Cadastrar')}</Text>
-                        )}
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.loginLink}
-                        onPress={() => navigation.goBack()}
-                    >
-                        <Text style={styles.loginText}>
-                            {t('auth.already_have_account', 'Já tem uma conta?')}{' '}
-                            <Text style={styles.loginBold}>{t('auth.login', 'Entrar')}</Text>
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </View>
     );
 }
 
@@ -166,7 +174,6 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         justifyContent: 'center',
         paddingHorizontal: 28,
-        paddingVertical: 40,
     },
     headerContainer: {
         alignItems: 'center',

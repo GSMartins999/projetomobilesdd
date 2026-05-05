@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
     "strict": true,
-    "target": "ES6",
+    "target": "ESNext",
     "lib": [
-      "ES2017",
+      "ESNext",
       "DOM"
     ],
-    "module": "commonjs",
+    "module": "preserve",
     "jsx": "react-native",
     "types": [
       "jest",
       "node"
     ],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,

@@ -64,4 +64,16 @@ describe('App', () => {
             return queryByText(/DB Failed/) !== null;
         }, { timeout: 10000 });
     });
+
+    it('repositórios mantêm a mesma referência entre re-renders', async () => {
+        const { MockAuthRepositoryImpl } = require('../data/repositories/MockAuthRepositoryImpl');
+
+        render(<App />);
+
+        await waitFor(() => {
+            // MockAuthRepositoryImpl deve ter sido chamado como construtor exatamente 1 vez,
+            // independente de quantos re-renders o App sofreu durante o boot
+            expect(MockAuthRepositoryImpl).toHaveBeenCalledTimes(1);
+        }, { timeout: 15000 });
+    });
 });

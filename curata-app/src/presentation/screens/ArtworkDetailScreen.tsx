@@ -6,11 +6,11 @@ import {
     ScrollView,
     Image,
     TouchableOpacity,
-    SafeAreaView,
     Dimensions,
     StatusBar,
     Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDI } from '../../infrastructure/di/DIContext';
 import { Artwork } from '../../domain/entities/Artwork';

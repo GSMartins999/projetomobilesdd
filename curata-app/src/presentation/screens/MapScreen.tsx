@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
+import MapView, { Marker, Callout, PROVIDER_DEFAULT } from 'react-native-maps';
 import { useDI } from '../../infrastructure/di/DIContext';
 import { Artwork } from '../../domain/entities/Artwork';
 import * as Location from 'expo-location';
@@ -46,57 +48,41 @@ export function MapScreen({ navigation }: any) {
                 )}
             </View>
 
-            {/* Info banner */}
-            <View style={styles.infoBanner}>
-                <MaterialIcons name="info" size={18} color="#D4883A" />
-                <Text style={styles.infoText}>
-                    Mapa nativo requer build de desenvolvimento. Exibindo lista de obras.
-                </Text>
-            </View>
-
-            {/* Artworks list */}
-            <FlatList
-                data={artworks}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.listContent}
-                ListEmptyComponent={
-                    <View style={styles.emptyContainer}>
-                        <MaterialIcons name="palette" size={48} color="#D4883A" />
-                        <Text style={styles.emptyText}>Nenhuma obra registrada</Text>
-                        <Text style={styles.emptySubtext}>Toque + para cadastrar a primeira obra</Text>
-                    </View>
-                }
-                renderItem={({ item }) => {
-                    const status = statusColors[item.conservationStatus] || statusColors.fair;
-                    return (
-                        <TouchableOpacity style={styles.card} activeOpacity={0.7}>
-                            <View style={[styles.statusIndicator, { backgroundColor: status.dot }]} />
-                            <View style={styles.cardContent}>
-                                <Text style={styles.cardTitle}>{item.name}</Text>
-                                <Text style={styles.cardSubtitle}>
-                                    {item.artist || 'Artista desconhecido'} · {item.type}
-                                </Text>
-                                {item.latitude && item.longitude && (
-                                    <View style={styles.cardLocationRow}>
-                                        <MaterialIcons name="location-on" size={12} color="#B0A898" />
-                                        <Text style={styles.cardCoords}>
-                                            {item.latitude.toFixed(4)}, {item.longitude.toFixed(4)}
-                                        </Text>
-                                    </View>
-                                )}
-                                {item.address && (
-                                    <Text style={styles.cardAddress}>{item.address}</Text>
-                                )}
-                            </View>
-                            <View style={[styles.statusBadge, { backgroundColor: status.bg }]}>
-                                <Text style={[styles.statusText, { color: status.text }]}>
-                                    {status.label}
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                    );
+            {/* Map */}
+            <MapView
+                style={styles.map}
+                provider={PROVIDER_DEFAULT}
+                showsUserLocation={true}
+                showsMyLocationButton={true}
+                initialRegion={{
+                    latitude: userLocation?.lat || -23.5505,
+                    longitude: userLocation?.lng || -46.6333,
+                    latitudeDelta: 0.05,
+                    longitudeDelta: 0.05,
                 }}
-            />
+            >
+                {artworks.map((artwork) => {
+                    if (!artwork.latitude || !artwork.longitude) return null;
+                    const status = statusColors[artwork.conservationStatus] || statusColors.fair;
+                    return (
+                        <Marker
+                            key={artwork.id}
+                            coordinate={{ latitude: artwork.latitude, longitude: artwork.longitude }}
+                            pinColor={status.dot}
+                        >
+                            <Callout onPress={() => navigation.navigate('ArtworkDetail', { artworkId: artwork.id })}>
+                                <View style={styles.calloutContainer}>
+                                    <Text style={styles.calloutTitle}>{artwork.name}</Text>
+                                    <Text style={styles.calloutSubtitle}>{artwork.artist || 'Artista desconhecido'}</Text>
+                                    <View style={[styles.statusBadge, { backgroundColor: status.bg, marginTop: 4 }]}>
+                                        <Text style={[styles.statusText, { color: status.text }]}>{status.label}</Text>
+                                    </View>
+                                </View>
+                            </Callout>
+                        </Marker>
+                    );
+                })}
+            </MapView>
 
             {/* FAB */}
             <TouchableOpacity
@@ -122,48 +108,25 @@ const styles = StyleSheet.create({
     title: { fontSize: 22, fontWeight: 'bold', color: '#1A1A2E' },
     locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4, gap: 4 },
     locationText: { color: '#B0A898', fontSize: 12 },
-    infoBanner: {
-        flexDirection: 'row',
+    map: {
+        flex: 1,
+        width: '100%',
+    },
+    calloutContainer: {
+        padding: 8,
+        minWidth: 150,
         alignItems: 'center',
-        backgroundColor: '#FDF0E6',
-        marginHorizontal: 20,
-        paddingHorizontal: 14,
-        paddingVertical: 10,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: '#F0E0CC',
-        marginBottom: 10,
-        gap: 8,
     },
-    infoText: { color: '#D4883A', fontSize: 12, flex: 1 },
-    listContent: { paddingHorizontal: 20, paddingBottom: 100 },
-    card: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 14,
-        padding: 16,
-        marginBottom: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#F0E8E0',
+    calloutTitle: {
+        fontWeight: 'bold',
+        fontSize: 14,
+        color: '#1A1A2E',
+        marginBottom: 2,
     },
-    statusIndicator: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        marginRight: 14,
+    calloutSubtitle: {
+        fontSize: 12,
+        color: '#888',
     },
-    cardContent: { flex: 1 },
-    cardTitle: { fontSize: 16, fontWeight: 'bold', color: '#1A1A2E' },
-    cardSubtitle: { fontSize: 13, color: '#888', marginTop: 2 },
-    cardLocationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4, gap: 2 },
-    cardCoords: { fontSize: 11, color: '#B0A898' },
-    cardAddress: { fontSize: 11, color: '#B0A898', marginTop: 2 },
-    statusBadge: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8 },
-    statusText: { fontSize: 11, fontWeight: 'bold' },
-    emptyContainer: { alignItems: 'center', marginTop: 60 },
-    emptyText: { fontSize: 18, fontWeight: 'bold', color: '#1A1A2E', marginTop: 15 },
-    emptySubtext: { fontSize: 14, color: '#888', marginTop: 5 },
     fab: {
         position: 'absolute',
         bottom: 30,

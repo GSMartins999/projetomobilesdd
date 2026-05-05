@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDI } from '../../infrastructure/di/DIContext';
 import { GetDashboardStatsUseCase, DashboardStats } from '../../domain/usecases/GetDashboardStatsUseCase';
@@ -8,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 
 export function DashboardScreen() {
     const navigation = useNavigation<any>();
+    const insets = useSafeAreaInsets();
     const { artworkRepository } = useDI();
     const { isOnline, isSyncing, triggerSync } = useSync();
     const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -24,9 +26,9 @@ export function DashboardScreen() {
     if (!stats) return <View style={styles.container} />;
 
     return (
-        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <ScrollView style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 100) }}>
             {/* Header */}
-            <View style={styles.header}>
+            <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
                 <Text style={styles.headerTitle}>Meu Mapa de Obras</Text>
                 <View style={styles.headerIcons}>
                     <TouchableOpacity
@@ -176,7 +178,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingTop: 55,
         paddingBottom: 16,
     },
     headerTitle: {

@@ -8,6 +8,7 @@ import {
     StyleSheet,
     ScrollView
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useDI } from '../../infrastructure/di/DIContext';
@@ -30,6 +31,7 @@ const statusLabels: Record<string, string> = {
 
 export function SearchScreen({ navigation }: any) {
     const { t } = useTranslation();
+    const insets = useSafeAreaInsets();
     const { artworkRepository } = useDI();
     const searchUseCase = new SearchArtworksUseCase(artworkRepository);
 
@@ -68,7 +70,7 @@ export function SearchScreen({ navigation }: any) {
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={styles.header}>
+            <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
                 <Text style={styles.headerTitle}>Explorar Acervo</Text>
             </View>
 
@@ -142,7 +144,7 @@ export function SearchScreen({ navigation }: any) {
             <FlatList
                 data={results}
                 keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.resultsList}
+                contentContainerStyle={[styles.resultsList, { paddingBottom: Math.max(insets.bottom + 20, 100) }]}
                 renderItem={({ item }) => {
                     const status = statusColors[item.conservationStatus] || statusColors.fair;
                     const label = statusLabels[item.conservationStatus] || 'REGULAR';
@@ -187,7 +189,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#F8F5F0',
     },
     header: {
-        paddingTop: 55,
         paddingHorizontal: 20,
         paddingBottom: 16,
     },
