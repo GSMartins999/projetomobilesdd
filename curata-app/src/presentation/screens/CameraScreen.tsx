@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useTranslation } from 'react-i18next';
-import { useCameraService, usePhotoRepository } from '../../infrastructure/di/DIContext';
+import { useCameraService } from '../../infrastructure/di/DIContext';
 import { CameraServiceImpl } from '../../infrastructure/services/CameraServiceImpl';
 import { CapturePhotoUseCase } from '../../domain/usecases/CapturePhotoUseCase';
 
@@ -12,11 +12,10 @@ export function CameraScreen({ navigation, route, ...props }: any) {
     const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const cameraService = useCameraService() as CameraServiceImpl;
-    const photoRepository = usePhotoRepository();
 
     const capturePhotoUseCase = useMemo(() =>
-        new CapturePhotoUseCase(cameraService, photoRepository),
-        [cameraService, photoRepository]);
+        new CapturePhotoUseCase(cameraService),
+        [cameraService]);
 
     const cameraRef = useRef<CameraView>(null);
     const [isCapturing, setIsCapturing] = useState(false);
@@ -50,13 +49,16 @@ export function CameraScreen({ navigation, route, ...props }: any) {
         setIsCapturing(true);
         try {
             if (artworkId && inspectionId) {
+                // Usa o use case para processar e retornar a URI
                 const photo = await capturePhotoUseCase.execute({
                     artworkId,
                     inspectionId,
                     label: label as any
                 });
+                // Passa URI para o formulário — o banco é salvo pelo CreateInspectionUseCase
                 if (onCapture) onCapture(photo.localPath);
             } else {
+                // Fluxo genérico: captura e processa direto
                 const raw = await cameraService.takePicture();
                 const processed = await cameraService.processImage(raw.uri);
                 if (onCapture) onCapture(processed.uri);

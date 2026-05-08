@@ -1,1 +1,75 @@
-{}
+{
+    "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "error": "Error",
+        "loading": "Loading...",
+        "retry": "Retry",
+        "back": "Back",
+        "help": "Help"
+    },
+    "tabs": {
+        "map": "Map",
+        "list": "List",
+        "dashboard": "Dashboard",
+        "profile": "Profile"
+    },
+    "status": {
+        "good": "Good Condition",
+        "fair": "Fair",
+        "poor": "Poor",
+        "urgent": "Urgent",
+        "unknown": "Unknown"
+    },
+    "artwork_type": {
+        "painting": "Painting",
+        "sculpture": "Sculpture",
+        "mural": "Mural",
+        "tile": "Tilework",
+        "relief": "Relief",
+        "monument": "Monument",
+        "other": "Other"
+    },
+    "dashboard": {
+        "title": "My Artwork Map",
+        "sync_online": "Online",
+        "sync_offline": "Offline",
+        "sync_action": "Sync {{count}}",
+        "syncing": "Syncing...",
+        "portfolio_summary": "Portfolio Summary",
+        "stats_total": "TOTAL ARTWORKS",
+        "recent_inspections": "Recent Inspections",
+        "view_all": "View all",
+        "empty_inspections": "No recent inspections",
+        "empty_subtext": "Performed inspections will appear here"
+    },
+    "map": {
+        "title": "Artwork Map",
+        "view_details": "View artwork details",
+        "unknown_artist": "Unknown artist"
+    },
+    "report": {
+        "title": "Generate Report",
+        "subtitle": "REPORT TITLE",
+        "period": "PERIOD",
+        "sections": "INCLUDED SECTIONS",
+        "format": "EXPORT FORMAT",
+        "export": "Export {{format}}",
+        "generating": "Generating report...",
+        "section_summary": "Executive Summary",
+        "section_status": "Conservation Status",
+        "section_photos": "Inspection Photos",
+        "section_geo": "Geolocation",
+        "section_history": "Intervention History"
+    },
+    "artwork": {
+        "new": "New Artwork",
+        "name": "Artwork Name",
+        "type": "Type",
+        "status": "Conservation Status",
+        "notes": "Notes",
+        "address": "Address",
+        "no_address": "Address not provided",
+        "new_inspection": "New Inspection"
+    }
+}

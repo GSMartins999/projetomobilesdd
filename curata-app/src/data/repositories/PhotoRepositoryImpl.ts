@@ -18,6 +18,16 @@ export class PhotoRepositoryImpl implements PhotoRepository {
         return result as Photo[];
     }
 
+    async findByArtworkId(artworkId: string): Promise<Photo[]> {
+        const result = await this.db.select().from(photos).where(
+            and(
+                eq(photos.artworkId, artworkId),
+                isNull(photos.deletedAt)
+            )
+        );
+        return result as Photo[];
+    }
+
     async save(photo: Photo): Promise<void> {
         await this.db.insert(photos).values({
             id: photo.id,

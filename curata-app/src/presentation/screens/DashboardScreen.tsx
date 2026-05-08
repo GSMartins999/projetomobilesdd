@@ -6,8 +6,10 @@ import { useDI } from '../../infrastructure/di/DIContext';
 import { GetDashboardStatsUseCase, DashboardStats } from '../../domain/usecases/GetDashboardStatsUseCase';
 import { useSync } from '../../infrastructure/sync/SyncContext';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 export function DashboardScreen() {
+    const { t, i18n } = useTranslation();
     const navigation = useNavigation<any>();
     const insets = useSafeAreaInsets();
     const { artworkRepository } = useDI();
@@ -29,7 +31,7 @@ export function DashboardScreen() {
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 100) }}>
             {/* Header */}
             <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-                <Text style={styles.headerTitle}>Meu Mapa de Obras</Text>
+                <Text style={styles.headerTitle}>{t('dashboard.title')}</Text>
                 <View style={styles.headerIcons}>
                     <TouchableOpacity
                         testID="notification-button"
@@ -48,12 +50,12 @@ export function DashboardScreen() {
             <View style={styles.syncBar}>
                 <View style={[styles.syncDot, { backgroundColor: isOnline ? '#2D6A4F' : '#E63946' }]} />
                 <Text style={styles.syncText}>
-                    {isOnline ? 'Conectado' : 'Offline'}
+                    {isOnline ? t('dashboard.sync_online') : t('dashboard.sync_offline')}
                 </Text>
                 {stats.totalUnsynced > 0 && (
                     <TouchableOpacity testID="sync-button" onPress={triggerSync} disabled={isSyncing}>
                         <Text style={styles.syncAction}>
-                            {isSyncing ? 'Sincronizando...' : `Sincronizar ${stats.totalUnsynced}`}
+                            {isSyncing ? t('dashboard.syncing') : t('dashboard.sync_action', { count: stats.totalUnsynced })}
                         </Text>
                     </TouchableOpacity>
                 )}
@@ -61,9 +63,9 @@ export function DashboardScreen() {
 
             {/* Section title */}
             <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Resumo do Portfólio</Text>
+                <Text style={styles.sectionTitle}>{t('dashboard.portfolio_summary')}</Text>
                 <Text style={styles.sectionDate}>
-                    {new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase()}
+                    {new Date().toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' }).toUpperCase()}
                 </Text>
             </View>
 
@@ -71,7 +73,7 @@ export function DashboardScreen() {
             <View style={styles.statsGrid}>
                 <StatCard
                     icon="corporate-fare"
-                    label="TOTAL DE OBRAS"
+                    label={t('dashboard.stats_total')}
                     value={stats.totalArtworks}
                     bgColor="#F8F5F0"
                     iconBg="#F5EDE3"
@@ -80,7 +82,7 @@ export function DashboardScreen() {
                 />
                 <StatCard
                     icon="priority-high"
-                    label="URGENTE"
+                    label={t('status.urgent').toUpperCase()}
                     value={stats.countByStatus.urgent}
                     bgColor="#FDF0F0"
                     iconBg="#FCE4E4"
@@ -91,7 +93,7 @@ export function DashboardScreen() {
             <View style={styles.statsGrid}>
                 <StatCard
                     icon="warning"
-                    label="PRECÁRIO"
+                    label={t('status.poor').toUpperCase()}
                     value={stats.countByStatus.poor}
                     bgColor="#FFF5EB"
                     iconBg="#FFE8D4"
@@ -100,7 +102,7 @@ export function DashboardScreen() {
                 />
                 <StatCard
                     icon="info"
-                    label="REGULAR"
+                    label={t('status.fair').toUpperCase()}
                     value={stats.countByStatus.fair}
                     bgColor="#FEFCE8"
                     iconBg="#FEF3C7"
@@ -111,7 +113,7 @@ export function DashboardScreen() {
             <View style={styles.statsGrid}>
                 <StatCard
                     icon="check-circle"
-                    label="BOM"
+                    label={t('status.good').toUpperCase()}
                     value={stats.countByStatus.good}
                     bgColor="#ECFDF5"
                     iconBg="#D1FAE5"
@@ -131,16 +133,16 @@ export function DashboardScreen() {
 
             {/* Recent inspections section */}
             <View style={styles.recentHeader}>
-                <Text style={styles.recentTitle}>Últimas inspeções</Text>
+                <Text style={styles.recentTitle}>{t('dashboard.recent_inspections')}</Text>
                 <TouchableOpacity>
-                    <Text style={styles.viewAllText}>Ver todas</Text>
+                    <Text style={styles.viewAllText}>{t('dashboard.view_all')}</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.emptyInspections}>
                 <MaterialIcons name="assignment" size={36} color="#B0A898" />
-                <Text style={styles.emptyText}>Nenhuma inspeção recente</Text>
-                <Text style={styles.emptySubtext}>As inspeções realizadas aparecerão aqui</Text>
+                <Text style={styles.emptyText}>{t('dashboard.empty_inspections')}</Text>
+                <Text style={styles.emptySubtext}>{t('dashboard.empty_subtext')}</Text>
             </View>
 
             <View style={{ height: 30 }} />

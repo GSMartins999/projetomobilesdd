@@ -11,18 +11,22 @@ import {
     Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ImageUtils } from '../../infrastructure/utils/ImageUtils';
+import { useTranslation } from 'react-i18next';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDI } from '../../infrastructure/di/DIContext';
 import { Artwork } from '../../domain/entities/Artwork';
-import { Inspection } from '../../domain/entities/Inspection';
+import { Inspection, Photo } from '../../domain/entities/Inspection';
 
 const { width } = Dimensions.get('window');
 
 export function ArtworkDetailScreen({ route, navigation }: any) {
     const { id } = route.params;
-    const { artworkRepository, inspectionRepository } = useDI();
+    const { t } = useTranslation();
+    const { artworkRepository, inspectionRepository, photoRepository } = useDI();
     const [artwork, setArtwork] = useState<Artwork | null>(null);
     const [inspections, setInspections] = useState<Inspection[]>([]);
+    const [coverPhoto, setCoverPhoto] = useState<string | null>(null);
 
     useEffect(() => {
         async function load() {
@@ -31,6 +35,13 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
                 setArtwork(art);
                 const insps = await inspectionRepository.findByArtworkId(id);
                 setInspections(insps.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()));
+
+                // Buscar fotos diretamente pela obra
+                const photosForArtwork = await photoRepository.findByArtworkId(id);
+                if (photosForArtwork.length > 0) {
+                    const p = photosForArtwork[0];
+                    setCoverPhoto(p.localPath || p.remoteUrl || null);
+                }
             }
         }
         load();
@@ -45,10 +56,16 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
             <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
                 {/* Hero Section */}
                 <View style={styles.heroSection}>
-                    <Image
-                        source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBHq-3WZc_qyUNC0WtGwRavLQftZFFOi_HBDCMDrW65vFUKsgRt5CRoNwGT1YA3KsaWYmnF5uh4eWt1uze-NY0N8aDKsx77E1g7qT7TjiAEm3ZjDVF8HlJgJIqal4RdkQgbqV5D3qwUvvtlbK5khReJXBtScwyx_L15ggSHso4ZTVeED97OKiOTNujutB6OdBKXvejzJz6xVwzok59nA4aixkEWtsvw4iqs33JgysLEzEFsbI87Y-60V6DeJiHtmAViuZgdKEyHoV9P' }}
-                        style={styles.heroImage}
-                    />
+                    {coverPhoto ? (
+                        <Image
+                            source={{ uri: ImageUtils.getImageUri(coverPhoto) || '' }}
+                            style={styles.heroImage}
+                        />
+                    ) : (
+                        <View style={[styles.heroImage, styles.heroPlaceholder]}>
+                            <MaterialIcons name="image" size={64} color="rgba(255,255,255,0.5)" />
+                        </View>
+                    )}
                     <View style={styles.overlay} />
 
                     {/* Header Overlay */}
@@ -72,7 +89,7 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
                     <View style={styles.heroContent}>
                         <View style={styles.statusBadge}>
                             <Text style={styles.statusBadgeText}>
-                                {artwork.conservationStatus.toUpperCase()}
+                                {t(`status.${artwork.conservationStatus}`).toUpperCase()}
                             </Text>
                         </View>
                         <Text style={styles.artworkId}>ID: {artwork.id.substring(0, 12).toUpperCase()}</Text>
@@ -86,7 +103,7 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
                     <View style={styles.locationContainer}>
                         <MaterialIcons name="location-on" size={18} color="#E8752A" />
                         <Text style={styles.locationText}>
-                            {artwork.address || 'Endereço não informado'}
+                            {artwork.address || t('artwork.no_address')}
                         </Text>
                     </View>
 
@@ -172,14 +189,14 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
                     onPress={() => navigation.navigate('InspectionForm', { artworkId: artwork.id })}
                 >
                     <MaterialIcons name="add-circle" size={20} color="#FFF" />
-                    <Text style={styles.primaryButtonText}>Nova Inspeção</Text>
+                    <Text style={styles.primaryButtonText}>{t('artwork.new_inspection')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.actionButton, styles.secondaryButton]}
-                    onPress={() => navigation.navigate('ReportGenerator')}
+                    onPress={() => navigation.navigate('ReportGenerator', { artworkId: artwork.id })}
                 >
                     <MaterialIcons name="description" size={20} color="#E8752A" />
-                    <Text style={styles.secondaryButtonText}>Gerar Relatório</Text>
+                    <Text style={styles.secondaryButtonText}>{t('report.title')}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -198,6 +215,11 @@ const styles = StyleSheet.create({
     heroImage: {
         width: '100%',
         height: '100%',
+    },
+    heroPlaceholder: {
+        backgroundColor: '#2C2C3E',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,

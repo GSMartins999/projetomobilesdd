@@ -1,1 +1,75 @@
-{}
+{
+    "common": {
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "error": "Error",
+        "loading": "Cargando...",
+        "retry": "Reintentar",
+        "back": "Volver",
+        "help": "Ayuda"
+    },
+    "tabs": {
+        "map": "Mapa",
+        "list": "Lista",
+        "dashboard": "Dashboard",
+        "profile": "Perfil"
+    },
+    "status": {
+        "good": "Buen Estado",
+        "fair": "Regular",
+        "poor": "Precario",
+        "urgent": "Urgente",
+        "unknown": "Desconocido"
+    },
+    "artwork_type": {
+        "painting": "Pintura",
+        "sculpture": "Escultura",
+        "mural": "Mural",
+        "tile": "Azulejería",
+        "relief": "Relieve",
+        "monument": "Monumento",
+        "other": "Otro"
+    },
+    "dashboard": {
+        "title": "Mi Mapa de Obras",
+        "sync_online": "Conectado",
+        "sync_offline": "Desconectado",
+        "sync_action": "Sincronizar {{count}}",
+        "syncing": "Sincronizando...",
+        "portfolio_summary": "Resumen del Portafolio",
+        "stats_total": "TOTAL DE OBRAS",
+        "recent_inspections": "Últimas inspecciones",
+        "view_all": "Ver todas",
+        "empty_inspections": "Sin inspecciones recientes",
+        "empty_subtext": "Las inspecciones aparecerán aquí"
+    },
+    "map": {
+        "title": "Mapa de Obras",
+        "view_details": "Ver detalles de la obra",
+        "unknown_artist": "Artista desconocido"
+    },
+    "report": {
+        "title": "Generar Informe",
+        "subtitle": "TÍTULO DEL INFORME",
+        "period": "PERÍODO",
+        "sections": "SECCIONES INCLUIDAS",
+        "format": "FORMATO DE EXPORTACIÓN",
+        "export": "Exportar {{format}}",
+        "generating": "Generando informe...",
+        "section_summary": "Resumen Ejecutivo",
+        "section_status": "Estado de Conservación",
+        "section_photos": "Fotos de Inspección",
+        "section_geo": "Geolocalización",
+        "section_history": "Historial de Intervenciones"
+    },
+    "artwork": {
+        "new": "Nueva Obra",
+        "name": "Nombre de la Obra",
+        "type": "Tipo",
+        "status": "Estado de Conservación",
+        "notes": "Notas",
+        "address": "Dirección",
+        "no_address": "Dirección no informada",
+        "new_inspection": "Nueva Inspección"
+    }
+}

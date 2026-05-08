@@ -4,7 +4,9 @@
         "cancel": "Cancelar",
         "error": "Erro",
         "loading": "Carregando...",
-        "retry": "Tentar novamente"
+        "retry": "Tentar novamente",
+        "back": "Voltar",
+        "help": "Ajuda"
     },
     "tabs": {
         "map": "Mapa",
@@ -12,34 +14,62 @@
         "dashboard": "Dashboard",
         "profile": "Perfil"
     },
-    "auth": {
-        "login": "Entrar",
-        "logout": "Sair",
-        "email": "E-mail",
-        "password": "Senha",
-        "name": "Nome",
-        "confirm_password": "Confirmar Senha",
-        "register": "Cadastrar",
-        "register_title": "Criar Conta",
-        "no_account": "Não tem uma conta?",
-        "already_have_account": "Já tem uma conta?",
-        "error_required": "Todos os campos são obrigatórios",
-        "password_mismatch": "As senhas não coincidem",
-        "password_too_short": "A senha deve ter no mínimo 6 caracteres",
-        "register_error": "Erro ao criar conta",
-        "invalid_credentials": "E-mail ou senha inválidos"
+    "status": {
+        "good": "Bom Estado",
+        "fair": "Regular",
+        "poor": "Precário",
+        "urgent": "Urgente",
+        "unknown": "Desconhecido"
     },
-    "onboarding": {
-        "next": "Próximo",
-        "finish": "Começar",
-        "camera_permission": "Permissão de Câmera",
-        "location_permission": "Permissão de Localização"
+    "artwork_type": {
+        "painting": "Pintura",
+        "sculpture": "Escultura",
+        "mural": "Mural",
+        "tile": "Azulejaria",
+        "relief": "Relevo",
+        "monument": "Monumento",
+        "other": "Outro"
+    },
+    "dashboard": {
+        "title": "Meu Mapa de Obras",
+        "sync_online": "Conectado",
+        "sync_offline": "Offline",
+        "sync_action": "Sincronizar {{count}}",
+        "syncing": "Sincronizando...",
+        "portfolio_summary": "Resumo do Portfólio",
+        "stats_total": "TOTAL DE OBRAS",
+        "recent_inspections": "Últimas inspeções",
+        "view_all": "Ver todas",
+        "empty_inspections": "Nenhuma inspeção recente",
+        "empty_subtext": "As inspeções realizadas aparecerão aqui"
+    },
+    "map": {
+        "title": "Mapa de Obras",
+        "view_details": "Ver detalhes da obra",
+        "unknown_artist": "Artista desconhecido"
+    },
+    "report": {
+        "title": "Gerar Relatório",
+        "subtitle": "TÍTULO DO RELATÓRIO",
+        "period": "PERÍODO",
+        "sections": "SEÇÕES INCLUÍDAS",
+        "format": "FORMATO DE EXPORTAÇÃO",
+        "export": "Exportar {{format}}",
+        "generating": "Relatório sendo gerado...",
+        "section_summary": "Resumo Executivo",
+        "section_status": "Status de Conservação",
+        "section_photos": "Fotos das Inspeções",
+        "section_geo": "Geolocalização",
+        "section_history": "Histórico de Intervenções"
     },
     "artwork": {
         "new": "Nova Obra",
         "name": "Nome da Obra",
         "type": "Tipo",
         "status": "Estado de Conservação",
-        "notes": "Notas"
+        "notes": "Notas",
+        "address": "Endereço",
+        "no_address": "Endereço não informado",
+        "new_inspection": "Nova Inspeção"
     }
 }

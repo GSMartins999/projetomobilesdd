@@ -49,7 +49,7 @@ export function ProfileScreen() {
                 <View style={styles.menuContent}>
                     <Text style={styles.menuTitle}>{t('profile.language', 'Idioma')}</Text>
                     <Text style={styles.menuSubtitle}>
-                        {i18n.language === 'pt-BR' ? 'Português (Brasil)' : 'English'}
+                        {i18n.language === 'pt-BR' ? 'Português (Brasil)' : i18n.language === 'es' ? 'Español' : 'English'}
                     </Text>
                 </View>
                 <View style={styles.langButtons}>
@@ -64,6 +64,12 @@ export function ProfileScreen() {
                         style={[styles.langPill, i18n.language === 'en' && styles.langPillActive]}
                     >
                         <Text style={[styles.langPillText, i18n.language === 'en' && styles.langPillTextActive]}>EN</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => changeLanguage('es')}
+                        style={[styles.langPill, i18n.language === 'es' && styles.langPillActive]}
+                    >
+                        <Text style={[styles.langPillText, i18n.language === 'es' && styles.langPillTextActive]}>ES</Text>
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>

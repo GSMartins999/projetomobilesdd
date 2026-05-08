@@ -6,12 +6,14 @@ import {
     FlatList,
     TouchableOpacity,
     StyleSheet,
-    ScrollView
+    ScrollView,
+    Image,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useDI } from '../../infrastructure/di/DIContext';
+import { ImageUtils } from '../../infrastructure/utils/ImageUtils';
 import { SearchArtworksUseCase } from '../../domain/usecases/SearchArtworksUseCase';
 import { Artwork, ArtworkType, ConservationStatus } from '../../domain/entities/Artwork';
 
@@ -32,13 +34,14 @@ const statusLabels: Record<string, string> = {
 export function SearchScreen({ navigation }: any) {
     const { t } = useTranslation();
     const insets = useSafeAreaInsets();
-    const { artworkRepository } = useDI();
+    const { artworkRepository, photoRepository } = useDI();
     const searchUseCase = new SearchArtworksUseCase(artworkRepository);
 
     const [query, setQuery] = useState('');
     const [selectedType, setSelectedType] = useState<ArtworkType | null>(null);
     const [selectedStatus, setSelectedStatus] = useState<ConservationStatus | null>(null);
     const [results, setResults] = useState<Artwork[]>([]);
+    const [coverPhotos, setCoverPhotos] = useState<Record<string, string>>({});
 
     const handleSearch = async () => {
         const data = await searchUseCase.execute({
@@ -47,6 +50,18 @@ export function SearchScreen({ navigation }: any) {
             conservationStatus: selectedStatus || undefined,
         });
         setResults(data);
+
+        // Buscar fotos de capa para cada resultado
+        const photosMap: Record<string, string> = {};
+        for (const art of data) {
+            const photos = await photoRepository.findByArtworkId(art.id);
+            if (photos.length > 0) {
+                const p = photos[0];
+                const uri = p.localPath || p.remoteUrl || '';
+                if (uri) photosMap[art.id] = uri;
+            }
+        }
+        setCoverPhotos(photosMap);
     };
 
     useEffect(() => {
@@ -139,7 +154,9 @@ export function SearchScreen({ navigation }: any) {
             </View>
 
             {/* Results */}
-            <Text style={styles.resultsCount}>Resultados ({results.length})</Text>
+            <Text style={styles.resultsCount}>
+                {t('common.results', { count: results.length, defaultValue: 'Resultados' })} ({results.length})
+            </Text>
 
             <FlatList
                 data={results}
@@ -147,7 +164,6 @@ export function SearchScreen({ navigation }: any) {
                 contentContainerStyle={[styles.resultsList, { paddingBottom: Math.max(insets.bottom + 20, 100) }]}
                 renderItem={({ item }) => {
                     const status = statusColors[item.conservationStatus] || statusColors.fair;
-                    const label = statusLabels[item.conservationStatus] || 'REGULAR';
                     return (
                         <TouchableOpacity
                             style={styles.resultCard}
@@ -155,12 +171,22 @@ export function SearchScreen({ navigation }: any) {
                             activeOpacity={0.7}
                         >
                             <View style={styles.resultImagePlaceholder}>
-                                <MaterialIcons name="image" size={28} color="#D4883A" />
+                                {coverPhotos[item.id] ? (
+                                    <Image
+                                        source={{ uri: ImageUtils.getImageUri(coverPhotos[item.id]) || '' }}
+                                        style={styles.resultImage}
+                                        resizeMode="cover"
+                                    />
+                                ) : (
+                                    <MaterialIcons name="image" size={28} color="#D4883A" />
+                                )}
                             </View>
                             <View style={styles.resultInfo}>
                                 <View style={[styles.statusBadge, { backgroundColor: status.bg }]}>
                                     <View style={[styles.statusDot, { backgroundColor: status.dot }]} />
-                                    <Text style={[styles.statusText, { color: status.text }]}>{label}</Text>
+                                    <Text style={[styles.statusText, { color: status.text }]}>
+                                        {t(`status.${item.conservationStatus}`).toUpperCase()}
+                                    </Text>
                                 </View>
                                 <Text style={styles.resultTitle}>{item.name}</Text>
                                 <Text style={styles.resultArtist}>{item.artist || 'Artista desconhecido'}</Text>
@@ -281,6 +307,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 14,
+        overflow: 'hidden',
+    },
+    resultImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 12,
     },
     resultInfo: {
         flex: 1,
