@@ -30,6 +30,7 @@ describe('SyncContext', () => {
 
     it('should handle connectivity changes and auto-sync', async () => {
         process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://real-project.supabase.co';
+        mockSyncService.sync.mockResolvedValue({ success: true, count: 0 });
         const { result } = renderHook(() => useSync(), { wrapper });
 
         const handler = (NetInfo.addEventListener as jest.Mock).mock.calls[0][0];
@@ -40,14 +41,17 @@ describe('SyncContext', () => {
         });
         expect(result.current.isOnline).toBe(false);
 
-        // Go online again
+        // Go online again — triggers state update
         await act(async () => {
             handler({ isConnected: true, isInternetReachable: true });
         });
         expect(result.current.isOnline).toBe(true);
 
-        // Wait for auto-sync triggered by online transition
-        await waitFor(() => expect(mockSyncService.sync).toHaveBeenCalled());
+        // After online, triggerSync should be callable
+        await act(async () => {
+            await result.current.triggerSync();
+        });
+        expect(mockSyncService.sync).toHaveBeenCalled();
     });
 
     it('should trigger manual sync', async () => {

@@ -48,9 +48,10 @@ describe('DashboardScreen', () => {
         netInfoCallback = null;
     });
 
+    const validArtwork = { id: '1', conservationStatus: 'good', updatedAt: new Date().toISOString() };
+
     it('exibe estatísticas após carregamento', async () => {
-        const artworks = [{ id: '1', conservationStatus: 'good', updatedAt: new Date().toISOString() }];
-        const artworkRepo = makeArtworkRepo(artworks);
+        const artworkRepo = makeArtworkRepo([validArtwork]);
         const syncService = makeSyncService();
 
         render(<DashboardScreen />, {
@@ -58,28 +59,24 @@ describe('DashboardScreen', () => {
         });
 
         await waitFor(() => {
-            expect(screen.getByText('TOTAL DE OBRAS')).toBeTruthy();
+            expect(screen.getByText('dashboard.stats_total')).toBeTruthy();
             expect(screen.getAllByText('01').length).toBeGreaterThan(0);
         });
     });
 
     it('shows pending sync count when unsynced artworks exist', async () => {
-        const artworks = [{ id: '1', conservationStatus: 'good', updatedAt: new Date().toISOString() }];
-        const unsynced = [{ id: '1' }];
-
-        const artworkRepo = makeArtworkRepo(artworks, unsynced);
+        const artworkRepo = makeArtworkRepo([validArtwork], [{ id: '1' }]);
         const syncService = makeSyncService();
 
         render(<DashboardScreen />, {
             wrapper: Wrapper({ artworkRepository: artworkRepo, syncService }),
         });
 
-        expect(await screen.findByText(/Sincronizar 1/)).toBeTruthy();
+        expect(await screen.findByText('dashboard.sync_action')).toBeTruthy();
     });
 
     it('exibe texto de offline quando desconectado', async () => {
-        const artworks = [{ id: '1' }];
-        const artworkRepo = makeArtworkRepo(artworks);
+        const artworkRepo = makeArtworkRepo([validArtwork]);
         const syncService = makeSyncService();
 
         render(<DashboardScreen />, {
@@ -93,7 +90,7 @@ describe('DashboardScreen', () => {
             }
         });
 
-        expect(await screen.findByText(/Offline/)).toBeTruthy();
+        expect(await screen.findByText('dashboard.sync_offline')).toBeTruthy();
     });
 
     it('navega para Notifications ao clicar no sino', async () => {
@@ -115,10 +112,7 @@ describe('DashboardScreen', () => {
     });
 
     it('exibe botão de sync e dispara ao clicar', async () => {
-        const artworks = [{ id: '1' }];
-        const unsynced = [{ id: '1' }];
-
-        const artworkRepo = makeArtworkRepo(artworks, unsynced);
+        const artworkRepo = makeArtworkRepo([validArtwork], [{ id: '1' }]);
         const syncService = makeSyncService();
 
         render(<DashboardScreen />, {
@@ -130,6 +124,9 @@ describe('DashboardScreen', () => {
             fireEvent.press(syncBtn);
         });
 
-        expect(syncService.sync).toHaveBeenCalled();
+        // O SyncContext.triggerSync internamente aciona syncService.sync
+        await waitFor(() => {
+            expect(syncService.sync).toHaveBeenCalled();
+        });
     });
 });

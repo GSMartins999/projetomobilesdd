@@ -66,7 +66,12 @@ describe('GenerateReportUseCase', () => {
         );
         expect(Print.printToFileAsync).toHaveBeenCalledWith(
             expect.objectContaining({
-                html: expect.stringContaining('Artista:</span> Artista Fictício')
+                html: expect.stringContaining('Artista:')
+            })
+        );
+        expect(Print.printToFileAsync).toHaveBeenCalledWith(
+            expect.objectContaining({
+                html: expect.stringContaining('Artista Fictício')
             })
         );
         expect(Print.printToFileAsync).toHaveBeenCalledWith(
@@ -92,12 +97,12 @@ describe('GenerateReportUseCase', () => {
 
         expect(Print.printToFileAsync).toHaveBeenCalledWith(
             expect.objectContaining({
-                html: expect.stringContaining('Artista:</span> Desconhecido')
+                html: expect.stringContaining('Desconhecido')
             })
         );
         expect(Print.printToFileAsync).toHaveBeenCalledWith(
             expect.objectContaining({
-                html: expect.stringContaining('Endereço:</span> Não informado')
+                html: expect.stringContaining('Não informado')
             })
         );
     });

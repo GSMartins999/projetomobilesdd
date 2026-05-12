@@ -51,6 +51,7 @@ describe('ArtworkRepositoryImpl', () => {
     });
 
     it('save deve inserir uma nova obra', async () => {
+        (mockDb.select() as any).mockResolvedValueOnce([]);
         await repository.save(mockArtwork);
         expect(mockDb.insert).toHaveBeenCalledWith(artworks);
     });

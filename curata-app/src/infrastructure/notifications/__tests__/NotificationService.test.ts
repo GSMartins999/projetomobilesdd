@@ -9,6 +9,7 @@ jest.mock('expo-notifications', () => ({
     getPermissionsAsync: jest.fn(),
     requestPermissionsAsync: jest.fn(),
     AndroidImportance: { MAX: 4 },
+    SchedulableTriggerInputTypes: { TIME_INTERVAL: 'timeInterval' },
 }));
 
 describe('NotificationService', () => {
@@ -27,6 +28,8 @@ describe('NotificationService', () => {
             shouldShowAlert: true,
             shouldPlaySound: true,
             shouldSetBadge: false,
+            shouldShowBanner: true,
+            shouldShowList: true,
         });
 
         if (Platform.OS === 'android') {

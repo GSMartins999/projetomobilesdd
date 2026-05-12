@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import NetInfo from '@react-native-community/netinfo';
 import { useDI } from '../di/DIContext';
 import { SyncService, SyncResult } from '../../domain/services/SyncService';
@@ -18,23 +18,14 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
     const [isSyncing, setIsSyncing] = useState(false);
     const [lastSyncResult, setLastSyncResult] = useState<SyncResult | null>(null);
 
-    useEffect(() => {
-        // Monitorar conectividade
-        const unsubscribe = NetInfo.addEventListener((state) => {
-            const online = !!state.isConnected && !!state.isInternetReachable;
-            setIsOnline(online);
+    const isSyncingRef = useRef(isSyncing);
+    isSyncingRef.current = isSyncing;
 
-            // Auto-sync ao voltar a ficar online
-            if (online && !isSyncing) {
-                triggerSync();
-            }
-        });
-
-        return () => unsubscribe();
-    }, []);
+    const isOnlineRef = useRef(isOnline);
+    isOnlineRef.current = isOnline;
 
     const triggerSync = async () => {
-        if (isSyncing || !isOnline) return;
+        if (isSyncingRef.current || !isOnlineRef.current) return;
 
         // Guarda: não executar sync se as credenciais do Supabase não estiverem configuradas
         const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
@@ -53,6 +44,24 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
             setIsSyncing(false);
         }
     };
+
+    const triggerSyncRef = useRef(triggerSync);
+    triggerSyncRef.current = triggerSync;
+
+    useEffect(() => {
+        // Monitorar conectividade
+        const unsubscribe = NetInfo.addEventListener((state) => {
+            const online = !!state.isConnected && !!state.isInternetReachable;
+            setIsOnline(online);
+
+            // Auto-sync ao voltar a ficar online
+            if (online && !isSyncingRef.current) {
+                triggerSyncRef.current();
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     return (
         <SyncContext.Provider value={{ isOnline, isSyncing, lastSyncResult, triggerSync }}>

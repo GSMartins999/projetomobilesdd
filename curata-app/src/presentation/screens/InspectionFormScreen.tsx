@@ -32,14 +32,14 @@ export function InspectionFormScreen({ navigation, route }: any) {
     const insets = useSafeAreaInsets();
     const { inspectionRepository, artworkRepository, photoRepository } = useDI();
 
-    const createInspectionUseCase = new CreateInspectionUseCase(
+    const createInspectionUseCase = React.useMemo(() => new CreateInspectionUseCase(
         inspectionRepository,
         artworkRepository,
         photoRepository,
         () => Math.random().toString(36).substr(2, 9),
         () => Math.random().toString(36).substr(2, 9),
         () => 'device-1'
-    );
+    ), [inspectionRepository, artworkRepository, photoRepository]);
 
     const [inspectionId] = useState(() => Math.random().toString(36).substr(2, 9));
     const [structuralCondition, setStructuralCondition] = useState('');

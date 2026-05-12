@@ -1,4 +1,4 @@
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions, Camera } from 'expo-camera';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { CameraService, PhotoCaptureResult } from '../../domain/services/CameraService';
 
@@ -13,14 +13,12 @@ export class CameraServiceImpl implements CameraService {
         // useCameraPermissions é um hook — não pode ser chamado aqui.
         // Usamos a API imperativa do módulo expo-modules-core via getCameraPermissionsAsync
         // que ainda está disponível fora de componentes React.
-        const { Camera } = await import('expo-camera');
         const { status } = await (Camera as any).getCameraPermissionsAsync?.() ??
             { status: 'undetermined' };
         return status === 'granted';
     }
 
     async requestPermissions(): Promise<boolean> {
-        const { Camera } = await import('expo-camera');
         const { status } = await (Camera as any).requestCameraPermissionsAsync?.() ??
             { status: 'denied' };
         return status === 'granted';

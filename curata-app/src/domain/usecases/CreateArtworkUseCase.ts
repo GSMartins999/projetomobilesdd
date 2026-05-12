@@ -1,5 +1,7 @@
 import { Artwork, CreateArtworkInput } from '../entities/Artwork';
 import { ArtworkRepository } from '../repositories/ArtworkRepository';
+import { PhotoRepository } from '../repositories/PhotoRepository';
+import { Photo } from '../entities/Inspection';
 
 const DUPLICATE_DETECTION_RADIUS_METERS = 30;
 
@@ -28,6 +30,7 @@ export class CreateArtworkUseCase {
         private readonly getDeviceId: () => string,
         private readonly generateId: () => string,
         private readonly now: () => string = () => new Date().toISOString(),
+        private readonly photoRepository?: PhotoRepository,
     ) { }
 
     async execute(input: CreateArtworkInput): Promise<CreateArtworkResult> {
@@ -67,6 +70,25 @@ export class CreateArtworkUseCase {
         }
 
         await this.artworkRepository.save(artwork);
+
+        if (input.photoLocalPath && this.photoRepository) {
+            const photo: Photo = {
+                id: this.generateId(),
+                inspectionId: null, // Sem inspeção associada, foto direta da obra
+                artworkId: artwork.id,
+                localPath: input.photoLocalPath,
+                remoteUrl: null,
+                uploadStatus: 'pending',
+                label: 'front',
+                order: 0,
+                deviceId: this.getDeviceId(),
+                updatedAt: this.now(),
+                syncedAt: null,
+                deletedAt: null,
+            };
+            await this.photoRepository.save(photo);
+        }
+
         return { artwork, nearbyArtworks };
     }
 }

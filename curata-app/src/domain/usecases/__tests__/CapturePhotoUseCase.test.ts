@@ -1,11 +1,9 @@
 import { CapturePhotoUseCase } from '../CapturePhotoUseCase';
 import { CameraService } from '../../services/CameraService';
-import { PhotoRepository } from '../../repositories/PhotoRepository';
 
 describe('CapturePhotoUseCase', () => {
     let useCase: CapturePhotoUseCase;
     let mockCameraService: jest.Mocked<CameraService>;
-    let mockPhotoRepo: jest.Mocked<PhotoRepository>;
 
     beforeEach(() => {
         mockCameraService = {
@@ -13,17 +11,10 @@ describe('CapturePhotoUseCase', () => {
             hasPermissions: jest.fn(),
             takePicture: jest.fn(),
             processImage: jest.fn(),
-        };
-
-        mockPhotoRepo = {
-            findByInspectionId: jest.fn(),
-            save: jest.fn(),
-            updateUploadStatus: jest.fn(),
-            findUnsyncedPhotos: jest.fn(),
-            softDelete: jest.fn(),
+            setCameraRef: jest.fn(),
         } as any;
 
-        useCase = new CapturePhotoUseCase(mockCameraService, mockPhotoRepo);
+        useCase = new CapturePhotoUseCase(mockCameraService);
     });
 
     it('should throw error if camera permission is denied', async () => {
@@ -37,7 +28,7 @@ describe('CapturePhotoUseCase', () => {
         })).rejects.toThrow('Permissão de câmera negada');
     });
 
-    it('should capture, process and save photo successfully', async () => {
+    it('should capture, process and return photo entity without saving', async () => {
         mockCameraService.hasPermissions.mockResolvedValueOnce(true);
         mockCameraService.takePicture.mockResolvedValueOnce({
             uri: 'file://raw.jpg',
@@ -58,8 +49,10 @@ describe('CapturePhotoUseCase', () => {
 
         expect(mockCameraService.takePicture).toHaveBeenCalled();
         expect(mockCameraService.processImage).toHaveBeenCalledWith('file://raw.jpg');
-        expect(mockPhotoRepo.save).toHaveBeenCalled();
         expect(result.localPath).toBe('file://compressed.jpg');
         expect(result.label).toBe('front');
+        expect(result.artworkId).toBe('a1');
+        expect(result.inspectionId).toBe('i1');
     });
 });
+

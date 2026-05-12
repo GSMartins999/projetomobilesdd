@@ -41,6 +41,7 @@ const mockDIValues: any = {
     },
     photoRepository: {
         findByInspectionId: jest.fn().mockResolvedValue([]),
+        findByArtworkId: jest.fn().mockResolvedValue([]),
         findUnsyncedPhotos: jest.fn().mockResolvedValue([]),
         save: jest.fn().mockResolvedValue({ id: '1' }),
     },

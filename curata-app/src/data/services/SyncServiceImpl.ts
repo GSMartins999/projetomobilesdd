@@ -6,6 +6,100 @@ import { SyncService, SyncResult } from '../../domain/services/SyncService';
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
 
+function mapToSnakeCase(tableName: string, item: any): any {
+    const base = {
+        id: item.id,
+        device_id: item.deviceId,
+        updated_at: item.updatedAt,
+        synced_at: new Date().toISOString(),
+        deleted_at: item.deletedAt,
+    };
+    if (tableName === 'artworks') {
+        return {
+            ...base,
+            display_id: item.displayId,
+            name: item.name,
+            artist: item.artist,
+            type: item.type,
+            conservation_status: item.conservationStatus,
+            notes: item.notes,
+            latitude: item.latitude,
+            longitude: item.longitude,
+            address: item.address,
+        };
+    }
+    if (tableName === 'inspections') {
+        return {
+            ...base,
+            artwork_id: item.artworkId,
+            technical_form: typeof item.technicalForm === 'string' ? item.technicalForm : JSON.stringify(item.technicalForm),
+            form_version: item.formVersion,
+        };
+    }
+    if (tableName === 'photos') {
+        return {
+            ...base,
+            inspection_id: item.inspectionId,
+            artwork_id: item.artworkId,
+            local_path: item.localPath,
+            remote_url: item.remoteUrl,
+            upload_status: item.uploadStatus,
+            label: item.label,
+            order: item.order,
+        };
+    }
+    return base;
+}
+
+function mapToCamelCase(tableName: string, item: any): any {
+    const base = {
+        id: item.id,
+        deviceId: item.device_id,
+        updatedAt: item.updated_at,
+        syncedAt: item.synced_at,
+        deletedAt: item.deleted_at,
+    };
+    if (tableName === 'artworks') {
+        return {
+            ...base,
+            displayId: item.display_id,
+            name: item.name,
+            artist: item.artist,
+            type: item.type,
+            conservationStatus: item.conservation_status,
+            notes: item.notes,
+            latitude: item.latitude,
+            longitude: item.longitude,
+            address: item.address,
+        };
+    }
+    if (tableName === 'inspections') {
+        let parsedForm = item.technical_form;
+        if (typeof parsedForm === 'string') {
+            try { parsedForm = JSON.parse(parsedForm); } catch(e){}
+        }
+        return {
+            ...base,
+            artworkId: item.artwork_id,
+            technicalForm: parsedForm,
+            formVersion: item.form_version,
+        };
+    }
+    if (tableName === 'photos') {
+        return {
+            ...base,
+            inspectionId: item.inspection_id,
+            artworkId: item.artwork_id,
+            localPath: item.local_path,
+            remoteUrl: item.remote_url,
+            uploadStatus: item.upload_status,
+            label: item.label,
+            order: item.order,
+        };
+    }
+    return base;
+}
+
 export class SyncServiceImpl implements SyncService {
     constructor(
         private readonly artworkRepo: ArtworkRepository,
@@ -41,10 +135,8 @@ export class SyncServiceImpl implements SyncService {
         // A. Upload: Local -> Server (unsynced items)
         const unsynced = await repo.findUnsynced();
         if (unsynced.length > 0) {
-            const { error } = await this.supabase.from(tableName).upsert(unsynced.map((item: any) => ({
-                ...item,
-                syncedAt: new Date().toISOString() // Marcar como sincronizado no servidor
-            })));
+            const upsertPayload = unsynced.map((item: any) => mapToSnakeCase(tableName, item));
+            const { error } = await this.supabase.from(tableName).upsert(upsertPayload);
             if (error) throw new Error(`Upload ${tableName} failed: ${error.message}`);
 
             // Atualizar localmente
@@ -68,7 +160,7 @@ export class SyncServiceImpl implements SyncService {
                 const localItem = await repo.findById(remoteItem.id);
                 if (!localItem || new Date(remoteItem.updated_at) > new Date(localItem.updatedAt)) {
                     // LWW: remoto é mais novo ou não existe localmente
-                    await repo.save(remoteItem);
+                    await repo.save(mapToCamelCase(tableName, remoteItem));
                     result.downloadedCount++;
                 }
             }
@@ -89,7 +181,7 @@ export class SyncServiceImpl implements SyncService {
                 if (error) throw error;
 
                 const { data: { publicUrl } } = this.supabase.storage.from('curata-media').getPublicUrl(filePath);
-                await this.photoRepo.updateUploadStatus(photo.id, 'synced', publicUrl);
+                await this.photoRepo.updateUploadStatus(photo.id, 'done', publicUrl);
                 result.uploadedCount++;
             } catch (err: any) {
                 result.errors.push(`Photo upload failed (${photo.id}): ${err.message}`);

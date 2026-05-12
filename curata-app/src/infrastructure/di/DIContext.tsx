@@ -1,4 +1,7 @@
 import React, { createContext, useContext, ReactNode } from 'react';
+import { ArtworkRepository } from '../../domain/repositories/ArtworkRepository';
+import { InspectionRepository } from '../../domain/repositories/InspectionRepository';
+import { PhotoRepository } from '../../domain/repositories/PhotoRepository';
 import { AuthRepository } from '../../domain/repositories/AuthRepository';
 import { SyncService } from '../../domain/services/SyncService';
 import { CameraService } from '../../domain/services/CameraService';

@@ -39,27 +39,33 @@ export class ArtworkRepositoryImpl implements ArtworkRepository {
     }
 
     async save(artwork: Artwork): Promise<void> {
-        await this.db.insert(artworks).values({
-            id: artwork.id,
-            displayId: artwork.displayId,
-            name: artwork.name,
-            artist: artwork.artist,
-            type: artwork.type,
-            conservationStatus: artwork.conservationStatus,
-            notes: artwork.notes,
-            latitude: artwork.latitude,
-            longitude: artwork.longitude,
-            address: artwork.address,
-            deviceId: artwork.deviceId,
-            updatedAt: artwork.updatedAt,
-            syncedAt: artwork.syncedAt,
-            deletedAt: artwork.deletedAt,
-        });
+        const existing = await this.findById(artwork.id);
+        if (existing) {
+            await this.update(artwork);
+        } else {
+            await this.db.insert(artworks).values({
+                id: artwork.id,
+                displayId: artwork.displayId,
+                name: artwork.name,
+                artist: artwork.artist,
+                type: artwork.type,
+                conservationStatus: artwork.conservationStatus,
+                notes: artwork.notes,
+                latitude: artwork.latitude,
+                longitude: artwork.longitude,
+                address: artwork.address,
+                deviceId: artwork.deviceId,
+                updatedAt: artwork.updatedAt,
+                syncedAt: artwork.syncedAt,
+                deletedAt: artwork.deletedAt,
+            });
+        }
     }
 
     async update(artwork: Artwork): Promise<void> {
         await this.db.update(artworks)
             .set({
+                displayId: artwork.displayId,
                 name: artwork.name,
                 artist: artwork.artist,
                 type: artwork.type,
@@ -69,7 +75,7 @@ export class ArtworkRepositoryImpl implements ArtworkRepository {
                 longitude: artwork.longitude,
                 address: artwork.address,
                 updatedAt: artwork.updatedAt,
-                syncedAt: artwork.syncedAt, // Atualiza para null no sync service se alterado
+                syncedAt: artwork.syncedAt,
                 deletedAt: artwork.deletedAt,
             })
             .where(eq(artworks.id, artwork.id));
@@ -79,6 +85,7 @@ export class ArtworkRepositoryImpl implements ArtworkRepository {
         await this.db.update(artworks)
             .set({
                 deletedAt: new Date().toISOString(),
+                syncedAt: null,
                 updatedAt: new Date().toISOString()
             })
             .where(eq(artworks.id, id));

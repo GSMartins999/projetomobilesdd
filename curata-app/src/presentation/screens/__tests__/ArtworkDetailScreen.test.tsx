@@ -33,6 +33,7 @@ describe('ArtworkDetailScreen', () => {
         const mockDI = {
             artworkRepository: { findById: jest.fn().mockResolvedValue(art) },
             inspectionRepository: { findByArtworkId: jest.fn().mockResolvedValue(insp) },
+            photoRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
         };
 
         const { getByText, findByText } = render(<ArtworkDetailScreen route={route} navigation={{ goBack: mockGoBack, navigate: mockNavigate }} />, {
@@ -48,6 +49,7 @@ describe('ArtworkDetailScreen', () => {
         const mockDI = {
             artworkRepository: { findById: jest.fn().mockResolvedValue(art) },
             inspectionRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
+            photoRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
         };
 
         const { findByText } = render(<ArtworkDetailScreen route={route} navigation={{ goBack: mockGoBack, navigate: mockNavigate }} />, {
@@ -63,6 +65,7 @@ describe('ArtworkDetailScreen', () => {
         const mockDI = {
             artworkRepository: { findById: jest.fn().mockResolvedValue(art) },
             inspectionRepository: { findByArtworkId: jest.fn().mockResolvedValue(insp) },
+            photoRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
         };
 
         const { getByText, UNSAFE_root } = render(<ArtworkDetailScreen route={route} navigation={{ goBack: mockGoBack, navigate: mockNavigate }} />, {
@@ -87,12 +90,12 @@ describe('ArtworkDetailScreen', () => {
         fireEvent.press(getByText('Ok'));
         expect(mockNavigate).toHaveBeenCalledWith('InspectionDetail', { inspectionId: 'insp-1' });
 
-        // click 'Gerar Relatório'
-        fireEvent.press(getByText('Gerar Relatório'));
-        expect(mockNavigate).toHaveBeenCalledWith('ReportGenerator');
+        // click 'Gerar Relatório' (navega com artworkId como param)
+        fireEvent.press(getByText('report.title'));
+        expect(mockNavigate).toHaveBeenCalledWith('ReportGenerator', expect.objectContaining({ artworkId: 'art-1' }));
         
-        // click 'Nova Inspeção' (was already tested but might as well group it here)
-        fireEvent.press(getByText('Nova Inspeção'));
+        // click 'Nova Inspeção' (chave i18n: artwork.new_inspection)
+        fireEvent.press(getByText('artwork.new_inspection'));
     });
 
     it('renders placeholder when address is missing', async () => {
@@ -100,13 +103,14 @@ describe('ArtworkDetailScreen', () => {
         const mockDI = {
             artworkRepository: { findById: jest.fn().mockResolvedValue(art) },
             inspectionRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
+            photoRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
         };
 
         const { findByText } = render(<ArtworkDetailScreen route={route} navigation={{ goBack: mockGoBack, navigate: mockNavigate }} />, {
             wrapper: (props) => <Wrapper {...props} mockDI={mockDI} />
         });
 
-        expect(await findByText('Endereço não informado')).toBeTruthy();
+        expect(await findByText('artwork.no_address')).toBeTruthy();
     });
 
     it('renders maximum 3 inspections in preview', async () => {
@@ -120,6 +124,7 @@ describe('ArtworkDetailScreen', () => {
         const mockDI = {
             artworkRepository: { findById: jest.fn().mockResolvedValue(art) },
             inspectionRepository: { findByArtworkId: jest.fn().mockResolvedValue(insp) },
+            photoRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
         };
 
         const { findByText, queryByText } = render(<ArtworkDetailScreen route={route} navigation={{ goBack: mockGoBack, navigate: mockNavigate }} />, {

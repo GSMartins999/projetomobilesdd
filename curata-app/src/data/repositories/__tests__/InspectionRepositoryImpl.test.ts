@@ -50,6 +50,7 @@ describe('InspectionRepositoryImpl', () => {
     });
 
     it('save deve inserir inspeção com JSON stringified', async () => {
+        (mockDb.select() as any).mockResolvedValueOnce([]);
         await repository.save(mockInspection);
         expect(mockDb.insert).toHaveBeenCalledWith(inspections);
         // Verifica se o valor passado para o insert tem a string JSON

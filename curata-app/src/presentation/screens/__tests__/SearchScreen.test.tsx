@@ -14,11 +14,15 @@ const mockRepository: any = {
     findAll: jest.fn().mockResolvedValue(mockArtworks),
 };
 
+const mockPhotoRepo: any = {
+    findByArtworkId: jest.fn().mockResolvedValue([]),
+};
+
 const mockNavigate = jest.fn();
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
     <NavigationContainer>
-        <DIProvider values={{ artworkRepository: mockRepository } as any}>
+        <DIProvider values={{ artworkRepository: mockRepository, photoRepository: mockPhotoRepo } as any}>
             {children}
         </DIProvider>
     </NavigationContainer>
@@ -109,7 +113,7 @@ describe('SearchScreen', () => {
 
         render(<SearchScreen {...mockProps} />, { wrapper: TestWrapper });
         
-        expect(await screen.findByText('REGULAR')).toBeTruthy();
-        expect(await screen.findByText('Artista desconhecido')).toBeTruthy();
+        expect(await screen.findByText('STATUS.UNKNOWN')).toBeTruthy();
+        expect(await screen.findByText('Unknown Art')).toBeTruthy();
     });
 });

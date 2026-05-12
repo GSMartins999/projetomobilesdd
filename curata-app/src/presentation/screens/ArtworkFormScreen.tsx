@@ -31,15 +31,18 @@ const statusOptions: { key: ConservationStatus; label: string; color: string; bg
 export function ArtworkFormScreen({ navigation, route }: any) {
     const { t } = useTranslation();
     const insets = useSafeAreaInsets();
-    const { artworkRepository } = useDI();
+    const { artworkRepository, photoRepository } = useDI();
 
-    const createArtworkUseCase = new CreateArtworkUseCase(
+    const createArtworkUseCase = React.useMemo(() => new CreateArtworkUseCase(
         artworkRepository,
         () => 'device-id-123',
-        () => Math.random().toString(36).substr(2, 9)
-    );
-    const duplicateDetectionUseCase = new DuplicateDetectionUseCase(artworkRepository);
-    const geocodingService = new GeocodingService();
+        () => Math.random().toString(36).substr(2, 9),
+        () => new Date().toISOString(),
+        photoRepository
+    ), [artworkRepository, photoRepository]);
+
+    const duplicateDetectionUseCase = React.useMemo(() => new DuplicateDetectionUseCase(artworkRepository), [artworkRepository]);
+    const geocodingService = React.useMemo(() => new GeocodingService(), []);
 
     const [name, setName] = useState('');
     const [artist, setArtist] = useState('');
@@ -73,7 +76,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
             }
         }
         getGPS();
-    }, []);
+    }, [geocodingService, duplicateDetectionUseCase, navigation]);
 
     const handleSave = async () => {
         if (!name.trim()) {
@@ -90,6 +93,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
                 notes,
                 latitude: location?.coords.latitude,
                 longitude: location?.coords.longitude,
+                photoLocalPath: photoUri || undefined,
             });
             navigation.goBack();
         } catch (err: any) {

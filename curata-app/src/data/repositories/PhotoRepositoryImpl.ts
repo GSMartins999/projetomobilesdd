@@ -28,21 +28,48 @@ export class PhotoRepositoryImpl implements PhotoRepository {
         return result as Photo[];
     }
 
+    async findById(id: string): Promise<Photo | null> {
+        const result = await this.db.select().from(photos).where(eq(photos.id, id)).limit(1);
+        return (result[0] as Photo) || null;
+    }
+
     async save(photo: Photo): Promise<void> {
-        await this.db.insert(photos).values({
-            id: photo.id,
-            inspectionId: photo.inspectionId,
-            artworkId: photo.artworkId,
-            localPath: photo.localPath,
-            remoteUrl: photo.remoteUrl,
-            uploadStatus: photo.uploadStatus,
-            label: photo.label,
-            order: photo.order,
-            deviceId: photo.deviceId,
-            updatedAt: photo.updatedAt,
-            syncedAt: photo.syncedAt,
-            deletedAt: photo.deletedAt,
-        });
+        const existing = await this.findById(photo.id);
+        if (existing) {
+            await this.update(photo);
+        } else {
+            await this.db.insert(photos).values({
+                id: photo.id,
+                inspectionId: photo.inspectionId,
+                artworkId: photo.artworkId,
+                localPath: photo.localPath,
+                remoteUrl: photo.remoteUrl,
+                uploadStatus: photo.uploadStatus,
+                label: photo.label,
+                order: photo.order,
+                deviceId: photo.deviceId,
+                updatedAt: photo.updatedAt,
+                syncedAt: photo.syncedAt,
+                deletedAt: photo.deletedAt,
+            });
+        }
+    }
+
+    async update(photo: Photo): Promise<void> {
+        await this.db.update(photos)
+            .set({
+                inspectionId: photo.inspectionId,
+                artworkId: photo.artworkId,
+                localPath: photo.localPath,
+                remoteUrl: photo.remoteUrl,
+                uploadStatus: photo.uploadStatus,
+                label: photo.label,
+                order: photo.order,
+                updatedAt: photo.updatedAt,
+                syncedAt: photo.syncedAt,
+                deletedAt: photo.deletedAt,
+            })
+            .where(eq(photos.id, photo.id));
     }
 
     async updateUploadStatus(id: string, status: Photo['uploadStatus'], remoteUrl?: string): Promise<void> {
@@ -64,10 +91,15 @@ export class PhotoRepositoryImpl implements PhotoRepository {
         ) as Photo[];
     }
 
+    async findUnsynced(): Promise<Photo[]> {
+        return await this.db.select().from(photos).where(isNull(photos.syncedAt)) as Photo[];
+    }
+
     async softDelete(id: string): Promise<void> {
         await this.db.update(photos)
             .set({
                 deletedAt: new Date().toISOString(),
+                syncedAt: null,
                 updatedAt: new Date().toISOString()
             })
             .where(eq(photos.id, id));

@@ -33,6 +33,7 @@ describe('PhotoRepositoryImpl', () => {
     });
 
     it('save deve inserir uma nova foto', async () => {
+        (mockDb.select() as any).mockResolvedValueOnce([]);
         await repository.save(mockPhoto);
         expect(mockDb.insert).toHaveBeenCalledWith(photos);
     });

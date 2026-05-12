@@ -26,7 +26,13 @@ const mockI18nInstance = {
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
-        t: (key: string, defaultValue?: string) => defaultValue || key,
+        t: (key: string, options?: any) => {
+            if (typeof options === 'string') return options;
+            if (options && typeof options === 'object' && options.defaultValue) {
+                return String(options.defaultValue);
+            }
+            return key;
+        },
         i18n: mockI18nInstance,
     }),
     initReactI18next: {
@@ -60,14 +66,21 @@ jest.mock('expo-location', () => ({
 jest.mock('expo-camera', () => {
     const React = require('react');
     const { View } = require('react-native');
-    const MockCameraView = (props: any) => React.createElement(View, props);
+    const MockCameraView = (props: any) => {
+        React.useEffect(() => {
+            if (props.onCameraReady) {
+                props.onCameraReady();
+            }
+        }, []);
+        return React.createElement(View, props);
+    };
     return {
         CameraView: MockCameraView,
-        requestCameraPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
-        useCameraPermissions: jest.fn().mockReturnValue([{ status: 'granted' }, jest.fn()]),
+        requestCameraPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted', granted: true }),
+        useCameraPermissions: jest.fn().mockReturnValue([{ status: 'granted', granted: true }, jest.fn()]),
         Camera: {
-            requestCameraPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
-            getCameraPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
+            requestCameraPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted', granted: true }),
+            getCameraPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted', granted: true }),
             Constants: { Type: { back: 'back', front: 'front' } },
         }
     };
@@ -109,5 +122,33 @@ jest.mock('@react-native-community/netinfo', () => ({
         isInternetReachable: true,
     }),
 }));
+
+// Mock @maplibre/maplibre-react-native
+jest.mock('@maplibre/maplibre-react-native', () => {
+    const React = require('react');
+    const { View } = require('react-native');
+    const MockComponent = (props: any) => React.createElement(View, props, props.children);
+    return {
+        __esModule: true,
+        default: {
+            MapView: MockComponent,
+            Camera: MockComponent,
+            UserLocation: MockComponent,
+            PointAnnotation: MockComponent,
+            MarkerView: MockComponent,
+        },
+    };
+}, { virtual: true });
+
+// Mock react-native-safe-area-context
+jest.mock('react-native-safe-area-context', () => {
+    const React = require('react');
+    const { View } = require('react-native');
+    return {
+        SafeAreaView: (props: any) => React.createElement(View, props, props.children),
+        SafeAreaProvider: (props: any) => React.createElement(View, props, props.children),
+        useSafeAreaInsets: () => ({ top: 40, bottom: 20, left: 0, right: 0 }),
+    };
+});
 
 

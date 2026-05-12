@@ -88,7 +88,7 @@ describe('SyncServiceImpl', () => {
 
         await syncService.sync();
 
-        expect(repos.photo.updateUploadStatus).toHaveBeenCalledWith('p1', 'synced', 'http://photo');
+        expect(repos.photo.updateUploadStatus).toHaveBeenCalledWith('p1', 'done', 'http://photo');
     });
 
     it('deve capturar erros globais durante o sync', async () => {
@@ -192,7 +192,11 @@ describe('SyncServiceImpl', () => {
         );
 
         await syncService.sync();
-        expect(repos.artwork.save).toHaveBeenCalledWith(serverArtwork);
+        expect(repos.artwork.save).toHaveBeenCalledWith(expect.objectContaining({
+            id: 's1',
+            name: 'Obra Remota',
+            updatedAt: '2026-03-27',
+        }));
     });
 
     it('não deve fazer nada se não houver registros não sincronizados', async () => {

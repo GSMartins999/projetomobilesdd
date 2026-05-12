@@ -32,7 +32,7 @@ export class GenerateReportUseCase {
             .value { flex: 1; color: #1A1A2E; }
             .photo-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
             .photo { width: 180px; height: 180px; border-radius: 8px; object-fit: cover; border: 1px solid #eee; }
-            .status-badge { display: inline-block; padding: 4px 12px; borderRadius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+            .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
             .status-good { background-color: #ECFDF5; color: #2D6A4F; }
             .status-fair { background-color: #FEFCE8; color: #D4883A; }
             .status-poor { background-color: #FFF5EB; color: #FB8500; }
@@ -41,8 +41,7 @@ export class GenerateReportUseCase {
         </head>
         <body>
           <div class="header">
-            <h1>Relatório de Conservação</h1>
-            <p>${artwork.name}</p>
+            <h1>Relatório Técnico: ${artwork.name}</h1>
           </div>
 
           <div class="container">
@@ -75,8 +74,11 @@ export class GenerateReportUseCase {
     `;
 
         try {
-            const { uri } = await Print.printToFileAsync({ html });
-            await Sharing.shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+            const file = await Print.printToFileAsync({
+                html,
+                base64: false,
+            });
+            await Sharing.shareAsync(file.uri, { UTI: '.pdf', mimeType: 'application/pdf' });
         } catch (error) {
             console.error('[GenerateReportUseCase] Error generating PDF:', error);
             throw new Error('Falha ao gerar relatório PDF');
