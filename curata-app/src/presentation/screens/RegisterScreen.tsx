@@ -15,6 +15,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { LoadingOverlay } from '../components/LoadingOverlay';
 
 export function RegisterScreen() {
     const { t } = useTranslation();
@@ -56,6 +57,7 @@ export function RegisterScreen() {
 
     return (
         <View style={styles.container}>
+            <LoadingOverlay visible={isLoading} message="Criando conta..." />
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior="padding"

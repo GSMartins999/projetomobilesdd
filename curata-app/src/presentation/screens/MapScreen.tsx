@@ -71,6 +71,7 @@ export function MapScreen({ navigation }: any) {
     const [selected, setSelected] = useState<Artwork | null>(null);
 
     const slideAnim = useRef(new Animated.Value(300)).current;
+    const mapRef = useRef<MapView>(null);
 
     useEffect(() => {
         async function init() {
@@ -92,7 +93,17 @@ export function MapScreen({ navigation }: any) {
             const { status } = await Location.requestForegroundPermissionsAsync();
             if (status === 'granted') {
                 const loc = await Location.getCurrentPositionAsync({});
-                setUserLocation({ lat: loc.coords.latitude, lng: loc.coords.longitude });
+                const lat = loc.coords.latitude;
+                const lng = loc.coords.longitude;
+                setUserLocation({ lat, lng });
+                
+                // Animar o mapa para a localização do usuário assim que obtida
+                mapRef.current?.animateToRegion({
+                    latitude: lat,
+                    longitude: lng,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                }, 1000);
             }
         }
         init();
@@ -134,7 +145,12 @@ export function MapScreen({ navigation }: any) {
             </View>
 
             {/* Map */}
+<<<<<<< HEAD
             <MapboxGL.MapView
+=======
+            <MapView
+                ref={mapRef}
+>>>>>>> cce0061 (feat: implement bounding box duplicate detection, add date pickers to reports, increase auth delay, and integrate expo-notifications)
                 style={styles.map}
                 onPress={closeCard}
                 logoEnabled={false}

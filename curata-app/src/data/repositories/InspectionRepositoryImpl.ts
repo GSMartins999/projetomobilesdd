@@ -73,4 +73,12 @@ export class InspectionRepositoryImpl implements InspectionRepository {
             technicalForm: JSON.parse(item.technicalForm),
         })) as Inspection[];
     }
+
+    async findAll(): Promise<Inspection[]> {
+        const result = await this.db.select().from(inspections);
+        return result.map((item) => ({
+            ...item,
+            technicalForm: JSON.parse(item.technicalForm),
+        })) as Inspection[];
+    }
 }

@@ -51,3 +51,8 @@ export const photos = sqliteTable('photos', {
     syncedAt: text('synced_at'),
     deletedAt: text('deleted_at'),
 });
+
+export const syncState = sqliteTable('sync_state', {
+    id: text('id').primaryKey(), // usually just 'default'
+    lastSyncTimestamp: text('last_sync_timestamp').notNull(),
+});

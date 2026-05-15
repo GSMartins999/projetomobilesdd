@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
     View,
     Text,
@@ -20,6 +20,7 @@ import { useDI } from '../../infrastructure/di/DIContext';
 import { CreateArtworkUseCase } from '../../domain/usecases/CreateArtworkUseCase';
 import { DuplicateDetectionUseCase } from '../../domain/usecases/DuplicateDetectionUseCase';
 import { GeocodingService } from '../../infrastructure/services/GeocodingService';
+import { LoadingOverlay } from '../components/LoadingOverlay';
 
 const statusOptions: { key: ConservationStatus; label: string; color: string; bg: string }[] = [
     { key: 'good', label: 'Bom', color: '#2D6A4F', bg: '#ECFDF5' },
@@ -28,11 +29,23 @@ const statusOptions: { key: ConservationStatus; label: string; color: string; bg
     { key: 'urgent', label: 'Urgente', color: '#E63946', bg: '#FDF0F0' },
 ];
 
+const typeOptions: { key: ArtworkType; label: string; icon: keyof typeof MaterialIcons.glyphMap }[] = [
+    { key: 'painting', label: 'Pintura', icon: 'palette' },
+    { key: 'sculpture', label: 'Escultura', icon: 'category' },
+    { key: 'mural', label: 'Mural', icon: 'brush' },
+    { key: 'tile', label: 'Azulejo', icon: 'grid-on' },
+    { key: 'relief', label: 'Relevo', icon: 'texture' },
+    { key: 'monument', label: 'Monumento', icon: 'account-balance' },
+    { key: 'other', label: 'Outro', icon: 'star' },
+];
+
+
 export function ArtworkFormScreen({ navigation, route }: any) {
     const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const { artworkRepository, photoRepository } = useDI();
 
+<<<<<<< HEAD
     const createArtworkUseCase = React.useMemo(() => new CreateArtworkUseCase(
         artworkRepository,
         () => 'device-id-123',
@@ -43,6 +56,16 @@ export function ArtworkFormScreen({ navigation, route }: any) {
 
     const duplicateDetectionUseCase = React.useMemo(() => new DuplicateDetectionUseCase(artworkRepository), [artworkRepository]);
     const geocodingService = React.useMemo(() => new GeocodingService(), []);
+=======
+    const createArtworkUseCase = useMemo(() => new CreateArtworkUseCase(
+        artworkRepository,
+        () => 'device-id-123',
+        () => Math.random().toString(36).substr(2, 9)
+    ), [artworkRepository]);
+
+    const duplicateDetectionUseCase = useMemo(() => new DuplicateDetectionUseCase(artworkRepository), [artworkRepository]);
+    const geocodingService = useMemo(() => new GeocodingService(), []);
+>>>>>>> cce0061 (feat: implement bounding box duplicate detection, add date pickers to reports, increase auth delay, and integrate expo-notifications)
 
     const [name, setName] = useState('');
     const [artist, setArtist] = useState('');
@@ -53,6 +76,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [address, setAddress] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         async function getGPS() {
@@ -78,13 +102,17 @@ export function ArtworkFormScreen({ navigation, route }: any) {
         getGPS();
     }, [geocodingService, duplicateDetectionUseCase, navigation]);
 
-    const handleSave = async () => {
+    const handleSave = async (forceCreate = false) => {
         if (!name.trim()) {
             setError(t('artwork.error_name_required', 'Nome da obra é obrigatório'));
             return;
         }
         try {
             setError(null);
+            setIsLoading(true);
+            // Pequeno delay artificial para garantir que o Modal tenha tempo de ser renderizado na UI thread
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
             await createArtworkUseCase.execute({
                 name,
                 artist,
@@ -93,11 +121,28 @@ export function ArtworkFormScreen({ navigation, route }: any) {
                 notes,
                 latitude: location?.coords.latitude,
                 longitude: location?.coords.longitude,
+<<<<<<< HEAD
                 photoLocalPath: photoUri || undefined,
+=======
+                forceCreate
+>>>>>>> cce0061 (feat: implement bounding box duplicate detection, add date pickers to reports, increase auth delay, and integrate expo-notifications)
             });
             navigation.goBack();
         } catch (err: any) {
+            if (err.message === 'DUPLICATE_DETECTED') {
+                Alert.alert(
+                    'Duplicata Detectada',
+                    'Encontramos outra obra muito próxima a esta localização. Deseja criar uma duplicata mesmo assim?',
+                    [
+                        { text: 'Cancelar', style: 'cancel' },
+                        { text: 'Salvar Mesmo Assim', onPress: () => handleSave(true) }
+                    ]
+                );
+                return;
+            }
             setError(err.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -106,6 +151,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
             style={{ flex: 1, backgroundColor: '#F8F5F0' }}
             behavior="padding"
         >
+            <LoadingOverlay visible={isLoading} message="Salvando obra..." />
             <ScrollView 
                 style={[styles.container, { paddingTop: insets.top + 12 }]} 
                 showsVerticalScrollIndicator={false}
@@ -131,6 +177,31 @@ export function ArtworkFormScreen({ navigation, route }: any) {
                 placeholder="Nome do artista"
                 placeholderTextColor="#B0A898"
             />
+
+            <Text style={styles.label}>Tipo de Obra</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.typeScroll} contentContainerStyle={styles.typeScrollContent}>
+                {typeOptions.map((tOpt) => (
+                    <TouchableOpacity
+                        key={tOpt.key}
+                        style={[
+                            styles.typeCard,
+                            type === tOpt.key && styles.typeCardActive
+                        ]}
+                        onPress={() => setType(tOpt.key)}
+                    >
+                        <MaterialIcons 
+                            name={tOpt.icon} 
+                            size={20} 
+                            color={type === tOpt.key ? '#FFFFFF' : '#888'} 
+                            style={{ marginBottom: 4 }} 
+                        />
+                        <Text style={[
+                            styles.typeCardText,
+                            type === tOpt.key && styles.typeCardTextActive
+                        ]}>{tOpt.label}</Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
 
             <TouchableOpacity
                 style={styles.photoContainer}
@@ -201,6 +272,32 @@ const styles = StyleSheet.create({
         padding: 16,
         fontSize: 16,
         color: '#1A1A2E',
+    },
+    typeScroll: { marginTop: 8 },
+    typeScrollContent: { paddingRight: 20 },
+    typeCard: {
+        backgroundColor: '#FFFFFF',
+        borderWidth: 1,
+        borderColor: '#E8E0D8',
+        borderRadius: 12,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        marginRight: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+        minWidth: 90,
+    },
+    typeCardActive: {
+        backgroundColor: '#D4883A',
+        borderColor: '#D4883A',
+    },
+    typeCardText: {
+        fontSize: 12,
+        fontWeight: '600',
+        color: '#888',
+    },
+    typeCardTextActive: {
+        color: '#FFFFFF',
     },
     photoContainer: {
         height: 180,

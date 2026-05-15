@@ -15,6 +15,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { LoadingOverlay } from '../components/LoadingOverlay';
 
 export function LoginScreen() {
     const { t } = useTranslation();
@@ -42,6 +43,7 @@ export function LoginScreen() {
 
     return (
         <View style={styles.container}>
+            <LoadingOverlay visible={isLoading} message="Entrando..." />
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior="padding"

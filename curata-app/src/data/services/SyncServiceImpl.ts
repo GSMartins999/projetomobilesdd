@@ -5,6 +5,9 @@ import { PhotoRepository } from '../../domain/repositories/PhotoRepository';
 import { SyncService, SyncResult } from '../../domain/services/SyncService';
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
+import { db } from '../db/client';
+import { syncState } from '../db/schema';
+import { eq } from 'drizzle-orm';
 
 function mapToSnakeCase(tableName: string, item: any): any {
     const base = {
@@ -111,18 +114,46 @@ export class SyncServiceImpl implements SyncService {
     async sync(): Promise<SyncResult> {
         const result: SyncResult = { uploadedCount: 0, downloadedCount: 0, errors: [] };
 
+        let lastSyncStr = '2020-01-01T00:00:00.000Z';
+        try {
+            const state = await db.select().from(syncState).where(eq(syncState.id, 'default')).limit(1);
+            if (state && state.length > 0) {
+                lastSyncStr = state[0].lastSyncTimestamp;
+            }
+        } catch (e) {
+            console.warn('Could not read sync_state', e);
+        }
+
         try {
             // 1. Upload de Fotos (Binários) pendentes
             await this.uploadPendingPhotos(result);
 
             // 2. Sincronizar Artworks (LWW)
-            await this.syncTable('artworks', this.artworkRepo, result);
+            let maxCursor = lastSyncStr;
+            const t1 = await this.syncTable('artworks', this.artworkRepo, result, lastSyncStr);
+            if (t1 > maxCursor) maxCursor = t1;
 
             // 3. Sincronizar Inspections
-            await this.syncTable('inspections', this.inspectionRepo, result);
+            const t2 = await this.syncTable('inspections', this.inspectionRepo, result, lastSyncStr);
+            if (t2 > maxCursor) maxCursor = t2;
 
             // 4. Sincronizar Photos (Metadata)
-            await this.syncTable('photos', this.photoRepo, result);
+            const t3 = await this.syncTable('photos', this.photoRepo, result, lastSyncStr);
+            if (t3 > maxCursor) maxCursor = t3;
+
+            // 5. Atualizar last_sync_timestamp após sucesso
+            try {
+                if (maxCursor > lastSyncStr) {
+                    const existing = await db.select().from(syncState).where(eq(syncState.id, 'default')).limit(1);
+                    if (existing && existing.length > 0) {
+                        await db.update(syncState).set({ lastSyncTimestamp: maxCursor }).where(eq(syncState.id, 'default'));
+                    } else {
+                        await db.insert(syncState).values({ id: 'default', lastSyncTimestamp: maxCursor });
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not update sync_state', e);
+            }
 
         } catch (error: any) {
             result.errors.push(error.message);
@@ -131,13 +162,29 @@ export class SyncServiceImpl implements SyncService {
         return result;
     }
 
-    private async syncTable(tableName: string, repo: any, result: SyncResult) {
+    private async syncTable(tableName: string, repo: any, result: SyncResult, lastSyncTimestamp: string): Promise<string> {
+        let highestTimestamp = lastSyncTimestamp;
+        
         // A. Upload: Local -> Server (unsynced items)
         const unsynced = await repo.findUnsynced();
         if (unsynced.length > 0) {
+<<<<<<< HEAD
             const upsertPayload = unsynced.map((item: any) => mapToSnakeCase(tableName, item));
             const { error } = await this.supabase.from(tableName).upsert(upsertPayload);
+=======
+            const { data: upserted, error } = await this.supabase.from(tableName).upsert(unsynced.map((item: any) => ({
+                ...item,
+                syncedAt: new Date().toISOString() // Marcar como sincronizado no servidor
+            }))).select('updated_at');
+            
+>>>>>>> cce0061 (feat: implement bounding box duplicate detection, add date pickers to reports, increase auth delay, and integrate expo-notifications)
             if (error) throw new Error(`Upload ${tableName} failed: ${error.message}`);
+
+            if (upserted) {
+                for (const u of upserted) {
+                    if (u.updated_at > highestTimestamp) highestTimestamp = u.updated_at;
+                }
+            }
 
             // Atualizar localmente
             for (const item of unsynced) {
@@ -147,16 +194,17 @@ export class SyncServiceImpl implements SyncService {
         }
 
         // B. Download: Server -> Local (newer items)
-        // No MVP, buscamos tudo que mudou desde o último sync (simplificado p/ v1)
         const { data: remoteData, error: dlError } = await this.supabase
             .from(tableName)
             .select('*')
-            .gt('updated_at', '2020-01-01'); // v2: Usar last_sync_timestamp persistido
+            .gt('updated_at', lastSyncTimestamp);
 
         if (dlError) throw new Error(`Download ${tableName} failed: ${dlError.message}`);
 
         if (remoteData) {
             for (const remoteItem of remoteData) {
+                if (remoteItem.updated_at > highestTimestamp) highestTimestamp = remoteItem.updated_at;
+                
                 const localItem = await repo.findById(remoteItem.id);
                 if (!localItem || new Date(remoteItem.updated_at) > new Date(localItem.updatedAt)) {
                     // LWW: remoto é mais novo ou não existe localmente
@@ -165,6 +213,8 @@ export class SyncServiceImpl implements SyncService {
                 }
             }
         }
+        
+        return highestTimestamp;
     }
 
     private async uploadPendingPhotos(result: SyncResult) {

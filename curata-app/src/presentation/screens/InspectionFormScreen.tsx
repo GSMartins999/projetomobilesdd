@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
     View,
     Text,
@@ -18,6 +18,7 @@ import { useDI } from '../../infrastructure/di/DIContext';
 import { CreateInspectionUseCase } from '../../domain/usecases/CreateInspectionUseCase';
 import { ConservationStatus } from '../../domain/entities/Artwork';
 import { PhotoLabel } from '../../domain/entities/Inspection';
+import { LoadingOverlay } from '../components/LoadingOverlay';
 
 const statusOptions: { key: ConservationStatus; label: string; color: string; bg: string }[] = [
     { key: 'good', label: 'Bom', color: '#2D6A4F', bg: '#ECFDF5' },
@@ -32,7 +33,11 @@ export function InspectionFormScreen({ navigation, route }: any) {
     const insets = useSafeAreaInsets();
     const { inspectionRepository, artworkRepository, photoRepository } = useDI();
 
+<<<<<<< HEAD
     const createInspectionUseCase = React.useMemo(() => new CreateInspectionUseCase(
+=======
+    const createInspectionUseCase = useMemo(() => new CreateInspectionUseCase(
+>>>>>>> cce0061 (feat: implement bounding box duplicate detection, add date pickers to reports, increase auth delay, and integrate expo-notifications)
         inspectionRepository,
         artworkRepository,
         photoRepository,
@@ -49,6 +54,7 @@ export function InspectionFormScreen({ navigation, route }: any) {
     const [statusAtVisit, setStatusAtVisit] = useState<ConservationStatus>('fair');
     const [photos, setPhotos] = useState<{ localPath: string; label: PhotoLabel }[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleAddPhoto = () => {
         if (photos.length >= 10) {
@@ -71,6 +77,10 @@ export function InspectionFormScreen({ navigation, route }: any) {
             return;
         }
         try {
+            setIsLoading(true);
+            // Pequeno delay artificial para garantir que o Modal tenha tempo de ser renderizado na UI thread
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
             await createInspectionUseCase.execute({
                 artworkId,
                 technicalForm: {
@@ -86,6 +96,8 @@ export function InspectionFormScreen({ navigation, route }: any) {
             navigation.goBack();
         } catch (err: any) {
             setError(err.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -94,6 +106,7 @@ export function InspectionFormScreen({ navigation, route }: any) {
             style={{ flex: 1, backgroundColor: '#F8F5F0' }}
             behavior="padding"
         >
+            <LoadingOverlay visible={isLoading} message="Salvando inspeção..." />
             <ScrollView 
                 style={[styles.container, { paddingTop: insets.top + 12 }]} 
                 showsVerticalScrollIndicator={false}

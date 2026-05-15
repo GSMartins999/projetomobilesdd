@@ -7,4 +7,5 @@ export interface InspectionRepository {
     update(inspection: Inspection): Promise<void>;
     softDelete(id: string): Promise<void>;
     findUnsynced(): Promise<Inspection[]>;
+    findAll(): Promise<Inspection[]>;
 }
