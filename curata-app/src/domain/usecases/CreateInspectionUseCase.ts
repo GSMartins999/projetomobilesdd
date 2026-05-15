@@ -3,6 +3,7 @@ import { InspectionRepository } from '../repositories/InspectionRepository';
 import { ArtworkRepository } from '../repositories/ArtworkRepository';
 import { PhotoRepository } from '../repositories/PhotoRepository';
 import { InspectionFormSchemaV1 } from '../schemas/InspectionFormSchema';
+import * as FileSystem from 'expo-file-system';
 
 export interface CreateInspectionWithPhotosInput extends CreateInspectionInput {
     photos?: { localPath: string; label: PhotoLabel }[];
@@ -51,11 +52,24 @@ export class CreateInspectionUseCase {
         if (input.photos && input.photos.length > 0) {
             for (let i = 0; i < input.photos.length; i++) {
                 const p = input.photos[i];
+                
+                let finalPath = p.localPath;
+                try {
+                    if (FileSystem.documentDirectory && !p.localPath.includes(FileSystem.documentDirectory)) {
+                        const filename = p.localPath.split('/').pop() || `photo_${Date.now()}.jpg`;
+                        const dest = FileSystem.documentDirectory + filename;
+                        await FileSystem.copyAsync({ from: p.localPath, to: dest });
+                        finalPath = dest;
+                    }
+                } catch (e) {
+                    console.error("Erro ao copiar foto para o documentDirectory:", e);
+                }
+
                 await this.photoRepository.save({
                     id: this.generatePhotoId(),
                     inspectionId,
                     artworkId: input.artworkId,
-                    localPath: p.localPath,
+                    localPath: finalPath,
                     remoteUrl: null,
                     uploadStatus: 'pending',
                     label: p.label,

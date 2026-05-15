@@ -7,7 +7,9 @@ import {
     TouchableOpacity,
     TextInput,
     Alert,
+    Platform,
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -24,6 +26,21 @@ export function ReportGeneratorScreen({ route }: any) {
     const [reportTitle, setReportTitle] = useState(t('report.subtitle_default', { defaultValue: 'Relatório Técnico' }));
     const [selectedFormat, setSelectedFormat] = useState('PDF');
     const [isGenerating, setIsGenerating] = useState(false);
+
+    const [startDate, setStartDate] = useState(new Date(new Date().setMonth(new Date().getMonth() - 1)));
+    const [endDate, setEndDate] = useState(new Date());
+    const [showStartPicker, setShowStartPicker] = useState(false);
+    const [showEndPicker, setShowEndPicker] = useState(false);
+
+    const onStartChange = (event: any, selectedDate?: Date) => {
+        setShowStartPicker(Platform.OS === 'ios');
+        if (selectedDate) setStartDate(selectedDate);
+    };
+
+    const onEndChange = (event: any, selectedDate?: Date) => {
+        setShowEndPicker(Platform.OS === 'ios');
+        if (selectedDate) setEndDate(selectedDate);
+    };
 
     const [sections, setSections] = useState([
         { id: '1', key: 'summary', title: t('report.section_summary'), selected: true },
@@ -88,16 +105,32 @@ export function ReportGeneratorScreen({ route }: any) {
                 <View style={styles.section}>
                     <Text style={styles.sectionLabel}>{t('report.period')}</Text>
                     <View style={styles.dateRow}>
-                        <TouchableOpacity style={styles.datePicker}>
+                        <TouchableOpacity style={styles.datePicker} onPress={() => setShowStartPicker(true)}>
                             <MaterialIcons name="calendar-today" size={18} color="#E8752A" />
-                            <Text style={styles.dateText}>01/04/2026</Text>
+                            <Text style={styles.dateText}>{startDate.toLocaleDateString()}</Text>
                         </TouchableOpacity>
                         <MaterialIcons name="arrow-forward" size={18} color="#B0A898" />
-                        <TouchableOpacity style={styles.datePicker}>
+                        <TouchableOpacity style={styles.datePicker} onPress={() => setShowEndPicker(true)}>
                             <MaterialIcons name="calendar-today" size={18} color="#E8752A" />
-                            <Text style={styles.dateText}>30/04/2026</Text>
+                            <Text style={styles.dateText}>{endDate.toLocaleDateString()}</Text>
                         </TouchableOpacity>
                     </View>
+                    {showStartPicker && (
+                        <DateTimePicker
+                            value={startDate}
+                            mode="date"
+                            display="default"
+                            onChange={onStartChange}
+                        />
+                    )}
+                    {showEndPicker && (
+                        <DateTimePicker
+                            value={endDate}
+                            mode="date"
+                            display="default"
+                            onChange={onEndChange}
+                        />
+                    )}
                 </View>
 
                 <View style={styles.section}>

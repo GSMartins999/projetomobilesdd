@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -10,61 +10,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-interface NotificationItem {
-    id: string;
-    title: string;
-    description: string;
-    time: string;
-    type: 'warning' | 'schedule' | 'check_circle' | 'info';
-    unread: boolean;
-}
+import * as Notifications from 'expo-notifications';
 
 export function NotificationsScreen() {
     const navigation = useNavigation();
+    const [notifications, setNotifications] = useState<Notifications.NotificationRequest[]>([]);
 
-    const notifications: NotificationItem[] = [
-        {
-            id: '1',
-            title: 'Inspeção Urgente!',
-            description: 'A obra "A Noite Estrelada Revisitada" atingiu o nível crítico de conservação.',
-            time: 'HÁ 5 MIN',
-            type: 'warning',
-            unread: true,
-        },
-        {
-            id: '2',
-            title: 'Agendamento Confirmado',
-            description: 'Sua visita ao Museu de Arte Moderna foi confirmada para amanhã às 10h.',
-            time: 'HÁ 2 HORAS',
-            type: 'schedule',
-            unread: true,
-        },
-        {
-            id: '3',
-            title: 'Inspeção Concluída',
-            description: 'O relatório da obra "Monumento às Bandeiras" foi enviado com sucesso.',
-            time: 'HÁ 5 HORAS',
-            type: 'check_circle',
-            unread: false,
-        },
-        {
-            id: '4',
-            title: 'Novo Objeto Encontrado',
-            description: 'Uma nova obra foi detectada próxima à sua localização atual.',
-            time: 'ONTEM',
-            type: 'info',
-            unread: false,
-        },
-    ];
-
-    const getIconColor = (type: string) => {
-        switch (type) {
-            case 'warning': return '#E63946';
-            case 'schedule': return '#E8752A';
-            case 'check_circle': return '#2D6A4F';
-            default: return '#D4883A';
+    useEffect(() => {
+        async function load() {
+            const { status } = await Notifications.requestPermissionsAsync();
+            if (status === 'granted') {
+                const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+                setNotifications(scheduled);
+            }
         }
-    };
+        load();
+    }, []);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -79,27 +40,33 @@ export function NotificationsScreen() {
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-                {notifications.map((item) => (
-                    <TouchableOpacity
-                        key={item.id}
-                        style={[styles.notificationCard, item.unread && styles.unreadCard]}
-                        activeOpacity={0.7}
-                    >
-                        <View style={[styles.iconContainer, { backgroundColor: `${getIconColor(item.type)}15` }]}>
-                            <MaterialIcons name={item.type as any} size={24} color={getIconColor(item.type)} />
-                        </View>
-                        <View style={styles.content}>
-                            <View style={styles.cardHeader}>
-                                <Text style={[styles.title, item.unread && styles.unreadTitle]}>{item.title}</Text>
-                                <Text style={styles.time}>{item.time}</Text>
+                {notifications.length > 0 ? (
+                    notifications.map((item) => (
+                        <TouchableOpacity
+                            key={item.identifier}
+                            style={styles.notificationCard}
+                            activeOpacity={0.7}
+                        >
+                            <View style={[styles.iconContainer, { backgroundColor: '#E8752A15' }]}>
+                                <MaterialIcons name="schedule" size={24} color="#E8752A" />
                             </View>
-                            <Text style={styles.description} numberOfLines={2}>
-                                {item.description}
-                            </Text>
-                        </View>
-                        {item.unread && <View style={styles.unreadDot} />}
-                    </TouchableOpacity>
-                ))}
+                            <View style={styles.content}>
+                                <View style={styles.cardHeader}>
+                                    <Text style={styles.title}>{item.content.title}</Text>
+                                    <Text style={styles.time}>Agendado</Text>
+                                </View>
+                                <Text style={styles.description} numberOfLines={2}>
+                                    {item.content.body}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    ))
+                ) : (
+                    <View style={styles.emptyContainer}>
+                        <MaterialIcons name="notifications-none" size={44} color="#B0A898" />
+                        <Text style={styles.emptyText}>Nenhuma notificação</Text>
+                    </View>
+                )}
             </ScrollView>
         </SafeAreaView>
     );
@@ -189,5 +156,14 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 16,
         right: 16,
+    },
+    emptyContainer: {
+        alignItems: 'center',
+        paddingTop: 60,
+    },
+    emptyText: {
+        fontSize: 16,
+        color: '#888',
+        marginTop: 12,
     },
 });

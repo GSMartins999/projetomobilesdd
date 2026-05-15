@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDI } from '../../infrastructure/di/DIContext';
 import { GetDashboardStatsUseCase, DashboardStats } from '../../domain/usecases/GetDashboardStatsUseCase';
+import { Inspection } from '../../domain/entities/Inspection';
 import { useSync } from '../../infrastructure/sync/SyncContext';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -12,15 +13,24 @@ export function DashboardScreen() {
     const { t, i18n } = useTranslation();
     const navigation = useNavigation<any>();
     const insets = useSafeAreaInsets();
-    const { artworkRepository } = useDI();
+    const { artworkRepository, inspectionRepository } = useDI();
     const { isOnline, isSyncing, triggerSync } = useSync();
     const [stats, setStats] = useState<DashboardStats | null>(null);
+    const [recentInspections, setRecentInspections] = useState<Inspection[]>([]);
 
     useEffect(() => {
         async function load() {
             const useCase = new GetDashboardStatsUseCase(artworkRepository);
             const data = await useCase.execute();
             setStats(data);
+
+            try {
+                const allInspections = await inspectionRepository.findAll();
+                const sorted = allInspections.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                setRecentInspections(sorted.slice(0, 5));
+            } catch (err) {
+                console.error("Erro ao carregar inspeções:", err);
+            }
         }
         load();
     }, [isSyncing]);
@@ -139,11 +149,32 @@ export function DashboardScreen() {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.emptyInspections}>
-                <MaterialIcons name="assignment" size={36} color="#B0A898" />
-                <Text style={styles.emptyText}>{t('dashboard.empty_inspections')}</Text>
-                <Text style={styles.emptySubtext}>{t('dashboard.empty_subtext')}</Text>
-            </View>
+            {recentInspections.length > 0 ? (
+                recentInspections.map(item => (
+                    <TouchableOpacity 
+                        key={item.id} 
+                        style={styles.recentItem}
+                        onPress={() => navigation.navigate('InspectionDetail', { id: item.id })}
+                    >
+                        <View style={styles.recentIcon}>
+                            <MaterialIcons name="assignment" size={20} color="#D4883A" />
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.recentItemTitle}>Inspeção</Text>
+                            <Text style={styles.recentItemDate}>
+                                {new Date(item.createdAt).toLocaleDateString()}
+                            </Text>
+                        </View>
+                        <MaterialIcons name="chevron-right" size={20} color="#B0A898" />
+                    </TouchableOpacity>
+                ))
+            ) : (
+                <View style={styles.emptyInspections}>
+                    <MaterialIcons name="assignment" size={36} color="#B0A898" />
+                    <Text style={styles.emptyText}>{t('dashboard.empty_inspections')}</Text>
+                    <Text style={styles.emptySubtext}>{t('dashboard.empty_subtext')}</Text>
+                </View>
+            )}
 
             <View style={{ height: 30 }} />
         </ScrollView>
@@ -319,5 +350,34 @@ const styles = StyleSheet.create({
     emptySubtext: {
         fontSize: 13,
         color: '#888',
+    },
+    recentItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 10,
+        borderWidth: 1,
+        borderColor: '#F0E8E0',
+    },
+    recentIcon: {
+        width: 40,
+        height: 40,
+        borderRadius: 10,
+        backgroundColor: '#F5EDE3',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 14,
+    },
+    recentItemTitle: {
+        fontSize: 15,
+        fontWeight: '600',
+        color: '#1A1A2E',
+    },
+    recentItemDate: {
+        fontSize: 13,
+        color: '#B0A898',
+        marginTop: 2,
     },
 });

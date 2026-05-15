@@ -1,4 +1,4 @@
-import { eq, and, isNull } from 'drizzle-orm';
+import { eq, and, isNull, gte, lte } from 'drizzle-orm';
 import { ExpoSQLiteDatabase } from 'drizzle-orm/expo-sqlite';
 import { ArtworkRepository } from '../../domain/repositories/ArtworkRepository';
 import { Artwork } from '../../domain/entities/Artwork';
@@ -20,21 +20,26 @@ export class ArtworkRepositoryImpl implements ArtworkRepository {
 
     async findNearby(latitude: number, longitude: number, radiusMeters: number): Promise<Artwork[]> {
         // SQLite não tem funções geográficas nativas complexas.
-        // Para o MVP, buscamos todas e filtramos em memória ou usamos uma caixa delimitadora (bounding box).
-        // Aqui usaremos bounding box aproximada (1 grau lat ~ 111km)
+        // Filtramos via caixa delimitadora (bounding box aproximada: 1 grau lat ~ 111km)
         const latDelta = radiusMeters / 111000;
         const lngDelta = radiusMeters / (111000 * Math.cos(latitude * (Math.PI / 180)));
+
+        const minLat = latitude - latDelta;
+        const maxLat = latitude + latDelta;
+        const minLng = longitude - lngDelta;
+        const maxLng = longitude + lngDelta;
 
         const result = await this.db.select().from(artworks).where(
             and(
                 isNull(artworks.deletedAt),
-                // Simplificação: Filtro retangular básico
-                // artworks.latitude >= latitude - latDelta, ...
+                gte(artworks.latitude, minLat),
+                lte(artworks.latitude, maxLat),
+                gte(artworks.longitude, minLng),
+                lte(artworks.longitude, maxLng)
             )
         );
 
-        // Filtro preciso via Haversine no domain ou aqui
-        // Como o domain já faz isso no CreateArtworkUseCase, aqui retornamos a lista base
+        // O filtro preciso via Haversine é feito no domain (CreateArtworkUseCase) após essa filtragem inicial
         return result as Artwork[];
     }
 

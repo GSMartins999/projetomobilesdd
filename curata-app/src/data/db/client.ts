@@ -14,8 +14,11 @@ export const db = drizzle(expoDb, { schema });
 export async function initializeDatabase() {
     console.log('[Database] Inicializando banco de dados...');
 
-    // Criar tabelas se não existirem
-    expoDb.execSync(`
+    const result = expoDb.getFirstSync<{ user_version: number }>('PRAGMA user_version');
+    const currentVersion = result?.user_version ?? 0;
+
+    if (currentVersion === 0) {
+        expoDb.execSync(`
         CREATE TABLE IF NOT EXISTS users (
             id TEXT PRIMARY KEY,
             name TEXT NOT NULL,
@@ -67,9 +70,16 @@ export async function initializeDatabase() {
             synced_at TEXT,
             deleted_at TEXT
         );
-    `);
 
-    console.log('[Database] Tabelas criadas/verificadas com sucesso.');
+        CREATE TABLE IF NOT EXISTS sync_state (
+            id TEXT PRIMARY KEY,
+            last_sync_timestamp TEXT NOT NULL
+        );
+        PRAGMA user_version = 1;
+        `);
+    }
+
+    console.log(`[Database] Tabelas criadas/verificadas com sucesso (v${currentVersion === 0 ? 1 : currentVersion}).`);
     return db;
 }
 

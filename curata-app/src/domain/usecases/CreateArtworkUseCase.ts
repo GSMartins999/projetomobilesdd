@@ -58,8 +58,15 @@ export class CreateArtworkUseCase {
         // Detecção de duplicatas por geofence de 30m
         let nearbyArtworks: Artwork[] = [];
         if (artwork.latitude !== null && artwork.longitude !== null) {
-            const allArtworks = await this.artworkRepository.findAll();
-            nearbyArtworks = allArtworks.filter((a) => {
+            // Busca filtrada pela caixa delimitadora do banco de dados primeiro
+            const candidateArtworks = await this.artworkRepository.findNearby(
+                artwork.latitude, 
+                artwork.longitude, 
+                DUPLICATE_DETECTION_RADIUS_METERS
+            );
+            
+            // Refina a busca exata usando Haversine apenas nos candidatos
+            nearbyArtworks = candidateArtworks.filter((a) => {
                 if (a.latitude === null || a.longitude === null || a.deletedAt !== null) return false;
                 const dist = haversineDistance(
                     artwork.latitude!, artwork.longitude!,
@@ -67,6 +74,10 @@ export class CreateArtworkUseCase {
                 );
                 return dist < DUPLICATE_DETECTION_RADIUS_METERS;
             });
+        }
+
+        if (nearbyArtworks.length > 0 && !input.forceCreate) {
+            throw new Error('DUPLICATE_DETECTED');
         }
 
         await this.artworkRepository.save(artwork);

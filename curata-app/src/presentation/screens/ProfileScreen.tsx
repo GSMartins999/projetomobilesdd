@@ -3,10 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'rea
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '../../infrastructure/auth/AuthContext';
+import { useSync } from '../../infrastructure/sync/SyncContext';
 import { useTranslation } from 'react-i18next';
+import { LoadingOverlay } from '../components/LoadingOverlay';
 
 export function ProfileScreen() {
     const { user, logout } = useAuth();
+    const { triggerSync, isSyncing } = useSync();
     const { t, i18n } = useTranslation();
     const insets = useSafeAreaInsets();
 
@@ -15,7 +18,9 @@ export function ProfileScreen() {
     };
 
     return (
-        <ScrollView style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 100) }}>
+        <View style={styles.container}>
+            <LoadingOverlay visible={isSyncing} message="Sincronizando dados..." />
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 100) }}>
             {/* Header */}
             <View style={[styles.headerBar, { paddingTop: insets.top + 12 }]}>
                 <Text style={styles.headerTitle}>Perfil</Text>
@@ -97,7 +102,7 @@ export function ProfileScreen() {
             {/* Account section */}
             <Text style={styles.sectionLabel}>CONTA</Text>
 
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity style={styles.menuItem} onPress={triggerSync}>
                 <View style={[styles.menuIconBg, { backgroundColor: '#F5EDE3' }]}>
                     <MaterialIcons name="sync" size={22} color="#D4883A" />
                 </View>
@@ -124,8 +129,8 @@ export function ProfileScreen() {
                 </View>
             </TouchableOpacity>
 
-            <View style={{ height: 40 }} />
-        </ScrollView>
+            </ScrollView>
+        </View>
     );
 }
 

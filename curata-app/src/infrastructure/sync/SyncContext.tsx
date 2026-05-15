@@ -27,10 +27,13 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
     const triggerSync = async () => {
         if (isSyncingRef.current || !isOnlineRef.current) return;
 
+        setIsSyncing(true);
         // Guarda: não executar sync se as credenciais do Supabase não estiverem configuradas
         const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
         if (supabaseUrl.includes('placeholder')) {
-            console.log('[SyncContext] Supabase não configurado — sync ignorado. Defina EXPO_PUBLIC_SUPABASE_URL no .env');
+            console.log('[SyncContext] Supabase não configurado — sync ignorado. Simulating delay.');
+            await new Promise(resolve => setTimeout(resolve, 1500)); // Fake delay para mostrar a tela
+            setIsSyncing(false);
             return;
         }
 

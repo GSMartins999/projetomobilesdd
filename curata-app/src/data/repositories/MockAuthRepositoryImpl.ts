@@ -14,8 +14,8 @@ export class MockAuthRepositoryImpl implements AuthRepository {
     private currentToken: string | null = null;
 
     async signIn(email: string, password: string): Promise<{ user: User; token: string }> {
-        // Simula um delay de rede
-        await this.delay(500);
+        // Simula um delay de rede longo
+        await this.delay(1500);
 
         const user: User = {
             id: generateId(),
@@ -34,7 +34,7 @@ export class MockAuthRepositoryImpl implements AuthRepository {
     }
 
     async signUp(email: string, password: string, name: string): Promise<{ user: User; token: string }> {
-        await this.delay(500);
+        await this.delay(1500);
 
         const user: User = {
             id: generateId(),
