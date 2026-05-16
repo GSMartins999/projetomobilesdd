@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import MapboxGL from '@maplibre/maplibre-react-native';
+import MapView, { Marker } from 'react-native-maps';
 import { useDI } from '../../infrastructure/di/DIContext';
 import { ImageUtils } from '../../infrastructure/utils/ImageUtils';
 import { Artwork } from '../../domain/entities/Artwork';
@@ -145,26 +145,20 @@ export function MapScreen({ navigation }: any) {
             </View>
 
             {/* Map */}
-<<<<<<< HEAD
-            <MapboxGL.MapView
-=======
             <MapView
                 ref={mapRef}
->>>>>>> cce0061 (feat: implement bounding box duplicate detection, add date pickers to reports, increase auth delay, and integrate expo-notifications)
                 style={styles.map}
                 onPress={closeCard}
-                logoEnabled={false}
-                attributionEnabled={false}
+                showsUserLocation={true}
+                showsMyLocationButton={false}
+                toolbarEnabled={false}
+                initialRegion={{
+                    latitude: userLocation?.lat || -23.5505,
+                    longitude: userLocation?.lng || -46.6333,
+                    latitudeDelta: 0.05,
+                    longitudeDelta: 0.05,
+                }}
             >
-                <MapboxGL.Camera
-                    zoomLevel={14}
-                    centerCoordinate={[userLocation?.lng || -46.6333, userLocation?.lat || -23.5505]}
-                    animationMode="flyTo"
-                    animationDuration={1000}
-                />
-                {userLocation && (
-                    <MapboxGL.UserLocation visible={true} />
-                )}
                 {artworks.map((artwork, index) => {
                     if (!artwork.latitude || !artwork.longitude) return null;
                     const st = statusColors[artwork.conservationStatus] || statusColors.unknown;
@@ -172,12 +166,12 @@ export function MapScreen({ navigation }: any) {
                     const markerColor = getMarkerColor(artwork.id);
                     const iconName = artworkTypeIcon[artwork.type] || 'star';
                     return (
-                        <MapboxGL.PointAnnotation
+                        <Marker
                             key={artwork.id}
-                            id={artwork.id}
+                            identifier={artwork.id}
                             testID={`annotation-${artwork.id}`}
-                            coordinate={[artwork.longitude, artwork.latitude]}
-                            onSelected={() => openCard(artwork)}
+                            coordinate={{ latitude: artwork.latitude, longitude: artwork.longitude }}
+                            onPress={() => openCard(artwork)}
                         >
                             {/* Custom marker pin: bubble com cor única, seta com cor do status */}
                             <View style={[
@@ -197,10 +191,10 @@ export function MapScreen({ navigation }: any) {
                                 {/* Cauda/seta usa a cor do status para informar conservação */}
                                 <View style={[styles.markerTail, { borderTopColor: st.dot }]} />
                             </View>
-                        </MapboxGL.PointAnnotation>
+                        </Marker>
                     );
                 })}
-            </MapboxGL.MapView>
+            </MapView>
 
             {/* Bottom card popup */}
             {selected && status && (

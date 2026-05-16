@@ -6,7 +6,7 @@ import { ArtworkRepository } from '../../repositories/ArtworkRepository';
 const makeMockRepository = (existingArtworks: Artwork[] = []): jest.Mocked<ArtworkRepository> => ({
     findAll: jest.fn().mockResolvedValue(existingArtworks),
     findById: jest.fn().mockResolvedValue(null),
-    findNearby: jest.fn().mockResolvedValue([]),
+    findNearby: jest.fn().mockResolvedValue(existingArtworks),
     save: jest.fn().mockResolvedValue(undefined),
     update: jest.fn().mockResolvedValue(undefined),
     softDelete: jest.fn().mockResolvedValue(undefined),
@@ -75,15 +75,13 @@ describe('CreateArtworkUseCase', () => {
             deviceId: FIXED_DEVICE_ID, updatedAt: FIXED_NOW, syncedAt: null, deletedAt: null,
         };
         const { useCase } = makeUseCase([existing]);
-        const result = await useCase.execute({
+        await expect(useCase.execute({
             name: 'Nova Obra',
             type: 'mural',
             conservationStatus: 'fair',
             latitude: -23.55052,   // ~2m de distância
             longitude: -46.63332,
-        });
-        expect(result.nearbyArtworks).toHaveLength(1);
-        expect(result.nearbyArtworks[0].id).toBe('existing-1');
+        })).rejects.toThrow('DUPLICATE_DETECTED');
     });
 
     it('não detecta duplicata quando obra está a 30m ou mais', async () => {

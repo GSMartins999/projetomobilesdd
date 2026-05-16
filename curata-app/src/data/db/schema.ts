@@ -14,7 +14,7 @@ export const artworks = sqliteTable('artworks', {
     displayId: text('display_id'), // ART-YYYY-XXXXX
     name: text('name').notNull(),
     artist: text('artist'),
-    type: text('type').$type<'painting' | 'sculpture' | 'mural' | 'tile' | 'relief' | 'other'>().notNull(),
+    type: text('type').$type<'painting' | 'sculpture' | 'mural' | 'tile' | 'relief' | 'monument' | 'other'>().notNull(),
     conservationStatus: text('conservation_status').$type<'good' | 'fair' | 'poor' | 'urgent' | 'unknown'>().notNull(),
     notes: text('notes'),
     latitude: real('latitude'),
@@ -39,7 +39,7 @@ export const inspections = sqliteTable('inspections', {
 
 export const photos = sqliteTable('photos', {
     id: text('id').primaryKey(),
-    inspectionId: text('inspection_id').notNull().references(() => inspections.id),
+    inspectionId: text('inspection_id'),
     artworkId: text('artwork_id').notNull().references(() => artworks.id),
     localPath: text('local_path').notNull(),
     remoteUrl: text('remote_url'),

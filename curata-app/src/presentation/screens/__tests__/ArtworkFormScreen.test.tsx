@@ -9,7 +9,7 @@ import { Alert } from 'react-native';
 // Mocks
 const mockRepository: any = {
     save: jest.fn().mockResolvedValue({ error: null }),
-    findNearby: jest.fn().mockResolvedValue({ data: [], error: null }),
+    findNearby: jest.fn().mockResolvedValue([]),
     findAll: jest.fn().mockResolvedValue([]),
     findById: jest.fn().mockResolvedValue({ id: '1', name: 'Mona Lisa', conservationStatus: 'good' }),
 };
@@ -110,7 +110,7 @@ describe('ArtworkFormScreen', () => {
         const photoButton = await findByTestId('photo-pressable');
         fireEvent.press(photoButton);
 
-        expect(mockNavigate).toHaveBeenCalledWith('Camera', expect.any(Object));
+        expect(mockNavigate).toHaveBeenCalledWith('Camera');
     });
 
     it('should handle save error', async () => {

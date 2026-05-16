@@ -46,7 +46,7 @@ describe('CameraServiceImpl', () => {
                 height: 800
             })
         };
-        service.setCameraRef(mockRef);
+        service.setCameraRef(mockRef as any);
         const result = await service.takePicture();
         expect(mockRef.takePictureAsync).toHaveBeenCalled();
         expect(result.uri).toBe('file://raw.jpg');

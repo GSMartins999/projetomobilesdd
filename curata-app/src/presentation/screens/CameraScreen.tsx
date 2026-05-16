@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Alert, DeviceEventEmitter } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions } from 'expo-camera';
@@ -55,12 +55,14 @@ export function CameraScreen({ navigation, route, ...props }: any) {
                     inspectionId,
                     label: label as any
                 });
-                // Passa URI para o formulário — o banco é salvo pelo CreateInspectionUseCase
+                // Passa URI para o formulário
+                DeviceEventEmitter.emit('onPhotoCaptured', { uri: photo.localPath, label });
                 if (onCapture) onCapture(photo.localPath);
             } else {
                 // Fluxo genérico: captura e processa direto
                 const raw = await cameraService.takePicture();
                 const processed = await cameraService.processImage(raw.uri);
+                DeviceEventEmitter.emit('onPhotoCaptured', { uri: processed.uri, label });
                 if (onCapture) onCapture(processed.uri);
             }
 

@@ -9,7 +9,8 @@ import {
     Image,
     Alert,
     KeyboardAvoidingView,
-    Platform
+    Platform,
+    DeviceEventEmitter
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -45,8 +46,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
     const insets = useSafeAreaInsets();
     const { artworkRepository, photoRepository } = useDI();
 
-<<<<<<< HEAD
-    const createArtworkUseCase = React.useMemo(() => new CreateArtworkUseCase(
+    const createArtworkUseCase = useMemo(() => new CreateArtworkUseCase(
         artworkRepository,
         () => 'device-id-123',
         () => Math.random().toString(36).substr(2, 9),
@@ -54,18 +54,8 @@ export function ArtworkFormScreen({ navigation, route }: any) {
         photoRepository
     ), [artworkRepository, photoRepository]);
 
-    const duplicateDetectionUseCase = React.useMemo(() => new DuplicateDetectionUseCase(artworkRepository), [artworkRepository]);
-    const geocodingService = React.useMemo(() => new GeocodingService(), []);
-=======
-    const createArtworkUseCase = useMemo(() => new CreateArtworkUseCase(
-        artworkRepository,
-        () => 'device-id-123',
-        () => Math.random().toString(36).substr(2, 9)
-    ), [artworkRepository]);
-
     const duplicateDetectionUseCase = useMemo(() => new DuplicateDetectionUseCase(artworkRepository), [artworkRepository]);
     const geocodingService = useMemo(() => new GeocodingService(), []);
->>>>>>> cce0061 (feat: implement bounding box duplicate detection, add date pickers to reports, increase auth delay, and integrate expo-notifications)
 
     const [name, setName] = useState('');
     const [artist, setArtist] = useState('');
@@ -102,6 +92,13 @@ export function ArtworkFormScreen({ navigation, route }: any) {
         getGPS();
     }, [geocodingService, duplicateDetectionUseCase, navigation]);
 
+    useEffect(() => {
+        const subscription = DeviceEventEmitter.addListener('onPhotoCaptured', (data) => {
+            setPhotoUri(data.uri);
+        });
+        return () => subscription.remove();
+    }, []);
+
     const handleSave = async (forceCreate = false) => {
         if (!name.trim()) {
             setError(t('artwork.error_name_required', 'Nome da obra é obrigatório'));
@@ -121,11 +118,8 @@ export function ArtworkFormScreen({ navigation, route }: any) {
                 notes,
                 latitude: location?.coords.latitude,
                 longitude: location?.coords.longitude,
-<<<<<<< HEAD
                 photoLocalPath: photoUri || undefined,
-=======
                 forceCreate
->>>>>>> cce0061 (feat: implement bounding box duplicate detection, add date pickers to reports, increase auth delay, and integrate expo-notifications)
             });
             navigation.goBack();
         } catch (err: any) {
@@ -206,7 +200,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
             <TouchableOpacity
                 style={styles.photoContainer}
                 testID="photo-pressable"
-                onPress={() => navigation.navigate('Camera', { onCapture: setPhotoUri })}
+                onPress={() => navigation.navigate('Camera')}
                 activeOpacity={0.7}
             >
                 {photoUri ? (
@@ -249,7 +243,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
 
             {error && <Text style={styles.errorText}>{error}</Text>}
 
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave} activeOpacity={0.8}>
+            <TouchableOpacity style={styles.saveButton} onPress={() => handleSave()} activeOpacity={0.8}>
                 <MaterialIcons name="save" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
                 <Text style={styles.saveButtonText}>{t('common.save', 'Salvar Obra')}</Text>
             </TouchableOpacity>

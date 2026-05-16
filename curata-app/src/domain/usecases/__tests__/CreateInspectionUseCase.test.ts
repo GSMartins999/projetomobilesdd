@@ -21,13 +21,19 @@ const makeMockInspectionRepository = (): jest.Mocked<InspectionRepository> => ({
     findByArtworkId: jest.fn(),
     softDelete: jest.fn(),
     findUnsynced: jest.fn(),
+    update: jest.fn(),
+    findAll: jest.fn(),
 });
 
 const makeMockPhotoRepository = (): jest.Mocked<PhotoRepository> => ({
     save: jest.fn(),
     findByInspectionId: jest.fn(),
+    findByArtworkId: jest.fn(),
+    findById: jest.fn(),
+    update: jest.fn(),
     updateUploadStatus: jest.fn(),
     findUnsyncedPhotos: jest.fn(),
+    findUnsynced: jest.fn(),
     softDelete: jest.fn(),
 });
 

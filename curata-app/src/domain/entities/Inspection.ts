@@ -5,7 +5,7 @@ export type UploadStatus = 'pending' | 'uploading' | 'done' | 'failed';
 
 export interface Photo {
     id: string;
-    inspectionId: string;
+    inspectionId: string | null;
     artworkId: string;
     localPath: string;
     remoteUrl: string | null;

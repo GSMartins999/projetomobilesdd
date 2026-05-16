@@ -95,6 +95,6 @@ describe('Presentation Smoke Tests', () => {
     it('InspectionFormScreen renders', () => { render(<Wrapper><InspectionFormScreen route={mockRouteWithId as any} /></Wrapper>); });
     it('InspectionHistoryScreen renders', () => { render(<Wrapper><InspectionHistoryScreen route={mockRouteWithId as any} /></Wrapper>); });
     it('MapScreen renders', () => { render(<Wrapper><MapScreen /></Wrapper>); });
-    it('PdfPreviewScreen renders', () => { render(<Wrapper><PdfPreviewScreen route={mockRoute as any} /></Wrapper>); });
+    it('PdfPreviewScreen renders', () => { render(<Wrapper>{React.createElement(PdfPreviewScreen as any, { route: mockRoute })}</Wrapper>); });
     it('ReportGeneratorScreen renders', () => { render(<Wrapper><ReportGeneratorScreen /></Wrapper>); });
 });

@@ -3,7 +3,7 @@ import { InspectionRepository } from '../repositories/InspectionRepository';
 import { ArtworkRepository } from '../repositories/ArtworkRepository';
 import { PhotoRepository } from '../repositories/PhotoRepository';
 import { InspectionFormSchemaV1 } from '../schemas/InspectionFormSchema';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 
 export interface CreateInspectionWithPhotosInput extends CreateInspectionInput {
     photos?: { localPath: string; label: PhotoLabel }[];

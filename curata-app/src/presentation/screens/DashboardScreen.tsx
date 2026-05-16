@@ -26,7 +26,7 @@ export function DashboardScreen() {
 
             try {
                 const allInspections = await inspectionRepository.findAll();
-                const sorted = allInspections.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                const sorted = allInspections.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
                 setRecentInspections(sorted.slice(0, 5));
             } catch (err) {
                 console.error("Erro ao carregar inspeções:", err);
@@ -162,7 +162,7 @@ export function DashboardScreen() {
                         <View style={{ flex: 1 }}>
                             <Text style={styles.recentItemTitle}>Inspeção</Text>
                             <Text style={styles.recentItemDate}>
-                                {new Date(item.createdAt).toLocaleDateString()}
+                                {new Date(item.updatedAt).toLocaleDateString()}
                             </Text>
                         </View>
                         <MaterialIcons name="chevron-right" size={20} color="#B0A898" />

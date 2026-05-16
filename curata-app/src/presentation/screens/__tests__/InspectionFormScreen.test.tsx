@@ -93,7 +93,7 @@ describe('InspectionFormScreen', () => {
         expect(mockNavigate).toHaveBeenCalledWith('Camera', expect.objectContaining({
             artworkId: 'artwork-123',
             inspectionId: expect.any(String),
-            onCapture: expect.any(Function)
+            label: 'front'
         }));
     });
 
@@ -110,11 +110,9 @@ describe('InspectionFormScreen', () => {
         const [navCall] = mockNavigate.mock.calls.filter(c => c[0] === 'Camera');
         expect(navCall).toBeTruthy();
 
-        if (navCall && navCall[1].onCapture) {
-            await act(async () => {
-                navCall[1].onCapture('new-photo-uri');
-            });
-        }
+        await act(async () => {
+            require('react-native').DeviceEventEmitter.emit('onPhotoCaptured', 'new-photo-uri');
+        });
 
         // 3. Verifica se a foto apareceu (Thumb) via testID
         const removeButton = await screen.findByTestId('remove-photo-0');
@@ -140,12 +138,10 @@ describe('InspectionFormScreen', () => {
         // Actually we need to re-find it after each capture if it re-renders
         // But for simplicity let's mock the state or just repeat fireEvent
         
-        // Simpler: iterate 10 times manually to fill state
         for(let i=0; i<10; i++) {
             fireEvent.press(photoButton);
-            const call = mockNavigate.mock.calls[mockNavigate.mock.calls.length - 1];
             await act(async () => {
-                call[1].onCapture(`uri-${i}`);
+                require('react-native').DeviceEventEmitter.emit('onPhotoCaptured', `uri-${i}`);
             });
         }
 

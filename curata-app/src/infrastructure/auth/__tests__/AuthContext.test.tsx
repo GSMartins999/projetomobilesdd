@@ -2,7 +2,7 @@ import React from 'react';
 import { renderHook, act } from '@testing-library/react-native';
 import { AuthProvider, useAuth } from '../AuthContext';
 import { DIProvider } from '../../di/DIContext';
-import { User } from '../../domain/entities/User';
+import { User } from '../../../domain/entities/User';
 
 const mockAuthRepository: any = {
     getCurrentUser: jest.fn(),
@@ -25,7 +25,7 @@ describe('AuthContext', () => {
     });
 
     it('should initialize with current user from repository', async () => {
-        const mockUser: User = { id: '1', email: 'test@example.com', name: 'Test User' };
+        const mockUser: User = { id: '1', email: 'test@example.com', name: 'Test User', avatarUrl: null, updatedAt: '2026-01-01', syncedAt: null };
         mockAuthRepository.getCurrentUser.mockResolvedValueOnce(mockUser);
 
         const { result } = renderHook(() => useAuth(), { wrapper });
@@ -45,7 +45,7 @@ describe('AuthContext', () => {
 
     it('should handle login successfully', async () => {
         mockAuthRepository.getCurrentUser.mockResolvedValueOnce(null);
-        const mockUser: User = { id: '1', email: 'test@example.com', name: 'Test User' };
+        const mockUser: User = { id: '1', email: 'test@example.com', name: 'Test User', avatarUrl: null, updatedAt: '2026-01-01', syncedAt: null };
         mockAuthRepository.signIn.mockResolvedValueOnce({ user: mockUser, token: 'fake-token' });
 
         const { result } = renderHook(() => useAuth(), { wrapper });
@@ -61,7 +61,7 @@ describe('AuthContext', () => {
 
     it('should handle register successfully', async () => {
         mockAuthRepository.getCurrentUser.mockResolvedValueOnce(null);
-        const mockUser: User = { id: '1', email: 'test@example.com', name: 'Test User' };
+        const mockUser: User = { id: '1', email: 'test@example.com', name: 'Test User', avatarUrl: null, updatedAt: '2026-01-01', syncedAt: null };
         mockAuthRepository.signUp.mockResolvedValueOnce({ user: mockUser, token: 'fake-token' });
 
         const { result } = renderHook(() => useAuth(), { wrapper });
@@ -75,7 +75,7 @@ describe('AuthContext', () => {
     });
 
     it('should handle logout successfully', async () => {
-        const mockUser: User = { id: '1', email: 'test@example.com', name: 'Test User' };
+        const mockUser: User = { id: '1', email: 'test@example.com', name: 'Test User', avatarUrl: null, updatedAt: '2026-01-01', syncedAt: null };
         mockAuthRepository.getCurrentUser.mockResolvedValueOnce(mockUser);
         mockAuthRepository.signOut.mockResolvedValueOnce(undefined);
 

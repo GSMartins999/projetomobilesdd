@@ -123,20 +123,16 @@ jest.mock('@react-native-community/netinfo', () => ({
     }),
 }));
 
-// Mock @maplibre/maplibre-react-native
-jest.mock('@maplibre/maplibre-react-native', () => {
+// Mock react-native-maps
+jest.mock('react-native-maps', () => {
     const React = require('react');
     const { View } = require('react-native');
     const MockComponent = (props: any) => React.createElement(View, props, props.children);
     return {
         __esModule: true,
-        default: {
-            MapView: MockComponent,
-            Camera: MockComponent,
-            UserLocation: MockComponent,
-            PointAnnotation: MockComponent,
-            MarkerView: MockComponent,
-        },
+        default: MockComponent,
+        Marker: MockComponent,
+        Callout: MockComponent,
     };
 }, { virtual: true });
 

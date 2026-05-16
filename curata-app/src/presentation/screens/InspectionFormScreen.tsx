@@ -9,7 +9,8 @@ import {
     Image,
     Alert,
     KeyboardAvoidingView,
-    Platform
+    Platform,
+    DeviceEventEmitter
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -33,11 +34,7 @@ export function InspectionFormScreen({ navigation, route }: any) {
     const insets = useSafeAreaInsets();
     const { inspectionRepository, artworkRepository, photoRepository } = useDI();
 
-<<<<<<< HEAD
-    const createInspectionUseCase = React.useMemo(() => new CreateInspectionUseCase(
-=======
     const createInspectionUseCase = useMemo(() => new CreateInspectionUseCase(
->>>>>>> cce0061 (feat: implement bounding box duplicate detection, add date pickers to reports, increase auth delay, and integrate expo-notifications)
         inspectionRepository,
         artworkRepository,
         photoRepository,
@@ -56,6 +53,13 @@ export function InspectionFormScreen({ navigation, route }: any) {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
+    React.useEffect(() => {
+        const subscription = DeviceEventEmitter.addListener('onPhotoCaptured', (data) => {
+            setPhotos(prev => [...prev, { localPath: data.uri, label: data.label }]);
+        });
+        return () => subscription.remove();
+    }, []);
+
     const handleAddPhoto = () => {
         if (photos.length >= 10) {
             Alert.alert('Limite Atingido', 'Máximo de 10 fotos por inspeção.');
@@ -65,9 +69,6 @@ export function InspectionFormScreen({ navigation, route }: any) {
             artworkId,
             inspectionId,
             label: 'front', // v1 default
-            onCapture: (uri: string) => {
-                setPhotos([...photos, { localPath: uri, label: 'front' }]);
-            }
         });
     };
 

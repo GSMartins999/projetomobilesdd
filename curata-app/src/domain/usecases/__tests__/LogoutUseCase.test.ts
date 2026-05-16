@@ -1,8 +1,9 @@
-import { AuthRepository } from '../../domain/repositories/AuthRepository';
+import { AuthRepository } from '../../../domain/repositories/AuthRepository';
 import { LogoutUseCase } from '../LogoutUseCase';
 
 const makeMockAuthRepository = (): jest.Mocked<AuthRepository> => ({
     signIn: jest.fn(),
+    signUp: jest.fn(),
     signOut: jest.fn(),
     getCurrentUser: jest.fn(),
     refreshToken: jest.fn(),

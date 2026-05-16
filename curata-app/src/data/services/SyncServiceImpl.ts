@@ -3,7 +3,7 @@ import { ArtworkRepository } from '../../domain/repositories/ArtworkRepository';
 import { InspectionRepository } from '../../domain/repositories/InspectionRepository';
 import { PhotoRepository } from '../../domain/repositories/PhotoRepository';
 import { SyncService, SyncResult } from '../../domain/services/SyncService';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { decode } from 'base64-arraybuffer';
 import { db } from '../db/client';
 import { syncState } from '../db/schema';
@@ -168,16 +168,8 @@ export class SyncServiceImpl implements SyncService {
         // A. Upload: Local -> Server (unsynced items)
         const unsynced = await repo.findUnsynced();
         if (unsynced.length > 0) {
-<<<<<<< HEAD
             const upsertPayload = unsynced.map((item: any) => mapToSnakeCase(tableName, item));
-            const { error } = await this.supabase.from(tableName).upsert(upsertPayload);
-=======
-            const { data: upserted, error } = await this.supabase.from(tableName).upsert(unsynced.map((item: any) => ({
-                ...item,
-                syncedAt: new Date().toISOString() // Marcar como sincronizado no servidor
-            }))).select('updated_at');
-            
->>>>>>> cce0061 (feat: implement bounding box duplicate detection, add date pickers to reports, increase auth delay, and integrate expo-notifications)
+            const { data: upserted, error } = await this.supabase.from(tableName).upsert(upsertPayload).select('updated_at');
             if (error) throw new Error(`Upload ${tableName} failed: ${error.message}`);
 
             if (upserted) {
@@ -226,7 +218,7 @@ export class SyncServiceImpl implements SyncService {
 
                 const { data, error } = await this.supabase.storage
                     .from('curata-media')
-                    .upload(filePath, decode(fileBase64), { contentType: 'image/jpeg', upscale: false });
+                    .upload(filePath, decode(fileBase64), { contentType: 'image/jpeg' });
 
                 if (error) throw error;
 
