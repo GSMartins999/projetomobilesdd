@@ -18,10 +18,10 @@ describe('NotificationsScreen', () => {
         <NavigationContainer>{children}</NavigationContainer>
     );
 
-    it('renders notifications successfully', () => {
-        const { getByText, getAllByText } = render(<NotificationsScreen />, { wrapper: Wrapper });
+    it('renders notifications successfully', async () => {
+        const { findByText, getByText } = render(<NotificationsScreen />, { wrapper: Wrapper });
         
-        expect(getByText('Inspeção Urgente!')).toBeTruthy();
+        expect(await findByText('Inspeção Urgente!')).toBeTruthy();
         expect(getByText('Agendamento Confirmado')).toBeTruthy();
         expect(getByText('Limpar')).toBeTruthy();
     });

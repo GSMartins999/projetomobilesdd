@@ -6,7 +6,11 @@
         "loading": "Loading...",
         "retry": "Retry",
         "back": "Back",
-        "help": "Help"
+        "help": "Help",
+        "logout": "Log out",
+        "add": "Add",
+        "search": "Search artworks...",
+        "results": "Results"
     },
     "tabs": {
         "map": "Map",
@@ -41,7 +45,9 @@
         "recent_inspections": "Recent Inspections",
         "view_all": "View all",
         "empty_inspections": "No recent inspections",
-        "empty_subtext": "Performed inspections will appear here"
+        "empty_subtext": "Performed inspections will appear here",
+        "pending_90d": "+90 DAYS",
+        "inspection": "Inspection"
     },
     "map": {
         "title": "Artwork Map",
@@ -65,11 +71,51 @@
     "artwork": {
         "new": "New Artwork",
         "name": "Artwork Name",
+        "name_placeholder": "Artwork name",
+        "artist": "Artist",
+        "artist_placeholder": "Artist name",
         "type": "Type",
         "status": "Conservation Status",
         "notes": "Notes",
         "address": "Address",
         "no_address": "Address not provided",
-        "new_inspection": "New Inspection"
+        "new_inspection": "New Inspection",
+        "add_photo": "Add Photo",
+        "fetching_location": "Fetching location...",
+        "saving": "Saving artwork...",
+        "error_name_required": "Artwork name is required",
+        "delete": "Delete Artwork",
+        "delete_confirm": "Are you sure you want to delete this artwork? This action cannot be undone."
+    },
+    "profile": {
+        "title": "Profile",
+        "curator": "Curator",
+        "last_sync": "LAST SYNC: TODAY",
+        "preferences": "PREFERENCES",
+        "language": "Language",
+        "map_download": "Map Downloads",
+        "map_download_sub": "Wi-Fi only",
+        "reminder": "Revisit Reminder",
+        "reminder_sub": "15 days",
+        "account": "ACCOUNT",
+        "sync_now": "Sync now",
+        "logout_title": "Log out",
+        "logout_confirm": "Are you sure you want to log out?",
+        "syncing_data": "Syncing data..."
+    },
+    "inspection": {
+        "new_form": "New Inspection",
+        "structural": "Structural Condition *",
+        "surface": "Surface Condition *",
+        "urgency": "Urgency Level",
+        "status_visit": "Status on Visit",
+        "recommendation": "Technical Recommendation *",
+        "photos": "Photos",
+        "finish": "Finish Inspection",
+        "saving": "Saving inspection..."
+    },
+    "search": {
+        "title": "Explore Artworks",
+        "empty": "No artworks found"
     }
 }

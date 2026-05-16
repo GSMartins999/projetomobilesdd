@@ -2,6 +2,7 @@ import { Artwork, CreateArtworkInput } from '../entities/Artwork';
 import { ArtworkRepository } from '../repositories/ArtworkRepository';
 import { PhotoRepository } from '../repositories/PhotoRepository';
 import { Photo } from '../entities/Inspection';
+import { scheduleInspectionReminder } from '../../infrastructure/notifications/NotificationService';
 
 const DUPLICATE_DETECTION_RADIUS_METERS = 30;
 
@@ -48,7 +49,7 @@ export class CreateArtworkUseCase {
             notes: input.notes?.trim() || null,
             latitude: input.latitude ?? null,
             longitude: input.longitude ?? null,
-            address: null,
+            address: input.address?.trim() || null,
             deviceId: this.getDeviceId(),
             updatedAt: this.now(),
             syncedAt: null,
@@ -98,6 +99,12 @@ export class CreateArtworkUseCase {
                 deletedAt: null,
             };
             await this.photoRepository.save(photo);
+        }
+
+        try {
+            await scheduleInspectionReminder(artwork.name);
+        } catch (err) {
+            console.error('[CreateArtworkUseCase] Erro ao agendar notificação:', err);
         }
 
         return { artwork, nearbyArtworks };

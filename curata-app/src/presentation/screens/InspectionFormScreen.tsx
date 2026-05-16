@@ -107,7 +107,7 @@ export function InspectionFormScreen({ navigation, route }: any) {
             style={{ flex: 1, backgroundColor: '#F8F5F0' }}
             behavior="padding"
         >
-            <LoadingOverlay visible={isLoading} message="Salvando inspeção..." />
+            <LoadingOverlay visible={isLoading} message={t('inspection.saving', 'Salvando inspeção...')} />
             <ScrollView 
                 style={[styles.container, { paddingTop: insets.top + 12 }]} 
                 showsVerticalScrollIndicator={false}
@@ -116,27 +116,27 @@ export function InspectionFormScreen({ navigation, route }: any) {
             >
             <Text style={styles.headerTitle}>{t('inspection.new_form', 'Nova Inspeção')}</Text>
 
-            <Text style={styles.label}>Condição Estrutural *</Text>
+            <Text style={styles.label}>{t('inspection.structural', 'Condição Estrutural *')}</Text>
             <TextInput
                 style={styles.textArea}
                 value={structuralCondition}
                 onChangeText={setStructuralCondition}
                 multiline
-                placeholder="Descreva a condição estrutural..."
+                placeholder={t('inspection.structural', 'Condição Estrutural *')}
                 placeholderTextColor="#B0A898"
             />
 
-            <Text style={styles.label}>Condição Superficial *</Text>
+            <Text style={styles.label}>{t('inspection.surface', 'Condição Superficial *')}</Text>
             <TextInput
                 style={styles.textArea}
                 value={surfaceCondition}
                 onChangeText={setSurfaceCondition}
                 multiline
-                placeholder="Descreva a condição superficial..."
+                placeholder={t('inspection.surface', 'Condição Superficial *')}
                 placeholderTextColor="#B0A898"
             />
 
-            <Text style={styles.label}>Nível de Urgência: {urgencyLevel}</Text>
+            <Text style={styles.label}>{t('inspection.urgency', 'Nível de Urgência')}: {urgencyLevel}</Text>
             <View style={styles.urgencyRow}>
                 {[1, 2, 3, 4, 5].map(v => {
                     const isActive = urgencyLevel === v;
@@ -160,7 +160,7 @@ export function InspectionFormScreen({ navigation, route }: any) {
                 })}
             </View>
 
-            <Text style={styles.label}>Estado na Visíta</Text>
+            <Text style={styles.label}>{t('inspection.status_visit', 'Estado na Visita')}</Text>
             <View style={styles.statusRow}>
                 {statusOptions.map((s) => (
                     <TouchableOpacity
@@ -176,22 +176,22 @@ export function InspectionFormScreen({ navigation, route }: any) {
                         <Text style={[
                             styles.statusPillText,
                             { color: statusAtVisit === s.key ? s.color : '#888' },
-                        ]}>{s.label}</Text>
+                        ]}>{t(`status.${s.key}`, s.label)}</Text>
                     </TouchableOpacity>
                 ))}
             </View>
 
-            <Text style={styles.label}>Recomendação Técnica *</Text>
+            <Text style={styles.label}>{t('inspection.recommendation', 'Recomendação Técnica *')}</Text>
             <TextInput
                 style={styles.textArea}
                 value={recommendation}
                 onChangeText={setRecommendation}
-                placeholder="Recomendação técnica..."
+                placeholder={t('inspection.recommendation', 'Recomendação Técnica *')}
                 placeholderTextColor="#B0A898"
                 multiline
             />
 
-            <Text style={styles.label}>Fotos ({photos.length}/10)</Text>
+            <Text style={styles.label}>{t('inspection.photos', 'Fotos')} ({photos.length}/10)</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photoRow}>
                 {photos.map((p, i) => (
                     <View key={i} style={styles.photoWrapper}>
@@ -207,7 +207,7 @@ export function InspectionFormScreen({ navigation, route }: any) {
                 ))}
                 <TouchableOpacity style={styles.addPhotoBtn} onPress={handleAddPhoto}>
                     <MaterialIcons name="photo-camera" size={24} color="#D4883A" />
-                    <Text style={styles.addPhotoText}>Adicionar</Text>
+                    <Text style={styles.addPhotoText}>{t('common.add', 'Adicionar')}</Text>
                 </TouchableOpacity>
             </ScrollView>
 
@@ -215,7 +215,7 @@ export function InspectionFormScreen({ navigation, route }: any) {
 
             <TouchableOpacity style={styles.saveButton} onPress={handleSave} activeOpacity={0.8}>
                 <MaterialIcons name="save" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
-                <Text style={styles.saveButtonText}>Finalizar Inspeção</Text>
+                <Text style={styles.saveButtonText}>{t('inspection.finish', 'Finalizar Inspeção')}</Text>
             </TouchableOpacity>
 
             <View style={{ height: 40 }} />

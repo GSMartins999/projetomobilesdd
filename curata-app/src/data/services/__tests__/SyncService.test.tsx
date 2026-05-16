@@ -1,9 +1,14 @@
 import { SyncServiceImpl } from '../SyncServiceImpl';
 import { AuthProvider, useAuth } from '../../../infrastructure/auth/AuthContext';
 import { DIProvider } from '../../../infrastructure/di/DIContext';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 
 jest.mock('expo-file-system', () => ({
+    readAsStringAsync: jest.fn().mockResolvedValue('fakebase64'),
+    EncodingType: { Base64: 'base64' },
+}));
+
+jest.mock('expo-file-system/legacy', () => ({
     readAsStringAsync: jest.fn().mockResolvedValue('fakebase64'),
     EncodingType: { Base64: 'base64' },
 }));

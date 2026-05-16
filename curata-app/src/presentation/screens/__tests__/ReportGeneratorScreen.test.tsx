@@ -47,7 +47,8 @@ describe('ReportGeneratorScreen', () => {
         // Após selecionar Excel, o texto do botão muda
         expect(getByText('Excel')).toBeTruthy();
         
-        const dateBtns = getAllByText('01/04/2026');
+        const dateText = new Date(new Date().setMonth(new Date().getMonth() - 1)).toLocaleDateString();
+        const dateBtns = getAllByText(dateText);
         if (dateBtns.length > 0) fireEvent.press(dateBtns[0]);
     });
 

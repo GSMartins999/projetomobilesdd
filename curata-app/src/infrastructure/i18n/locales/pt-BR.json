@@ -6,7 +6,11 @@
         "loading": "Carregando...",
         "retry": "Tentar novamente",
         "back": "Voltar",
-        "help": "Ajuda"
+        "help": "Ajuda",
+        "logout": "Sair",
+        "add": "Adicionar",
+        "search": "Pesquisar obras...",
+        "results": "Resultados"
     },
     "tabs": {
         "map": "Mapa",
@@ -41,7 +45,9 @@
         "recent_inspections": "Últimas inspeções",
         "view_all": "Ver todas",
         "empty_inspections": "Nenhuma inspeção recente",
-        "empty_subtext": "As inspeções realizadas aparecerão aqui"
+        "empty_subtext": "As inspeções realizadas aparecerão aqui",
+        "pending_90d": "+90 DIAS",
+        "inspection": "Inspeção"
     },
     "map": {
         "title": "Mapa de Obras",
@@ -65,11 +71,51 @@
     "artwork": {
         "new": "Nova Obra",
         "name": "Nome da Obra",
+        "name_placeholder": "Nome da obra",
+        "artist": "Artista",
+        "artist_placeholder": "Nome do artista",
         "type": "Tipo",
         "status": "Estado de Conservação",
         "notes": "Notas",
         "address": "Endereço",
         "no_address": "Endereço não informado",
-        "new_inspection": "Nova Inspeção"
+        "new_inspection": "Nova Inspeção",
+        "add_photo": "Adicionar Foto",
+        "fetching_location": "Buscando localização...",
+        "saving": "Salvando obra...",
+        "error_name_required": "Nome da obra é obrigatório",
+        "delete": "Excluir Obra",
+        "delete_confirm": "Tem certeza que deseja excluir esta obra? Esta ação não pode ser desfeita."
+    },
+    "profile": {
+        "title": "Perfil",
+        "curator": "Curador",
+        "last_sync": "ÚLTIMA SINCRONIZAÇÃO: HOJE",
+        "preferences": "PREFERÊNCIAS",
+        "language": "Idioma",
+        "map_download": "Download de Mapas",
+        "map_download_sub": "Somente via Wi-Fi",
+        "reminder": "Lembrete de Revisita",
+        "reminder_sub": "15 dias",
+        "account": "CONTA",
+        "sync_now": "Sincronizar agora",
+        "logout_title": "Sair da conta",
+        "logout_confirm": "Tem certeza que deseja sair?",
+        "syncing_data": "Sincronizando dados..."
+    },
+    "inspection": {
+        "new_form": "Nova Inspeção",
+        "structural": "Condição Estrutural *",
+        "surface": "Condição Superficial *",
+        "urgency": "Nível de Urgência",
+        "status_visit": "Estado na Visita",
+        "recommendation": "Recomendação Técnica *",
+        "photos": "Fotos",
+        "finish": "Finalizar Inspeção",
+        "saving": "Salvando inspeção..."
+    },
+    "search": {
+        "title": "Explorar Acervo",
+        "empty": "Nenhuma obra encontrada"
     }
 }

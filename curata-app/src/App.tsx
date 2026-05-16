@@ -20,13 +20,12 @@ import { MockAuthRepositoryImpl } from './data/repositories/MockAuthRepositoryIm
 import { SyncServiceImpl } from './data/services/SyncServiceImpl';
 import { CameraServiceImpl } from './infrastructure/services/CameraServiceImpl';
 
+import { setupNotifications, requestNotificationPermission } from './infrastructure/notifications/NotificationService';
+
 export default function App() {
     const [isReady, setIsReady] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Instâncias criadas UMA VEZ e estáveis entre re-renders.
-    // useRef garante que não são recriadas a cada ciclo de renderização,
-    // preservando o estado interno (ex: sessão do MockAuthRepositoryImpl).
     const artworkRepository = useRef(new ArtworkRepositoryImpl(db)).current;
     const inspectionRepository = useRef(new InspectionRepositoryImpl(db)).current;
     const photoRepository = useRef(new PhotoRepositoryImpl(db)).current;
@@ -43,6 +42,8 @@ export default function App() {
         async function bootstrap() {
             try {
                 await initializeDatabase();
+                await setupNotifications();
+                await requestNotificationPermission();
                 setIsReady(true);
             } catch (e: any) {
                 console.error('[App] Bootstrap error:', e);

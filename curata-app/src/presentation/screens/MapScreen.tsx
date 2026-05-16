@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
     StyleSheet,
     View,
@@ -73,40 +74,50 @@ export function MapScreen({ navigation }: any) {
     const slideAnim = useRef(new Animated.Value(300)).current;
     const mapRef = useRef<MapView>(null);
 
-    useEffect(() => {
-        async function init() {
-            const data = await artworkRepository.findAll();
-            setArtworks(data);
+    const loadArtworks = useCallback(async () => {
+        const data = await artworkRepository.findAll();
+        setArtworks(data);
 
-            // Buscar capa de cada obra
-            const photosMap: Record<string, string> = {};
-            for (const art of data) {
-                const photos: Photo[] = await photoRepository.findByArtworkId(art.id);
-                if (photos.length > 0) {
-                    const p = photos[0];
-                    const uri = p.localPath || p.remoteUrl || '';
-                    if (uri) photosMap[art.id] = uri;
-                }
-            }
-            setCoverPhotos(photosMap);
-
-            const { status } = await Location.requestForegroundPermissionsAsync();
-            if (status === 'granted') {
-                const loc = await Location.getCurrentPositionAsync({});
-                const lat = loc.coords.latitude;
-                const lng = loc.coords.longitude;
-                setUserLocation({ lat, lng });
-                
-                // Animar o mapa para a localização do usuário assim que obtida
-                mapRef.current?.animateToRegion({
-                    latitude: lat,
-                    longitude: lng,
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,
-                }, 1000);
+        const photosMap: Record<string, string> = {};
+        for (const art of data) {
+            const photos: Photo[] = await photoRepository.findByArtworkId(art.id);
+            if (photos.length > 0) {
+                const p = photos[0];
+                const uri = p.localPath || p.remoteUrl || '';
+                if (uri) photosMap[art.id] = uri;
             }
         }
-        init();
+        setCoverPhotos(photosMap);
+    }, [artworkRepository, photoRepository]);
+
+    useFocusEffect(
+        useCallback(() => {
+            loadArtworks();
+        }, [loadArtworks])
+    );
+
+    useEffect(() => {
+        async function initGps() {
+            try {
+                const { status } = await Location.requestForegroundPermissionsAsync();
+                if (status === 'granted') {
+                    const loc = await Location.getCurrentPositionAsync({});
+                    const lat = loc.coords.latitude;
+                    const lng = loc.coords.longitude;
+                    setUserLocation({ lat, lng });
+                    
+                    mapRef.current?.animateToRegion({
+                        latitude: lat,
+                        longitude: lng,
+                        latitudeDelta: 0.01,
+                        longitudeDelta: 0.01,
+                    }, 1000);
+                }
+            } catch (err) {
+                console.error("Erro ao obter GPS no MapScreen:", err);
+            }
+        }
+        initGps();
     }, []);
 
     const openCard = (artwork: Artwork) => {

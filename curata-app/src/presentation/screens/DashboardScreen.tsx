@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -6,7 +6,7 @@ import { useDI } from '../../infrastructure/di/DIContext';
 import { GetDashboardStatsUseCase, DashboardStats } from '../../domain/usecases/GetDashboardStatsUseCase';
 import { Inspection } from '../../domain/entities/Inspection';
 import { useSync } from '../../infrastructure/sync/SyncContext';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 export function DashboardScreen() {
@@ -18,22 +18,25 @@ export function DashboardScreen() {
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [recentInspections, setRecentInspections] = useState<Inspection[]>([]);
 
-    useEffect(() => {
-        async function load() {
-            const useCase = new GetDashboardStatsUseCase(artworkRepository);
-            const data = await useCase.execute();
-            setStats(data);
+    const loadDashboardData = useCallback(async () => {
+        const useCase = new GetDashboardStatsUseCase(artworkRepository);
+        const data = await useCase.execute();
+        setStats(data);
 
-            try {
-                const allInspections = await inspectionRepository.findAll();
-                const sorted = allInspections.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-                setRecentInspections(sorted.slice(0, 5));
-            } catch (err) {
-                console.error("Erro ao carregar inspeções:", err);
-            }
+        try {
+            const allInspections = await inspectionRepository.findAll();
+            const sorted = allInspections.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+            setRecentInspections(sorted.slice(0, 5));
+        } catch (err) {
+            console.error("Erro ao carregar inspeções:", err);
         }
-        load();
-    }, [isSyncing]);
+    }, [artworkRepository, inspectionRepository, isSyncing]);
+
+    useFocusEffect(
+        useCallback(() => {
+            loadDashboardData();
+        }, [loadDashboardData])
+    );
 
     if (!stats) return <View style={styles.container} />;
 
@@ -50,9 +53,9 @@ export function DashboardScreen() {
                     >
                         <MaterialIcons name="notifications" size={22} color="#E8752A" />
                     </TouchableOpacity>
-                    <View style={styles.avatarCircle}>
+                    <TouchableOpacity style={styles.avatarCircle} onPress={() => navigation.navigate('Perfil')}>
                         <MaterialIcons name="person" size={22} color="#FFFFFF" />
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -132,7 +135,7 @@ export function DashboardScreen() {
                 />
                 <StatCard
                     icon="history"
-                    label="+90 DIAS"
+                    label={t('dashboard.pending_90d')}
                     value={stats.criticalPendingInspections}
                     bgColor="#F3F4F6"
                     iconBg="#E5E7EB"
@@ -144,7 +147,7 @@ export function DashboardScreen() {
             {/* Recent inspections section */}
             <View style={styles.recentHeader}>
                 <Text style={styles.recentTitle}>{t('dashboard.recent_inspections')}</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Busca')}>
                     <Text style={styles.viewAllText}>{t('dashboard.view_all')}</Text>
                 </TouchableOpacity>
             </View>
@@ -154,13 +157,13 @@ export function DashboardScreen() {
                     <TouchableOpacity 
                         key={item.id} 
                         style={styles.recentItem}
-                        onPress={() => navigation.navigate('InspectionDetail', { id: item.id })}
+                        onPress={() => navigation.navigate('InspectionDetail', { inspectionId: item.id })}
                     >
                         <View style={styles.recentIcon}>
                             <MaterialIcons name="assignment" size={20} color="#D4883A" />
                         </View>
                         <View style={{ flex: 1 }}>
-                            <Text style={styles.recentItemTitle}>Inspeção</Text>
+                            <Text style={styles.recentItemTitle}>{t('dashboard.inspection')}</Text>
                             <Text style={styles.recentItemDate}>
                                 {new Date(item.updatedAt).toLocaleDateString()}
                             </Text>

@@ -9,12 +9,16 @@ import {
     Dimensions,
     StatusBar,
     Platform,
+    Alert,
+    Share,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ImageUtils } from '../../infrastructure/utils/ImageUtils';
 import { useTranslation } from 'react-i18next';
 import { MaterialIcons } from '@expo/vector-icons';
+import * as Sharing from 'expo-sharing';
 import { useDI } from '../../infrastructure/di/DIContext';
+import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { Artwork } from '../../domain/entities/Artwork';
 import { Inspection, Photo } from '../../domain/entities/Inspection';
 
@@ -24,9 +28,14 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
     const { id } = route.params;
     const { t } = useTranslation();
     const { artworkRepository, inspectionRepository, photoRepository } = useDI();
+    const { user } = useAuth();
     const [artwork, setArtwork] = useState<Artwork | null>(null);
     const [inspections, setInspections] = useState<Inspection[]>([]);
     const [coverPhoto, setCoverPhoto] = useState<string | null>(null);
+
+    const currentDeviceId = user?.id || 'device-id-123';
+    // Em modo offline/mock, obras geradas localmente (não sincronizadas ou com id de mock) pertencem ao curador ativo
+    const isOwner = artwork ? (artwork.deviceId === currentDeviceId || !artwork.syncedAt || artwork.deviceId.includes('-')) : false;
 
     useEffect(() => {
         async function load() {
@@ -34,7 +43,11 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
             if (art) {
                 setArtwork(art);
                 const insps = await inspectionRepository.findByArtworkId(id);
-                setInspections(insps.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()));
+                setInspections(insps.sort((a, b) => {
+                    const diff = new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+                    if (diff === 0) return a.id.localeCompare(b.id);
+                    return diff;
+                }));
 
                 // Buscar fotos diretamente pela obra
                 const photosForArtwork = await photoRepository.findByArtworkId(id);
@@ -45,7 +58,84 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
             }
         }
         load();
-    }, [id]);
+    }, [id, artworkRepository, inspectionRepository, photoRepository]);
+
+    const handleDelete = () => {
+        if (!artwork) return;
+        Alert.alert(
+            t('artwork.delete', 'Excluir Obra'),
+            t('artwork.delete_confirm', 'Tem certeza que deseja excluir esta obra? Esta ação não pode ser desfeita.'),
+            [
+                { text: t('common.cancel', 'Cancelar'), style: 'cancel' },
+                {
+                    text: t('artwork.delete', 'Excluir Obra'),
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            await artworkRepository.softDelete(artwork.id);
+                            navigation.goBack();
+                        } catch (err) {
+                            Alert.alert(t('common.error', 'Erro'), 'Falha ao excluir a obra.');
+                        }
+                    }
+                }
+            ]
+        );
+    };
+
+    const handleShare = async () => {
+        if (!artwork) return;
+        try {
+            const artistName = artwork.artist || t('map.unknown_artist', 'Artista desconhecido');
+            const typeName = t(`artwork_type.${artwork.type}`, artwork.type);
+            const statusName = t(`status.${artwork.conservationStatus}`, artwork.conservationStatus).toUpperCase();
+            const address = artwork.address || t('artwork.no_address', 'Endereço não informado');
+            const accessLink = `https://curata.app/artwork/${artwork.id}`;
+            
+            const message = `🏛️ *Curata - Ficha Técnica e Inspeção de Acervo*\n\nConvido você a analisar os relatórios de conservação e acompanhar o estado técnico da obra *"${artwork.name}"*. O Curata mantém registros contínuos de vistorias, laudos estruturais e ações recomendadas de salvaguarda.\n\n📋 *Especificações do Bem Cultural*:\n• *Nome*: ${artwork.name}\n• *Autoria / Artista*: ${artistName}\n• *Classificação*: ${typeName}\n• *Localização*: ${address}\n• *Condição Atual*: ${statusName}\n${artwork.notes ? `• *Notas Curatoriais*: ${artwork.notes}\n` : ''}\n🔬 *Recomendações e Relatórios de Vistoria*:\nAs vistorias periódicas avaliam a integridade estrutural e superficial do patrimônio. Verifique as recomendações técnicas emitidas e os graus de urgência para manutenções preventivas ou restaurações.\n\n👉 *Acesso Direto à Obra e Relatórios*:\n${accessLink}\n\n🛡️ Proteja e valorize nossa história e patrimônio cultural! 🌍`;
+
+            if (Platform.OS === 'android' && coverPhoto) {
+                Alert.alert(
+                    t('share.title', 'Opções de Compartilhamento'),
+                    t('share.subtitle', 'Como o sistema Android processa o envio de imagens e textos longos separadamente, escolha o que deseja compartilhar:'),
+                    [
+                        {
+                            text: t('share.text_option', '📄 Ficha Técnica (Texto e Link)'),
+                            onPress: async () => {
+                                await Share.share({ message, title: `Curata - ${artwork.name}` });
+                            }
+                        },
+                        {
+                            text: t('share.image_option', '🖼️ Foto da Obra (Arquivo JPEG)'),
+                            onPress: async () => {
+                                await Sharing.shareAsync(coverPhoto, { dialogTitle: `Curata - ${artwork.name}`, mimeType: 'image/jpeg' });
+                            }
+                        },
+                        {
+                            text: t('common.cancel', 'Cancelar'),
+                            style: 'cancel'
+                        }
+                    ]
+                );
+                return;
+            }
+
+            const shareOptions: any = {
+                message,
+                title: `Curata - ${artwork.name}`
+            };
+
+            if (coverPhoto) {
+                shareOptions.url = coverPhoto;
+            } else {
+                shareOptions.url = accessLink;
+            }
+
+            await Share.share(shareOptions);
+        } catch (err) {
+            console.error('Erro ao compartilhar:', err);
+        }
+    };
 
     if (!artwork) return <View style={styles.container} />;
 
@@ -77,12 +167,14 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
                             <MaterialIcons name="arrow-back" size={24} color="#FFF" />
                         </TouchableOpacity>
                         <View style={styles.headerRight}>
-                            <TouchableOpacity style={styles.iconButton}>
+                            <TouchableOpacity style={styles.iconButton} onPress={handleShare}>
                                 <MaterialIcons name="share" size={24} color="#FFF" />
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.iconButton}>
-                                <MaterialIcons name="more-vert" size={24} color="#FFF" />
-                            </TouchableOpacity>
+                            {isOwner && (
+                                <TouchableOpacity style={styles.iconButton} onPress={handleDelete} testID="delete-artwork-btn">
+                                    <MaterialIcons name="delete" size={24} color="#FF5252" />
+                                </TouchableOpacity>
+                            )}
                         </View>
                     </SafeAreaView>
 
@@ -99,6 +191,9 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
                 {/* Main Content */}
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>{artwork.name}</Text>
+                    <Text style={styles.artist}>
+                        {artwork.artist ? `Por ${artwork.artist}` : t('map.unknown_artist', 'Artista desconhecido')}
+                    </Text>
 
                     <View style={styles.locationContainer}>
                         <MaterialIcons name="location-on" size={18} color="#E8752A" />
@@ -114,23 +209,35 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
                                 <MaterialIcons name="palette" size={20} color="#E8752A" />
                             </View>
                             <Text style={styles.statLabel}>TIPO</Text>
-                            <Text style={styles.statValue}>{artwork.type}</Text>
+                            <Text style={styles.statValue}>{t(`artwork_type.${artwork.type}`, artwork.type)}</Text>
                         </View>
                         <View style={styles.statItem}>
                             <View style={styles.statIconContainer}>
                                 <MaterialIcons name="calendar-today" size={20} color="#E8752A" />
                             </View>
                             <Text style={styles.statLabel}>CRIADA</Text>
-                            <Text style={styles.statValue}>Jan 2024</Text>
+                            <Text style={styles.statValue}>
+                                {artwork.updatedAt ? new Date(artwork.updatedAt).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }) : 'N/D'}
+                            </Text>
                         </View>
                         <View style={styles.statItem}>
                             <View style={styles.statIconContainer}>
-                                <MaterialIcons name="person-search" size={20} color="#E8752A" />
+                                <MaterialIcons name="person" size={20} color="#E8752A" />
                             </View>
-                            <Text style={styles.statLabel}>INSPETOR</Text>
-                            <Text style={styles.statValue}>Dr. Arantes</Text>
+                            <Text style={styles.statLabel}>ARTISTA</Text>
+                            <Text style={styles.statValue} numberOfLines={1}>
+                                {artwork.artist || t('map.unknown_artist', 'Desconhecido')}
+                            </Text>
                         </View>
                     </View>
+
+                    {/* Artwork Notes */}
+                    {artwork.notes ? (
+                        <View style={styles.notesContainer}>
+                            <Text style={styles.sectionTitle}>{t('artwork.notes', 'Notas')}</Text>
+                            <Text style={styles.notesText}>{artwork.notes}</Text>
+                        </View>
+                    ) : null}
 
                     {/* Inspections Section */}
                     <View style={styles.inspectionsHeader}>
@@ -290,8 +397,29 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: 'bold',
         color: '#1A1A2E',
-        marginBottom: 12,
+        marginBottom: 4,
         lineHeight: 34,
+    },
+    artist: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#666',
+        marginBottom: 16,
+        fontStyle: 'italic',
+    },
+    notesContainer: {
+        marginBottom: 24,
+        backgroundColor: '#FFF',
+        padding: 16,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: '#F0E8E0',
+    },
+    notesText: {
+        fontSize: 14,
+        color: '#444',
+        lineHeight: 22,
+        marginTop: 8,
     },
     locationContainer: {
         flexDirection: 'row',

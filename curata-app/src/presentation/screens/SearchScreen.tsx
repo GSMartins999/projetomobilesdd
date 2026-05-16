@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
     View,
     Text,
@@ -8,6 +9,7 @@ import {
     StyleSheet,
     ScrollView,
     Image,
+    Alert,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -43,7 +45,7 @@ export function SearchScreen({ navigation }: any) {
     const [results, setResults] = useState<Artwork[]>([]);
     const [coverPhotos, setCoverPhotos] = useState<Record<string, string>>({});
 
-    const handleSearch = async () => {
+    const handleSearch = useCallback(async () => {
         const data = await searchUseCase.execute({
             query,
             type: selectedType || undefined,
@@ -51,7 +53,6 @@ export function SearchScreen({ navigation }: any) {
         });
         setResults(data);
 
-        // Buscar fotos de capa para cada resultado
         const photosMap: Record<string, string> = {};
         for (const art of data) {
             const photos = await photoRepository.findByArtworkId(art.id);
@@ -62,11 +63,13 @@ export function SearchScreen({ navigation }: any) {
             }
         }
         setCoverPhotos(photosMap);
-    };
+    }, [query, selectedType, selectedStatus, artworkRepository, photoRepository]);
 
-    useEffect(() => {
-        handleSearch();
-    }, [query, selectedType, selectedStatus]);
+    useFocusEffect(
+        useCallback(() => {
+            handleSearch();
+        }, [handleSearch])
+    );
 
     const statusFilters: { key: ConservationStatus; label: string }[] = [
         { key: 'urgent', label: 'Urgente' },
@@ -86,7 +89,7 @@ export function SearchScreen({ navigation }: any) {
         <View style={styles.container}>
             {/* Header */}
             <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-                <Text style={styles.headerTitle}>Explorar Acervo</Text>
+                <Text style={styles.headerTitle}>{t('search.title', 'Explorar Acervo')}</Text>
             </View>
 
             {/* Search bar */}
@@ -100,14 +103,14 @@ export function SearchScreen({ navigation }: any) {
                     onChangeText={setQuery}
                     onSubmitEditing={handleSearch}
                 />
-                <TouchableOpacity style={styles.filterButton}>
+                <TouchableOpacity style={styles.filterButton} onPress={() => Alert.alert(t('search.filter_title', 'Opções de Filtro'), t('search.filter_desc', 'Toque nas categorias abaixo para filtrar os resultados por status ou tipo.'))}>
                     <MaterialIcons name="tune" size={22} color="#888" />
                 </TouchableOpacity>
             </View>
 
             {/* Status filters */}
             <View style={styles.filterSection}>
-                <Text style={styles.filterLabel}>Status de Conservação</Text>
+                <Text style={styles.filterLabel}>{t('artwork.status', 'Status de Conservação')}</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillRow}>
                     {statusFilters.map((filter) => (
                         <TouchableOpacity
@@ -122,7 +125,7 @@ export function SearchScreen({ navigation }: any) {
                                 styles.pillText,
                                 selectedStatus === filter.key && styles.pillTextActive,
                             ]}>
-                                {filter.label}
+                                {t(`status.${filter.key}`, filter.label)}
                             </Text>
                         </TouchableOpacity>
                     ))}
@@ -131,7 +134,7 @@ export function SearchScreen({ navigation }: any) {
 
             {/* Type filters */}
             <View style={styles.filterSection}>
-                <Text style={styles.filterLabel}>Tipo de Obra</Text>
+                <Text style={styles.filterLabel}>{t('artwork.type', 'Tipo de Obra')}</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillRow}>
                     {typeFilters.map((filter) => (
                         <TouchableOpacity
@@ -146,7 +149,7 @@ export function SearchScreen({ navigation }: any) {
                                 styles.pillText,
                                 selectedType === filter.key && styles.pillTextActive,
                             ]}>
-                                {filter.label}
+                                {t(`artwork_type.${filter.key}`, filter.label)}
                             </Text>
                         </TouchableOpacity>
                     ))}
@@ -189,10 +192,10 @@ export function SearchScreen({ navigation }: any) {
                                     </Text>
                                 </View>
                                 <Text style={styles.resultTitle}>{item.name}</Text>
-                                <Text style={styles.resultArtist}>{item.artist || 'Artista desconhecido'}</Text>
+                                <Text style={styles.resultArtist}>{item.artist || t('map.unknown_artist', 'Artista desconhecido')}</Text>
                                 <View style={styles.locationRow}>
                                     <MaterialIcons name="location-on" size={14} color="#B0A898" />
-                                    <Text style={styles.locationText}>{item.address || 'Endereço não informado'}</Text>
+                                    <Text style={styles.locationText}>{item.address || t('artwork.no_address', 'Endereço não informado')}</Text>
                                 </View>
                             </View>
                         </TouchableOpacity>
@@ -201,7 +204,7 @@ export function SearchScreen({ navigation }: any) {
                 ListEmptyComponent={
                     <View style={styles.emptyContainer}>
                         <MaterialIcons name="search" size={44} color="#B0A898" />
-                        <Text style={styles.emptyText}>Nenhuma obra encontrada</Text>
+                        <Text style={styles.emptyText}>{t('search.empty', 'Nenhuma obra encontrada')}</Text>
                     </View>
                 }
             />

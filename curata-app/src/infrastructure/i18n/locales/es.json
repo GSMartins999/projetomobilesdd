@@ -6,7 +6,11 @@
         "loading": "Cargando...",
         "retry": "Reintentar",
         "back": "Volver",
-        "help": "Ayuda"
+        "help": "Ayuda",
+        "logout": "Salir",
+        "add": "Añadir",
+        "search": "Buscar obras...",
+        "results": "Resultados"
     },
     "tabs": {
         "map": "Mapa",
@@ -41,7 +45,9 @@
         "recent_inspections": "Últimas inspecciones",
         "view_all": "Ver todas",
         "empty_inspections": "Sin inspecciones recientes",
-        "empty_subtext": "Las inspecciones aparecerán aquí"
+        "empty_subtext": "Las inspecciones aparecerán aquí",
+        "pending_90d": "+90 DÍAS",
+        "inspection": "Inspección"
     },
     "map": {
         "title": "Mapa de Obras",
@@ -59,17 +65,57 @@
         "section_summary": "Resumen Ejecutivo",
         "section_status": "Estado de Conservación",
         "section_photos": "Fotos de Inspección",
-        "section_geo": "Geolocalización",
+        "section_geo": "Geolocalização",
         "section_history": "Historial de Intervenciones"
     },
     "artwork": {
         "new": "Nueva Obra",
         "name": "Nombre de la Obra",
+        "name_placeholder": "Nombre de la obra",
+        "artist": "Artista",
+        "artist_placeholder": "Nombre del artista",
         "type": "Tipo",
         "status": "Estado de Conservación",
         "notes": "Notas",
         "address": "Dirección",
         "no_address": "Dirección no informada",
-        "new_inspection": "Nueva Inspección"
+        "new_inspection": "Nueva Inspección",
+        "add_photo": "Añadir Foto",
+        "fetching_location": "Buscando ubicación...",
+        "saving": "Guardando obra...",
+        "error_name_required": "El nombre de la obra es obligatorio",
+        "delete": "Eliminar Obra",
+        "delete_confirm": "¿Estás seguro de que deseas eliminar esta obra? Esta acción no se puede deshacer."
+    },
+    "profile": {
+        "title": "Perfil",
+        "curator": "Curador",
+        "last_sync": "ÚLTIMA SINCRONIZACIÓN: HOY",
+        "preferences": "PREFERENCIAS",
+        "language": "Idioma",
+        "map_download": "Descarga de Mapas",
+        "map_download_sub": "Solo por Wi-Fi",
+        "reminder": "Recordatorio de Revisita",
+        "reminder_sub": "15 días",
+        "account": "CUENTA",
+        "sync_now": "Sincronizar ahora",
+        "logout_title": "Cerrar sesión",
+        "logout_confirm": "¿Estás seguro de que deseas salir?",
+        "syncing_data": "Sincronizando datos..."
+    },
+    "inspection": {
+        "new_form": "Nueva Inspección",
+        "structural": "Condición Estructural *",
+        "surface": "Condição Superficial *",
+        "urgency": "Nivel de Urgencia",
+        "status_visit": "Estado en la Visita",
+        "recommendation": "Recomendación Técnica *",
+        "photos": "Fotos",
+        "finish": "Finalizar Inspección",
+        "saving": "Guardando inspección..."
+    },
+    "search": {
+        "title": "Explorar Obras",
+        "empty": "No se encontraron obras"
     }
 }

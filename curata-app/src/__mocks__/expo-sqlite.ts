@@ -21,6 +21,10 @@ export const openDatabaseAsync = jest.fn(async (_name: string) => mockDb);
 export const openDatabaseSync = jest.fn((_name: string) => ({
     ...mockDb,
     exec: jest.fn(),
+    execSync: jest.fn(),
+    getFirstSync: jest.fn(() => ({ user_version: 0 })),
+    runSync: jest.fn(() => ({ lastInsertRowId: 1, changes: 1 })),
+    getAllSync: jest.fn(() => []),
     run: jest.fn(() => ({ lastInsertRowId: 1, changes: 1 })),
     all: jest.fn(() => []),
     get: jest.fn(() => null),

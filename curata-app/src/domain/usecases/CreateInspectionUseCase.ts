@@ -4,6 +4,7 @@ import { ArtworkRepository } from '../repositories/ArtworkRepository';
 import { PhotoRepository } from '../repositories/PhotoRepository';
 import { InspectionFormSchemaV1 } from '../schemas/InspectionFormSchema';
 import * as FileSystem from 'expo-file-system/legacy';
+import { scheduleInspectionReminder } from '../../infrastructure/notifications/NotificationService';
 
 export interface CreateInspectionWithPhotosInput extends CreateInspectionInput {
     photos?: { localPath: string; label: PhotoLabel }[];
@@ -48,7 +49,10 @@ export class CreateInspectionUseCase {
             deletedAt: null,
         };
 
-        // 3. Salvar Fotos (se houver)
+        // 3. Salvar Inspeção
+        await this.inspectionRepository.save(inspection);
+
+        // 4. Salvar Fotos (se houver)
         if (input.photos && input.photos.length > 0) {
             for (let i = 0; i < input.photos.length; i++) {
                 const p = input.photos[i];
@@ -82,14 +86,17 @@ export class CreateInspectionUseCase {
             }
         }
 
-        // 4. Salvar Inspeção
-        await this.inspectionRepository.save(inspection);
-
         // 5. Atualizar Status da Obra-Mãe
         artwork.conservationStatus = formValidation.data.statusAtVisit;
         artwork.updatedAt = timestamp;
         artwork.syncedAt = null; // Marcar para re-sync
         await this.artworkRepository.update(artwork);
+
+        try {
+            await scheduleInspectionReminder(artwork.name);
+        } catch (err) {
+            console.error('[CreateInspectionUseCase] Erro ao agendar notificação:', err);
+        }
 
         return inspection;
     }

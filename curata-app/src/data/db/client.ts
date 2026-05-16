@@ -58,7 +58,7 @@ export async function initializeDatabase() {
 
         CREATE TABLE IF NOT EXISTS photos (
             id TEXT PRIMARY KEY,
-            inspection_id TEXT NOT NULL REFERENCES inspections(id),
+            inspection_id TEXT REFERENCES inspections(id),
             artwork_id TEXT NOT NULL REFERENCES artworks(id),
             local_path TEXT NOT NULL,
             remote_url TEXT,
@@ -75,11 +75,38 @@ export async function initializeDatabase() {
             id TEXT PRIMARY KEY,
             last_sync_timestamp TEXT NOT NULL
         );
-        PRAGMA user_version = 1;
+        PRAGMA user_version = 2;
         `);
     }
 
-    console.log(`[Database] Tabelas criadas/verificadas com sucesso (v${currentVersion === 0 ? 1 : currentVersion}).`);
+    if (currentVersion === 1) {
+        expoDb.execSync(`
+        PRAGMA foreign_keys=off;
+        BEGIN TRANSACTION;
+        CREATE TABLE IF NOT EXISTS photos_new (
+            id TEXT PRIMARY KEY,
+            inspection_id TEXT REFERENCES inspections(id),
+            artwork_id TEXT NOT NULL REFERENCES artworks(id),
+            local_path TEXT NOT NULL,
+            remote_url TEXT,
+            upload_status TEXT NOT NULL,
+            label TEXT NOT NULL,
+            "order" INTEGER NOT NULL,
+            device_id TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            synced_at TEXT,
+            deleted_at TEXT
+        );
+        INSERT INTO photos_new SELECT * FROM photos;
+        DROP TABLE photos;
+        ALTER TABLE photos_new RENAME TO photos;
+        COMMIT;
+        PRAGMA foreign_keys=on;
+        PRAGMA user_version = 2;
+        `);
+    }
+
+    console.log(`[Database] Tabelas criadas/verificadas com sucesso (v${currentVersion === 0 ? 2 : (currentVersion === 1 ? 2 : currentVersion)}).`);
     return db;
 }
 

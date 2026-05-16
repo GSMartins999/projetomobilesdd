@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import * as Location from 'expo-location';
 import { ArtworkType, ConservationStatus } from '../../domain/entities/Artwork';
 import { useDI } from '../../infrastructure/di/DIContext';
+import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { CreateArtworkUseCase } from '../../domain/usecases/CreateArtworkUseCase';
 import { DuplicateDetectionUseCase } from '../../domain/usecases/DuplicateDetectionUseCase';
 import { GeocodingService } from '../../infrastructure/services/GeocodingService';
@@ -45,14 +46,16 @@ export function ArtworkFormScreen({ navigation, route }: any) {
     const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const { artworkRepository, photoRepository } = useDI();
+    const { user } = useAuth();
+    const currentDeviceId = user?.id || 'device-id-123';
 
     const createArtworkUseCase = useMemo(() => new CreateArtworkUseCase(
         artworkRepository,
-        () => 'device-id-123',
+        () => currentDeviceId,
         () => Math.random().toString(36).substr(2, 9),
         () => new Date().toISOString(),
         photoRepository
-    ), [artworkRepository, photoRepository]);
+    ), [artworkRepository, photoRepository, currentDeviceId]);
 
     const duplicateDetectionUseCase = useMemo(() => new DuplicateDetectionUseCase(artworkRepository), [artworkRepository]);
     const geocodingService = useMemo(() => new GeocodingService(), []);
@@ -118,6 +121,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
                 notes,
                 latitude: location?.coords.latitude,
                 longitude: location?.coords.longitude,
+                address: address || undefined,
                 photoLocalPath: photoUri || undefined,
                 forceCreate
             });
@@ -145,34 +149,34 @@ export function ArtworkFormScreen({ navigation, route }: any) {
             style={{ flex: 1, backgroundColor: '#F8F5F0' }}
             behavior="padding"
         >
-            <LoadingOverlay visible={isLoading} message="Salvando obra..." />
+            <LoadingOverlay visible={isLoading} message={t('artwork.saving', 'Salvando obra...')} />
             <ScrollView 
                 style={[styles.container, { paddingTop: insets.top + 12 }]} 
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 40) }}
                 keyboardShouldPersistTaps="handled"
             >
-            <Text style={styles.headerTitle}>Nova Obra</Text>
+            <Text style={styles.headerTitle}>{t('artwork.new', 'Nova Obra')}</Text>
 
             <Text style={styles.label}>{t('artwork.name', 'Nome da Obra')}</Text>
             <TextInput
                 style={styles.input}
                 value={name}
                 onChangeText={setName}
-                placeholder="Nome da obra"
+                placeholder={t('artwork.name_placeholder', 'Nome da obra')}
                 placeholderTextColor="#B0A898"
             />
 
-            <Text style={styles.label}>Artista</Text>
+            <Text style={styles.label}>{t('artwork.artist', 'Artista')}</Text>
             <TextInput
                 style={styles.input}
                 value={artist}
                 onChangeText={setArtist}
-                placeholder="Nome do artista"
+                placeholder={t('artwork.artist_placeholder', 'Nome do artista')}
                 placeholderTextColor="#B0A898"
             />
 
-            <Text style={styles.label}>Tipo de Obra</Text>
+            <Text style={styles.label}>{t('artwork.type', 'Tipo de Obra')}</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.typeScroll} contentContainerStyle={styles.typeScrollContent}>
                 {typeOptions.map((tOpt) => (
                     <TouchableOpacity
@@ -192,7 +196,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
                         <Text style={[
                             styles.typeCardText,
                             type === tOpt.key && styles.typeCardTextActive
-                        ]}>{tOpt.label}</Text>
+                        ]}>{t(`artwork_type.${tOpt.key}`, tOpt.label)}</Text>
                     </TouchableOpacity>
                 ))}
             </ScrollView>
@@ -229,7 +233,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
                         <Text style={[
                             styles.statusPillText,
                             { color: status === s.key ? s.color : '#888' },
-                        ]}>{s.label}</Text>
+                        ]}>{t(`status.${s.key}`, s.label)}</Text>
                     </TouchableOpacity>
                 ))}
             </View>

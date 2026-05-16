@@ -26,6 +26,7 @@ export interface CreateArtworkInput {
     notes?: string;
     latitude?: number;
     longitude?: number;
+    address?: string;
     photoLocalPath?: string;
     forceCreate?: boolean;
 }

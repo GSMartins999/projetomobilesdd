@@ -2,6 +2,7 @@ import { initializeDatabase, db, expoDb } from '../client';
 
 jest.mock('expo-sqlite', () => ({
     openDatabaseSync: jest.fn().mockReturnValue({
+        getFirstSync: jest.fn().mockReturnValue({ user_version: 0 }),
         execSync: jest.fn(),
     }),
 }));

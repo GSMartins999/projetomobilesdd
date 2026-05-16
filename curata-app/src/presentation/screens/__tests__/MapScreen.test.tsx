@@ -8,6 +8,7 @@ const mockNavigate = jest.fn();
 jest.mock('@react-navigation/native', () => ({
     ...jest.requireActual('@react-navigation/native'),
     useNavigation: () => ({ navigate: mockNavigate }),
+    useFocusEffect: (cb: any) => cb(),
 }));
 
 // Mock Location
@@ -43,7 +44,7 @@ describe('MapScreen', () => {
         });
 
         const annotation = await waitFor(() => getByTestId('annotation-art-1'));
-        fireEvent(annotation, 'onSelected');
+        fireEvent.press(annotation);
 
         await findByText('Monumento');
     });
@@ -95,7 +96,7 @@ describe('MapScreen', () => {
         });
 
         const annotation = await waitFor(() => getByTestId('annotation-art-2'));
-        fireEvent(annotation, 'onSelected');
+        fireEvent.press(annotation);
 
         expect(await findByText('map.unknown_artist')).toBeTruthy();
         expect(await findByText('Desconhecido')).toBeTruthy(); // unknown fallback status label

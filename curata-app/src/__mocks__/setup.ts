@@ -90,11 +90,31 @@ jest.mock('expo-camera', () => {
 jest.mock('expo-notifications', () => ({
     getPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
     requestPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
+    getAllScheduledNotificationsAsync: jest.fn().mockResolvedValue([
+        { identifier: '1', content: { title: 'Inspeção Urgente!', body: 'Revisitar obra' } },
+        { identifier: '2', content: { title: 'Agendamento Confirmado', body: 'Visita agendada' } }
+    ]),
     setNotificationHandler: jest.fn(),
+    scheduleNotificationAsync: jest.fn().mockResolvedValue('notif-id'),
+    setNotificationChannelAsync: jest.fn().mockResolvedValue(undefined),
+    SchedulableTriggerInputTypes: {
+        TIME_INTERVAL: 'timeInterval',
+        DATE: 'date',
+        DAILY: 'daily',
+        WEEKLY: 'weekly',
+        MONTHLY: 'monthly',
+        YEARLY: 'yearly',
+    },
+    AndroidImportance: { MAX: 5, HIGH: 4, DEFAULT: 3, LOW: 2, MIN: 1, NONE: 0 },
 }));
 
 // Mock expo-file-system
 jest.mock('expo-file-system', () => ({
+    readAsStringAsync: jest.fn().mockResolvedValue('base64data'),
+    EncodingType: { Base64: 'base64' },
+}));
+
+jest.mock('expo-file-system/legacy', () => ({
     readAsStringAsync: jest.fn().mockResolvedValue('base64data'),
     EncodingType: { Base64: 'base64' },
 }));
@@ -127,7 +147,12 @@ jest.mock('@react-native-community/netinfo', () => ({
 jest.mock('react-native-maps', () => {
     const React = require('react');
     const { View } = require('react-native');
-    const MockComponent = (props: any) => React.createElement(View, props, props.children);
+    const MockComponent = React.forwardRef((props: any, ref: any) => {
+        React.useImperativeHandle(ref, () => ({
+            animateToRegion: jest.fn(),
+        }));
+        return React.createElement(View, props, props.children);
+    });
     return {
         __esModule: true,
         default: MockComponent,

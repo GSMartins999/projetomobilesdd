@@ -1,4 +1,5 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import { ArtworkDetailScreen } from '../ArtworkDetailScreen';
 import { DIProvider } from '../../../infrastructure/di/DIContext';
@@ -136,4 +137,35 @@ describe('ArtworkDetailScreen', () => {
         await findByText('Ok3');
         expect(queryByText('Ok4')).toBeNull();
     });
+
+    it('shows delete option only for owner and handles delete confirmation', async () => {
+        const art = { id: 'art-1', name: 'Mona Lisa', type: 'painting', conservationStatus: 'good', deviceId: 'device-id-123' };
+        const mockDI = {
+            artworkRepository: { findById: jest.fn().mockResolvedValue(art), softDelete: jest.fn().mockResolvedValue(undefined) },
+            inspectionRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
+            photoRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
+        };
+
+        const { findByTestId } = render(<ArtworkDetailScreen route={route} navigation={{ goBack: mockGoBack, navigate: mockNavigate }} />, {
+            wrapper: (props) => <Wrapper {...props} mockDI={mockDI} />
+        });
+
+        const deleteBtn = await findByTestId('delete-artwork-btn');
+        expect(deleteBtn).toBeTruthy();
+
+        const alertSpy = jest.spyOn(Alert, 'alert');
+        fireEvent.press(deleteBtn);
+
+        expect(alertSpy).toHaveBeenCalled();
+        
+        const buttons = alertSpy.mock.calls[0][2];
+        const confirmBtn = buttons?.find(b => b.style === 'destructive');
+        if (confirmBtn && confirmBtn.onPress) {
+            await confirmBtn.onPress();
+        }
+
+        expect(mockDI.artworkRepository.softDelete).toHaveBeenCalledWith('art-1');
+        expect(mockGoBack).toHaveBeenCalled();
+    });
 });
+

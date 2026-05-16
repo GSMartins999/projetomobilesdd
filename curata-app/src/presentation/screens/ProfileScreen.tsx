@@ -19,12 +19,12 @@ export function ProfileScreen() {
 
     return (
         <View style={styles.container}>
-            <LoadingOverlay visible={isSyncing} message="Sincronizando dados..." />
+            <LoadingOverlay visible={isSyncing} message={t('profile.syncing_data', 'Sincronizando dados...')} />
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 100) }}>
             {/* Header */}
             <View style={[styles.headerBar, { paddingTop: insets.top + 12 }]}>
-                <Text style={styles.headerTitle}>Perfil</Text>
-                <TouchableOpacity>
+                <Text style={styles.headerTitle}>{t('profile.title', 'Perfil')}</Text>
+                <TouchableOpacity onPress={() => Alert.alert(t('profile.settings', 'Configurações'), t('profile.settings_desc', 'As configurações do sistema estão sincronizadas com seu perfil.'))}>
                     <MaterialIcons name="settings" size={24} color="#1A1A2E" />
                 </TouchableOpacity>
             </View>
@@ -34,18 +34,18 @@ export function ProfileScreen() {
                 <View style={styles.avatarCircle}>
                     <MaterialIcons name="person" size={36} color="#B0A898" />
                 </View>
-                <Text style={styles.userName}>{user?.name || 'Curador'}</Text>
+                <Text style={styles.userName}>{user?.name || t('profile.curator', 'Curador')}</Text>
                 <Text style={styles.userEmail}>{user?.email || ''}</Text>
             </View>
 
             {/* Sync status */}
             <View style={styles.syncBanner}>
                 <MaterialIcons name="sync" size={18} color="#D4883A" />
-                <Text style={styles.syncText}>ÚLTIMA SINCRONIZAÇÃO: HOJE</Text>
+                <Text style={styles.syncText}>{t('profile.last_sync', 'ÚLTIMA SINCRONIZAÇÃO: HOJE')}</Text>
             </View>
 
             {/* Preferences section */}
-            <Text style={styles.sectionLabel}>PREFERÊNCIAS</Text>
+            <Text style={styles.sectionLabel}>{t('profile.preferences', 'PREFERÊNCIAS')}</Text>
 
             <TouchableOpacity style={styles.menuItem}>
                 <View style={[styles.menuIconBg, { backgroundColor: '#FDF0E6' }]}>
@@ -79,35 +79,35 @@ export function ProfileScreen() {
                 </View>
             </TouchableOpacity>
 
-            <View style={styles.menuItem}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert(t('profile.map_download', 'Download de Mapas'), t('profile.map_downloading', 'Iniciando cache offline de mapas da região via Wi-Fi.'))}>
                 <View style={[styles.menuIconBg, { backgroundColor: '#FDF0E6' }]}>
                     <MaterialIcons name="map" size={22} color="#E8752A" />
                 </View>
                 <View style={styles.menuContent}>
-                    <Text style={styles.menuTitle}>Download de Mapas</Text>
-                    <Text style={styles.menuSubtitle}>Somente via Wi-Fi</Text>
+                    <Text style={styles.menuTitle}>{t('profile.map_download', 'Download de Mapas')}</Text>
+                    <Text style={styles.menuSubtitle}>{t('profile.map_download_sub', 'Somente via Wi-Fi')}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
 
-            <View style={styles.menuItem}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert(t('profile.reminder', 'Lembrete de Revisita'), t('profile.reminder_set', 'Frequência de lembrete configurada para 15 dias.'))}>
                 <View style={[styles.menuIconBg, { backgroundColor: '#FDF0E6' }]}>
                     <MaterialIcons name="notification-important" size={22} color="#E8752A" />
                 </View>
                 <View style={styles.menuContent}>
-                    <Text style={styles.menuTitle}>Lembrete de Revisita</Text>
-                    <Text style={styles.menuSubtitle}>15 dias</Text>
+                    <Text style={styles.menuTitle}>{t('profile.reminder', 'Lembrete de Revisita')}</Text>
+                    <Text style={styles.menuSubtitle}>{t('profile.reminder_sub', '15 dias')}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
 
             {/* Account section */}
-            <Text style={styles.sectionLabel}>CONTA</Text>
+            <Text style={styles.sectionLabel}>{t('profile.account', 'CONTA')}</Text>
 
             <TouchableOpacity style={styles.menuItem} onPress={triggerSync}>
                 <View style={[styles.menuIconBg, { backgroundColor: '#F5EDE3' }]}>
                     <MaterialIcons name="sync" size={22} color="#D4883A" />
                 </View>
                 <View style={styles.menuContent}>
-                    <Text style={styles.menuTitle}>Sincronizar agora</Text>
+                    <Text style={styles.menuTitle}>{t('profile.sync_now', 'Sincronizar agora')}</Text>
                 </View>
             </TouchableOpacity>
 
@@ -125,7 +125,7 @@ export function ProfileScreen() {
                     <MaterialIcons name="logout" size={22} color="#E63946" />
                 </View>
                 <View style={styles.menuContent}>
-                    <Text style={styles.logoutText}>Sair da conta</Text>
+                    <Text style={styles.logoutText}>{t('profile.logout_title', 'Sair da conta')}</Text>
                 </View>
             </TouchableOpacity>
 
