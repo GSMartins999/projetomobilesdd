@@ -1,6 +1,7 @@
 # 🎨 Curata — App de Conservação e Restauração de Arte
 
-> Sessões de exploração: **06/03/2026** (produto e arquitetura) · **10/03/2026** (decisões técnicas e refinamentos)
+> Sessões de exploração: **06/03/2026** (produto e arquitetura) · **10/03/2026** (decisões técnicas e refinamentos)  
+> Última atualização: **19/05/2026** — projeto em implementação ativa
 
 ---
 
@@ -14,21 +15,23 @@
 
 | Camada | Tecnologia |
 |---|---|
-| Framework | Expo SDK **latest** + React Native + **TypeScript** |
-| Build | **Expo Dev Client** ← obrigatório (react-native-maplibre requer GL nativo, incompatível com Managed Workflow puro) |
+| Framework | **Expo SDK 54** + React Native **0.81.5** + React **19.1** + **TypeScript 5.9** |
+| Build | **Expo Dev Client** |
 | Câmera | expo-camera |
 | Geolocalização | expo-location |
 | Armazenamento local | expo-sqlite + expo-file-system |
 | Auth / Backend | Supabase (Auth + PostgreSQL + Storage Buckets) |
-| Mapa | react-native-maplibre + OpenStreetMap (offline nativo, **não** Leaflet, **não** react-native-maps) |
+| Mapa | **react-native-maps** (decisão atualizada — substituiu react-native-maplibre por simplicidade de integração) |
 | i18n | i18next + react-i18next + expo-localization |
 | DI / Arch | Clean Architecture + Context API + factories (**não** tsyringe, **não** inversify) |
 | Validação | zod (schema `technical_form` + entities) |
 | Notificações | expo-notifications |
-| PDF | react-native-html-to-pdf |
+| PDF | react-native-html-to-pdf + expo-print + expo-sharing |
 | Auth storage | expo-secure-store (JWT — **nunca** AsyncStorage) |
 | ORM/Migrations | drizzle-orm (SQLite local com migrations) |
-| Testes | **Jest** (domain/usecases/Zod) + **RNTL** `@testing-library/react-native` (presentation/components) + **Maestro** (E2E) |
+| Navegação | @react-navigation/native v7 + bottom-tabs + stack |
+| Utilitários | expo-battery, expo-device, expo-image-manipulator, uuid |
+| Testes | **Jest** + **jest-expo** (domain/usecases/Zod) + **RNTL** `@testing-library/react-native` (presentation/components) + **Maestro** (E2E) |
 
 ---
 
@@ -37,22 +40,30 @@
 ```
 src/
 ├── domain/
-│   ├── entities/        (Artwork, Inspection, User)
-│   ├── usecases/        (RegisterArtwork, SyncData, GenerateReport...)
-│   └── repositories/    (interfaces/contratos)
+│   ├── entities/        (Artwork.ts, Inspection.ts, User.ts)
+│   ├── usecases/        (CreateArtwork, CreateInspection, CapturePhoto, DuplicateDetection,
+│   │                     GenerateReport, GetDashboardStats, Login, Logout, SearchArtworks)
+│   ├── repositories/    (interfaces: Artwork, Auth, Inspection, Photo)
+│   ├── schemas/         (InspectionFormSchema — validação Zod)
+│   └── services/        (CameraService, SyncService — interfaces)
 ├── data/
-│   ├── repositories/    (implementações dos contratos)
-│   └── datasources/
-│       ├── local/       (SQLite)
-│       └── remote/      (Supabase)
+│   ├── db/              (client.ts, schema.ts — drizzle-orm + expo-sqlite)
+│   ├── repositories/    (ArtworkRepositoryImpl, AuthRepositoryImpl, InspectionRepositoryImpl,
+│   │                     PhotoRepositoryImpl, MockAuthRepositoryImpl)
+│   ├── services/        (SyncServiceImpl)
+│   └── supabaseClient.ts
 ├── presentation/
-│   ├── screens/
-│   ├── components/
-│   └── hooks/           (useArtwork, useSync, useMap...)
+│   ├── screens/         (16 telas implementadas — ver mapa abaixo)
+│   └── components/      (LoadingOverlay)
 └── infrastructure/
-    ├── di/              (injeção de dependência)
-    ├── navigation/
-    └── i18n/
+    ├── auth/            (AuthContext)
+    ├── di/              (DIContext — injeção de dependência)
+    ├── i18n/            (i18next — locales: pt-BR, en, es)
+    ├── navigation/      (AppNavigator)
+    ├── notifications/   (NotificationService)
+    ├── services/        (CameraServiceImpl, GeocodingService)
+    ├── sync/            (SyncContext)
+    └── utils/           (ImageUtils — compressão de fotos)
 ```
 
 ---
@@ -145,15 +156,14 @@ Deleção (offline) → seta deleted_at → SQLite → internet → Supabase
 
 ---
 
-## 🗺️ Mapa Offline
+## 🗺️ Mapa
 
-- Biblioteca: **react-native-maplibre + OpenStreetMap** (offline-first nativo, sem WebView, sem chave de API)
-- Download automático de tiles a cada **30 minutos**, raio de **10km**
-- Configurável pelo usuário: automático / manual / somente WiFi
-- Pausa quando bateria < 20%
-- **Fallback:** mapa em branco com ponto GPS marcado
+- Biblioteca: **react-native-maps** (nativo, integrado com Google Maps / Apple Maps)
+- Tiles offline: planejado para v1.1 (atualmente requer conexão para tiles)
+- **Fallback offline:** marcadores posicionados por coordenadas locais; mapa em branco se sem cache de tiles
+- Pausa de downloads quando bateria < 20% (expo-battery)
 
-> ⚠️ **Decisão arquitetural:** Leaflet foi descartado — é uma biblioteca web (DOM) incompatível com React Native nativo.
+> ⚠️ **Decisão atualizada (maio/2026):** react-native-maplibre foi substituído por `react-native-maps` por simplicidade de integração com Expo SDK 54 e menor curva de aprendizado. Tiles offline serão tratados como feature separada.
 
 ---
 
@@ -236,28 +246,29 @@ Total: XX obras
 
 ---
 
-## 📱 Mapa de Telas (18 telas)
+## 📱 Mapa de Telas (19 telas)
 
-| Grupo | # | Tela |
-|---|---|---|
-| Sistema | 1 | Splash / Loading |
-| Auth | 2 | Login |
-| Auth | 3 | Onboarding (1ª vez) |
-| Tab Bar | 4 | 🗺️ Mapa |
-| Tab Bar | 5 | 📋 Lista de Obras |
-| Tab Bar | 6 | 📊 Dashboard |
-| Tab Bar | 7 | 👤 Perfil / Configurações |
-| Obras | 8 | Detalhe da Obra |
-| Obras | 9 | Nova Obra — Câmera |
-| Obras | 10 | Nova Obra — Formulário |
-| Obras | 11 | Formulário Técnico de Inspeção |
-| Obras | 12 | Histórico de Inspeções |
-| Obras | 13 | Detalhe de uma Inspeção |
-| Relatórios | 14 | Gerador de Relatório |
-| Relatórios | 15 | Preview do PDF |
-| Busca | 16 | Busca & Filtros |
-| Notificações | 17 | Central de Notificações |
-| Config | 18 | Preferências (idioma + mapa) |
+| Grupo | # | Tela | Arquivo |
+|---|---|---|---|
+| Sistema | 1 | Splash / Loading | (AppNavigator) |
+| Auth | 2 | Login | `LoginScreen.tsx` |
+| Auth | 3 | Registro | `RegisterScreen.tsx` |
+| Auth | 4 | Onboarding (1ª vez) | `OnboardingScreen.tsx` |
+| Tab Bar | 5 | 🗺️ Mapa | `MapScreen.tsx` |
+| Tab Bar | 6 | 📋 Lista de Obras | (via SearchScreen) |
+| Tab Bar | 7 | 📊 Dashboard | `DashboardScreen.tsx` |
+| Tab Bar | 8 | 👤 Perfil / Configurações | `ProfileScreen.tsx` |
+| Obras | 9 | Detalhe da Obra | `ArtworkDetailScreen.tsx` |
+| Obras | 10 | Nova Obra — Câmera | `CameraScreen.tsx` |
+| Obras | 11 | Nova Obra — Formulário | `ArtworkFormScreen.tsx` |
+| Obras | 12 | Formulário Técnico de Inspeção | `InspectionFormScreen.tsx` |
+| Obras | 13 | Histórico de Inspeções | `InspectionHistoryScreen.tsx` |
+| Obras | 14 | Detalhe de uma Inspeção | `InspectionDetailScreen.tsx` |
+| Relatórios | 15 | Gerador de Relatório | `ReportGeneratorScreen.tsx` |
+| Relatórios | 16 | Preview do PDF | `PdfPreviewScreen.tsx` |
+| Busca | 17 | Busca & Filtros | `SearchScreen.tsx` |
+| Notificações | 18 | Central de Notificações | `NotificationsScreen.tsx` |
+| Config | 19 | Preferências (idioma + mapa) | (em ProfileScreen) |
 
 ---
 
@@ -298,7 +309,7 @@ Total: XX obras
 | RF-08 | O sistema deve comprimir fotos automaticamente para no máximo 1200px / 300KB antes de armazená-las localmente. |
 | RF-09 | O sistema deve sincronizar dados locais (ARTWORK, INSPECTION, PHOTO) com Supabase automaticamente ao detectar conexão, usando last-write-wins por `updated_at`. |
 | RF-10 | O sistema deve nunca deletar registros fisicamente; deleções devem ser propagadas via campo `deleted_at`. |
-| RF-11 | O sistema deve exibir um mapa com marcadores de todas as obras, coloridos pelo estado de conservação, usando react-native-maplibre com tiles OpenStreetMap. |
+| RF-11 | O sistema deve exibir um mapa com marcadores de todas as obras, coloridos pelo estado de conservação, usando react-native-maps. |
 | RF-12 | O sistema deve baixar tiles de mapa automaticamente num raio de 10km a cada 30 minutos quando online, pausando se bateria estiver abaixo de 20%. |
 | RF-13 | O sistema deve gerar relatório PDF em dois formatos: técnico (para profissionais) e simplificado (para leigos), ambos compartilháveis via share sheet nativa. |
 | RF-14 | O sistema deve enviar notificações locais de revisita para obras com estado `poor` ou `urgent` sem nova inspeção após 90 dias (configurável). |
@@ -562,10 +573,10 @@ Total: XX obras
 | Risco | Mitigação |
 |---|---|
 | `updated_at` incorreto (relógio do device) → conflito silencioso | Validar no servidor que `updated_at` não é data futura; `device_id` para auditoria |
-| react-native-maplibre — curva de aprendizado (configuração de tiles offline) | Testar download de tiles como **spike** no início do projeto, antes de outras features |
+| react-native-maps — tiles offline não incluídos nativamente | Planejado para v1.1 com cache de tiles; v1 requer conexão para visualização do mapa base |
 | drizzle-orm + expo-sqlite — integração relativamente nova | Criar **spike de migration** antes de modelar todas as entidades (task 2.1) |
 | Supabase Storage free tier (1GB) atingido com fotos | Compressão obrigatória (300KB/foto) + limite de 10 fotos por inspeção |
-| react-native-maplibre exige módulo GL nativo | **Resolvido:** Expo Dev Client adotado desde o início |
+| Mapa sem tiles offline em v1 | Coordenadas e marcadores funcionam offline; apenas tiles do mapa base requerem conexão |
 
 ---
 
@@ -575,7 +586,7 @@ Total: XX obras
 2. **JWT grace period:** acesso offline mantido por até **7 dias** após expiração do token, com banner de aviso persistente — sem bloquear o uso dos dados locais.
 3. **Tablets:** suportados opcionalmente em portrait; landscape em tablets é v2.
 4. **Colaboração:** usuário solo em v1 — dados modelados com `user_id` para preparar equipe em v2.
-5. **Mapa offline:** somente raio de 10km configurado automaticamente; sem download de área global.
+5. **Mapa offline:** tiles do mapa base requerem conexão em v1; marcadores e coordenadas funcionam offline. Download de tiles planejado para v1.1.
 
 ---
 
@@ -583,7 +594,7 @@ Total: XX obras
 
 | # | Decisão | Alternativas Consideradas | Escolha Final | Motivo |
 |---|---|---|---|---|
-| 1 | Biblioteca de mapa | Leaflet (web ❌), react-native-maps (sem offline), react-native-leaflet (WebView) | **react-native-maplibre** | Offline real nativo, sem WebView, alta performance |
+| 1 | Biblioteca de mapa | Leaflet (web ❌), react-native-maplibre (complexo), react-native-leaflet (WebView) | **react-native-maps** | Integração nativa simples com Expo SDK 54; tiles offline planejado para v1.1 |
 | 2 | Soft delete | Deleção física | **`deleted_at` nullable** | Deleções offline precisam ser propagadas via sync |
 | 3 | Estratégia de sync | CRDT, merge manual, last-write-wins | **Last-write-wins + `device_id`** | Adequado para solo v1; `device_id` prepara multi-device |
 | 4 | DI Container | tsyringe, inversify | **Context API + factories** | Idiomático em RN; tsyringe conflita com Metro bundler |
@@ -593,7 +604,7 @@ Total: XX obras
 | 8 | `technical_form` | Tabela INSPECTION_FORM com campos explícitos | **JSON + validação Zod + `form_version`** | Simples para v1; `form_version` garante compatibilidade com inspeções antigas ao evoluir o schema |
 | 9 | Entity User local | Sem entity local, User entity completa | **User mínimo (id, name, avatar_url)** | Necessário para exibição offline sem chamada de API |
 | 10 | ID de obra | Sequencial (ART-YYYY-XXXXX) como primary key | **UUID interno + display_id gerado no sync** | UUID evita colisões entre devices offline |
-| 11 | Build workflow | Managed Workflow puro | **Expo Dev Client** | react-native-maplibre requer módulo GL nativo, incompatível com Managed Workflow puro |
+| 11 | Build workflow | Managed Workflow puro | **Expo Dev Client** | Necessário para módulos nativos customizados e melhor debugging |
 | 12 | JWT expirado offline | Bloquear acesso imediatamente | **Janela de graça de 7 dias + banner de aviso** | Bloquear offline torna o app inutilizável em campo estendido |
 | 13 | Atualização de `conservation_status` | Manual pela profissional | **Automática via `CreateInspectionUseCase`** | Status deve sempre refletir a avaliação mais recente sem ação manual |
 | 14 | Fluxo de [Vincular] duplicata | Manter foto/GPS ou redirecionar com dados | **Descarta foto+GPS, redireciona para obra existente** | Simplifica UX; profissional inicia inspeção normalmente na obra correta |
@@ -601,7 +612,35 @@ Total: XX obras
 
 ---
 
-> **Status do projeto (17/03/2026):**
-> - ✅ `curata-mvp` change criado com `proposal.md`, `design.md`, specs por capability e `tasks.md` (15 grupos, ~60 tasks)
-> - ✅ Dependências instaladas (`node_modules` gerado)
-> - ⏳ Implementação pendente — próximo passo: `/opsx-apply` para iniciar pela task 1.1 (setup Expo Dev Client)
+> **Status do projeto (19/05/2026):**
+>
+> ### ✅ Concluído
+> - Estrutura Clean Architecture completa (domain → data → infrastructure → presentation)
+> - **9 use cases** implementados (CreateArtwork, CreateInspection, CapturePhoto, DuplicateDetection, GenerateReport, GetDashboardStats, Login, Logout, SearchArtworks)
+> - **16 telas** implementadas (Login, Register, Onboarding, Map, ArtworkList→Detail→Form, Camera, InspectionForm→Detail→History, Dashboard, Profile, Search, Notifications, ReportGenerator, PdfPreview)
+> - Banco SQLite local com drizzle-orm (schema + client + migrations)
+> - Repositórios: Artwork, Auth, Inspection, Photo (interfaces + implementações)
+> - Sincronização offline-first (SyncServiceImpl + SyncContext)
+> - Internacionalização (pt-BR, en, es) — i18next configurado
+> - Notificações locais (NotificationService)
+> - Compressão de imagens (ImageUtils + expo-image-manipulator)
+> - Geocoding reverso (GeocodingService)
+> - Autenticação (AuthContext + MockAuthRepositoryImpl para dev)
+> - Navegação (AppNavigator — tabs + stack)
+> - Testes unitários (domain, data, infrastructure, presentation)
+>
+> ### 🔧 Changes aplicados (openspec)
+> - `curata-mvp` — implementação base completa
+> - `fix-app-boot-loading` — correções de boot e carregamento
+> - `fix-architecture-and-sync` — ajustes de arquitetura e sync
+> - `fix-architecture-flaws` — correções de falhas arquiteturais
+> - `camera-capture-integration` — integração de captura de câmera
+> - `finish-v1-ui` — finalização da UI v1
+> - `fix-image-i18n-report` — correções de imagem, i18n e relatórios
+> - `improve-test-coverage` — melhorias na cobertura de testes
+>
+> ### ⏳ Pendente / Em progresso
+> - Testes E2E com Maestro
+> - Integração real com Supabase Auth (atualmente usando MockAuthRepositoryImpl)
+> - Download de tiles offline para mapa
+> - Publicação e build de produção
