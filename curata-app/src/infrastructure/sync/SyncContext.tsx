@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useRef } from 'r
 import NetInfo from '@react-native-community/netinfo';
 import { useDI } from '../di/DIContext';
 import { SyncService, SyncResult } from '../../domain/services/SyncService';
+import { supabase } from '../../data/supabaseClient';
 
 interface SyncContextData {
     isOnline: boolean;
@@ -28,17 +29,25 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
         if (isSyncingRef.current || !isOnlineRef.current) return;
 
         setIsSyncing(true);
-        // Guarda: não executar sync se as credenciais do Supabase não estiverem configuradas
-        const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
-        if (supabaseUrl.includes('placeholder')) {
-            console.log('[SyncContext] Supabase não configurado — sync ignorado. Simulating delay.');
-            await new Promise(resolve => setTimeout(resolve, 1500)); // Fake delay para mostrar a tela
-            setIsSyncing(false);
-            return;
-        }
-
-        setIsSyncing(true);
         try {
+            // Guarda: não executar sync se as credenciais do Supabase não estiverem configuradas
+            const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
+            if (supabaseUrl.includes('placeholder')) {
+                console.log('[SyncContext] Supabase não configurado — sync ignorado. Simulating delay.');
+                await new Promise(resolve => setTimeout(resolve, 1500)); // Fake delay para mostrar a tela
+                setIsSyncing(false);
+                return;
+            }
+
+            // Guarda: não executar sync se não houver usuário autenticado no Supabase
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                console.log('[SyncContext] Usuário não autenticado — sync ignorado.');
+                setIsSyncing(false);
+                return;
+            }
+
+
             const result = await syncService.sync();
             setLastSyncResult(result);
         } catch (error) {

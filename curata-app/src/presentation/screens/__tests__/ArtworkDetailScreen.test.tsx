@@ -4,6 +4,7 @@ import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import { ArtworkDetailScreen } from '../ArtworkDetailScreen';
 import { DIProvider } from '../../../infrastructure/di/DIContext';
 import { NavigationContainer } from '@react-navigation/native';
+import { AuthProvider } from '../../../infrastructure/auth/AuthContext';
 
 const mockNavigate = jest.fn();
 const mockGoBack = jest.fn();
@@ -20,13 +21,22 @@ describe('ArtworkDetailScreen', () => {
 
     const route = { params: { id: 'art-1' } };
     
-    const Wrapper = ({ children, mockDI }: any) => (
-        <DIProvider values={mockDI}>
-            <NavigationContainer>
-                {children}
-            </NavigationContainer>
-        </DIProvider>
-    );
+    const Wrapper = ({ children, mockDI }: any) => {
+        const fullDI = {
+            authRepository: { getCurrentUser: jest.fn().mockResolvedValue({ id: 'device-id-123', email: 'test@curata.app' }) },
+            ...mockDI,
+        };
+        return (
+            <DIProvider values={fullDI}>
+                <NavigationContainer>
+                    <AuthProvider>
+                        {children}
+                    </AuthProvider>
+                </NavigationContainer>
+            </DIProvider>
+        );
+    };
+
 
     it('renders loading state initially then shows artwork', async () => {
         const art = { id: 'art-1', name: 'Mona Lisa', type: 'painting', conservationStatus: 'good' };

@@ -16,14 +16,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function useAuth() {
     const context = useContext(AuthContext);
     if (!context) {
-        return {
-            user: { id: 'device-id-123', name: 'Curador', email: 'curador@curata.app', avatarUrl: null, updatedAt: new Date().toISOString(), syncedAt: null },
-            isAuthenticated: true,
-            isLoading: false,
-            login: async () => {},
-            register: async () => {},
-            logout: async () => {},
-        };
+        throw new Error('useAuth deve ser usado dentro de um AuthProvider');
     }
     return context;
 }

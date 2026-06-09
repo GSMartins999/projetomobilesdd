@@ -22,8 +22,8 @@ jest.mock('../data/repositories/PhotoRepositoryImpl', () => ({
     PhotoRepositoryImpl: jest.fn().mockImplementation(() => ({})),
 }));
 
-jest.mock('../data/repositories/MockAuthRepositoryImpl', () => ({
-    MockAuthRepositoryImpl: jest.fn().mockImplementation(() => ({})),
+jest.mock('../data/repositories/AuthRepositoryImpl', () => ({
+    AuthRepositoryImpl: jest.fn().mockImplementation(() => ({})),
 }));
 
 jest.mock('../data/services/SyncServiceImpl', () => ({
@@ -66,14 +66,14 @@ describe('App', () => {
     });
 
     it('repositórios mantêm a mesma referência entre re-renders', async () => {
-        const { MockAuthRepositoryImpl } = require('../data/repositories/MockAuthRepositoryImpl');
+        const { AuthRepositoryImpl } = require('../data/repositories/AuthRepositoryImpl');
 
         render(<App />);
 
         await waitFor(() => {
-            // MockAuthRepositoryImpl deve ter sido chamado como construtor exatamente 1 vez,
+            // AuthRepositoryImpl deve ter sido chamado como construtor exatamente 1 vez,
             // independente de quantos re-renders o App sofreu durante o boot
-            expect(MockAuthRepositoryImpl).toHaveBeenCalledTimes(1);
+            expect(AuthRepositoryImpl).toHaveBeenCalledTimes(1);
         }, { timeout: 15000 });
     });
 });

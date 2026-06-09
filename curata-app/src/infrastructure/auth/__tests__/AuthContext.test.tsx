@@ -90,15 +90,12 @@ describe('AuthContext', () => {
         expect(result.current.isAuthenticated).toBe(false);
     });
 
-    it('should provide fallback user if used outside AuthProvider', () => {
-        const { result } = renderHook(() => useAuth());
-
-        expect(result.current.user).toEqual(expect.objectContaining({
-            id: 'device-id-123',
-            name: 'Curador'
-        }));
-        expect(result.current.isAuthenticated).toBe(true);
+    it('should throw error if used outside AuthProvider', () => {
+        const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+        expect(() => renderHook(() => useAuth())).toThrow('useAuth deve ser usado dentro de um AuthProvider');
+        consoleSpy.mockRestore();
     });
+
 
     it('should handle session recovery error gracefully', async () => {
         mockAuthRepository.getCurrentUser.mockRejectedValueOnce(new Error('Auth error'));

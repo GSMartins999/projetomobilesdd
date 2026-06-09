@@ -6,12 +6,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { Alert } from 'react-native';
 
+import { AuthProvider } from '../../../infrastructure/auth/AuthContext';
+
 // Mocks
 const mockRepository: any = {
     save: jest.fn().mockResolvedValue({ error: null }),
     findNearby: jest.fn().mockResolvedValue([]),
     findAll: jest.fn().mockResolvedValue([]),
     findById: jest.fn().mockResolvedValue({ id: '1', name: 'Mona Lisa', conservationStatus: 'good' }),
+};
+
+const mockAuthRepository: any = {
+    getCurrentUser: jest.fn().mockResolvedValue({ id: '1', email: 'test@curata.app' }),
 };
 
 const mockNavigate = jest.fn();
@@ -22,11 +28,17 @@ jest.spyOn(Alert, 'alert').mockImplementation(() => { });
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
     <NavigationContainer>
-        <DIProvider values={{ artworkRepository: mockRepository } as any}>
-            {children}
+        <DIProvider values={{ 
+            artworkRepository: mockRepository,
+            authRepository: mockAuthRepository,
+        } as any}>
+            <AuthProvider>
+                {children}
+            </AuthProvider>
         </DIProvider>
     </NavigationContainer>
 );
+
 
 describe('ArtworkFormScreen', () => {
     beforeEach(() => {

@@ -62,7 +62,8 @@
           "color": "#1a1a2e"
         }
       ],
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-localization"
     ],
     "scheme": "curata",
     "extra": {
