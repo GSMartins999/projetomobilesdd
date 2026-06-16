@@ -65,7 +65,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
     const [type, setType] = useState<ArtworkType>('painting');
     const [status, setStatus] = useState<ConservationStatus>('good');
     const [notes, setNotes] = useState('');
-    const [photoUri, setPhotoUri] = useState<string | null>(null);
+    const [photoUris, setPhotoUris] = useState<string[]>([]);
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [address, setAddress] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -97,7 +97,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
 
     useEffect(() => {
         const subscription = DeviceEventEmitter.addListener('onPhotoCaptured', (data) => {
-            setPhotoUri(data.uri);
+            setPhotoUris(prev => [...prev, data.uri]);
         });
         return () => subscription.remove();
     }, []);
@@ -122,7 +122,7 @@ export function ArtworkFormScreen({ navigation, route }: any) {
                 latitude: location?.coords.latitude,
                 longitude: location?.coords.longitude,
                 address: address || undefined,
-                photoLocalPath: photoUri || undefined,
+                photoLocalPaths: photoUris,
                 forceCreate
             });
             navigation.goBack();
@@ -201,21 +201,35 @@ export function ArtworkFormScreen({ navigation, route }: any) {
                 ))}
             </ScrollView>
 
-            <TouchableOpacity
-                style={styles.photoContainer}
-                testID="photo-pressable"
-                onPress={() => navigation.navigate('Camera')}
-                activeOpacity={0.7}
-            >
-                {photoUri ? (
-                    <Image source={{ uri: photoUri }} style={styles.photo} />
-                ) : (
-                    <View style={styles.photoPlaceholderContent}>
-                        <MaterialIcons name="photo-camera" size={36} color="#D4883A" />
-                        <Text style={styles.photoPlaceholder}>{t('artwork.add_photo', 'Adicionar Foto')}</Text>
+            <Text style={styles.label}>{t('inspection.photos', 'Fotos')} ({photoUris.length}/10)</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photoRow}>
+                {photoUris.map((uri, i) => (
+                    <View key={i} style={styles.photoWrapper}>
+                        <Image source={{ uri }} style={styles.photoThumb} />
+                        <TouchableOpacity
+                            style={styles.removePhotoBtn}
+                            onPress={() => setPhotoUris(photoUris.filter((_, idx) => idx !== i))}
+                            testID={`remove-photo-${i}`}
+                        >
+                            <MaterialIcons name="close" size={16} color="#FFF" />
+                        </TouchableOpacity>
                     </View>
-                )}
-            </TouchableOpacity>
+                ))}
+                <TouchableOpacity 
+                    style={styles.addPhotoBtn} 
+                    onPress={() => {
+                        if (photoUris.length >= 10) {
+                            Alert.alert('Limite Atingido', 'Máximo de 10 fotos.');
+                            return;
+                        }
+                        navigation.navigate('Camera');
+                    }}
+                    testID="photo-pressable"
+                >
+                    <MaterialIcons name="photo-camera" size={24} color="#D4883A" />
+                    <Text style={styles.addPhotoText}>{t('common.add', 'Adicionar')}</Text>
+                </TouchableOpacity>
+            </ScrollView>
 
             <Text style={styles.label}>{t('artwork.status', 'Estado de Conservação')}</Text>
             <View style={styles.statusGrid}>
@@ -322,6 +336,33 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     statusPillText: { fontSize: 12, fontWeight: 'bold' },
+    photoRow: { flexDirection: 'row', marginTop: 8 },
+    photoThumb: { width: 80, height: 80, borderRadius: 12, marginRight: 10 },
+    addPhotoBtn: {
+        width: 80,
+        height: 80,
+        borderRadius: 12,
+        backgroundColor: '#FFFFFF',
+        borderWidth: 1,
+        borderColor: '#E8E0D8',
+        borderStyle: 'dashed',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    addPhotoText: { fontSize: 10, color: '#B0A898', marginTop: 4 },
+    photoWrapper: { position: 'relative', marginRight: 10 },
+    removePhotoBtn: {
+        position: 'absolute',
+        top: -5,
+        right: -5,
+        backgroundColor: 'rgba(230, 57, 70, 0.9)',
+        borderRadius: 12,
+        width: 24,
+        height: 24,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1,
+    },
     locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 20, gap: 6 },
     addressText: { fontSize: 13, color: '#B0A898', fontStyle: 'italic', flex: 1 },
     errorText: { color: '#E63946', marginTop: 12, textAlign: 'center', fontSize: 13 },

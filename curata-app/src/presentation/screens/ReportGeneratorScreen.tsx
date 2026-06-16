@@ -16,6 +16,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useDI } from '../../infrastructure/di/DIContext';
 import { GenerateReportUseCase } from '../../domain/usecases/GenerateReportUseCase';
+import * as FileSystem from 'expo-file-system/legacy';
+import * as Sharing from 'expo-sharing';
 
 export function ReportGeneratorScreen({ route }: any) {
     const { artworkId } = route?.params || {};
@@ -63,8 +65,95 @@ export function ReportGeneratorScreen({ route }: any) {
 
             const inspections = await inspectionRepository.findByArtworkId(artworkId);
             
-            const useCase = new GenerateReportUseCase(photoRepository);
-            await useCase.execute(artwork, inspections);
+            // Filter inspections by date range
+            const filteredInspections = inspections.filter(insp => {
+                const date = new Date(insp.updatedAt);
+                const start = new Date(startDate);
+                start.setHours(0, 0, 0, 0);
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999);
+                return date >= start && date <= end;
+            });
+            
+            if (selectedFormat === 'CSV' || selectedFormat === 'Excel') {
+                const escapeCSV = (val: any) => {
+                    if (val === null || val === undefined) return '';
+                    let str = String(val);
+                    str = str.replace(/"/g, '""');
+                    if (str.includes(';') || str.includes('\n') || str.includes('\r') || str.includes('"')) {
+                        str = `"${str}"`;
+                    }
+                    return str;
+                };
+
+                const headers = [
+                    t('report.csv.artwork_id', { defaultValue: 'ID da Obra' }),
+                    t('report.csv.artwork_name', { defaultValue: 'Nome da Obra' }),
+                    t('report.csv.artist', { defaultValue: 'Artista' }),
+                    t('report.csv.artwork_type', { defaultValue: 'Tipo de Obra' }),
+                    t('report.csv.status', { defaultValue: 'Status de Conservação' }),
+                    t('report.csv.address', { defaultValue: 'Endereço' }),
+                    t('report.csv.inspection_id', { defaultValue: 'ID da Inspeção' }),
+                    t('report.csv.inspection_date', { defaultValue: 'Data da Inspeção' }),
+                    t('report.csv.structural_condition', { defaultValue: 'Condição Estrutural' }),
+                    t('report.csv.surface_condition', { defaultValue: 'Condição Superficial' }),
+                    t('report.csv.recommendation', { defaultValue: 'Recomendações' }),
+                    t('report.csv.urgency_level', { defaultValue: 'Nível de Urgência' }),
+                    t('report.csv.status_at_visit', { defaultValue: 'Status na Visita' }),
+                    t('report.csv.device_id', { defaultValue: 'Dispositivo' }),
+                ];
+
+                let csvContent = '\ufeff'; // UTF-8 BOM
+                csvContent += headers.join(';') + '\n';
+
+                if (filteredInspections.length === 0) {
+                    const row = [
+                        artwork.id,
+                        artwork.name,
+                        artwork.artist || '',
+                        t(`artwork_type.${artwork.type}`, { defaultValue: artwork.type }),
+                        t(`status.${artwork.conservationStatus}`, { defaultValue: artwork.conservationStatus }),
+                        artwork.address || '',
+                        '', '', '', '', '', '', '', artwork.deviceId
+                    ];
+                    csvContent += row.map(escapeCSV).join(';') + '\n';
+                } else {
+                    for (const insp of filteredInspections) {
+                        const row = [
+                            artwork.id,
+                            artwork.name,
+                            artwork.artist || '',
+                            t(`artwork_type.${artwork.type}`, { defaultValue: artwork.type }),
+                            t(`status.${artwork.conservationStatus}`, { defaultValue: artwork.conservationStatus }),
+                            artwork.address || '',
+                            insp.id,
+                            new Date(insp.updatedAt).toLocaleDateString('pt-BR'),
+                            insp.technicalForm.structuralCondition || '',
+                            insp.technicalForm.surfaceCondition || '',
+                            insp.technicalForm.recommendation || '',
+                            String(insp.technicalForm.urgencyLevel || ''),
+                            t(`status.${insp.technicalForm.statusAtVisit}`, { defaultValue: insp.technicalForm.statusAtVisit }),
+                            insp.deviceId || ''
+                        ];
+                        csvContent += row.map(escapeCSV).join(';') + '\n';
+                    }
+                }
+
+                const filename = `relatorio-${artwork.id}-${Date.now()}.csv`;
+                const fileUri = `${FileSystem.documentDirectory}${filename}`;
+
+                await FileSystem.writeAsStringAsync(fileUri, csvContent, {
+                    encoding: FileSystem.EncodingType.UTF8,
+                });
+
+                await Sharing.shareAsync(fileUri, {
+                    mimeType: 'text/csv',
+                    dialogTitle: t('report.export_title', { defaultValue: 'Compartilhar Relatório' }),
+                });
+            } else {
+                const useCase = new GenerateReportUseCase(photoRepository);
+                await useCase.execute(artwork, filteredInspections);
+            }
             
             Alert.alert('Sucesso', 'Relatório gerado com sucesso!');
         } catch (error: any) {

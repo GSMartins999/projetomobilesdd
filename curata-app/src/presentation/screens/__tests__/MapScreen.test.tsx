@@ -49,6 +49,29 @@ describe('MapScreen', () => {
         await findByText('Monumento');
     });
 
+    it('navigates to ArtworkDetail on popup CTA press', async () => {
+        const artworks = [
+            { id: 'art-1', name: 'Monumento', conservationStatus: 'good', latitude: 10, longitude: 20, type: 'monument' },
+        ];
+        const mockDI = {
+            artworkRepository: { findAll: jest.fn().mockResolvedValue(artworks) },
+            photoRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
+        };
+
+        const { findByText, getByTestId, getByText } = render(<MapScreen navigation={{ navigate: mockNavigate }} />, {
+            wrapper: (props) => <Wrapper {...props} mockDI={mockDI} />
+        });
+
+        const annotation = await waitFor(() => getByTestId('annotation-art-1'));
+        fireEvent.press(annotation);
+
+        await findByText('Monumento');
+        const ctaBtn = getByText('map.view_details');
+        fireEvent.press(ctaBtn);
+
+        expect(mockNavigate).toHaveBeenCalledWith('ArtworkDetail', { id: 'art-1' });
+    });
+
     it('navigates to ArtworkForm on fab press', async () => {
         const mockDI = {
             artworkRepository: { findAll: jest.fn().mockResolvedValue([]) },

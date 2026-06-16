@@ -60,21 +60,24 @@ export function ProfileScreen() {
                 <View style={styles.langButtons}>
                     <TouchableOpacity
                         onPress={() => changeLanguage('pt-BR')}
-                        style={[styles.langPill, i18n.language === 'pt-BR' && styles.langPillActive]}
+                        style={[styles.langPill, i18n.language?.startsWith('pt') && styles.langPillActive]}
+                        testID="lang-pill-pt-BR"
                     >
-                        <Text style={[styles.langPillText, i18n.language === 'pt-BR' && styles.langPillTextActive]}>PT</Text>
+                        <Text style={[styles.langPillText, i18n.language?.startsWith('pt') && styles.langPillTextActive]}>PT</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => changeLanguage('en')}
-                        style={[styles.langPill, i18n.language === 'en' && styles.langPillActive]}
+                        style={[styles.langPill, i18n.language?.startsWith('en') && styles.langPillActive]}
+                        testID="lang-pill-en"
                     >
-                        <Text style={[styles.langPillText, i18n.language === 'en' && styles.langPillTextActive]}>EN</Text>
+                        <Text style={[styles.langPillText, i18n.language?.startsWith('en') && styles.langPillTextActive]}>EN</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => changeLanguage('es')}
-                        style={[styles.langPill, i18n.language === 'es' && styles.langPillActive]}
+                        style={[styles.langPill, i18n.language?.startsWith('es') && styles.langPillActive]}
+                        testID="lang-pill-es"
                     >
-                        <Text style={[styles.langPillText, i18n.language === 'es' && styles.langPillTextActive]}>ES</Text>
+                        <Text style={[styles.langPillText, i18n.language?.startsWith('es') && styles.langPillTextActive]}>ES</Text>
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>

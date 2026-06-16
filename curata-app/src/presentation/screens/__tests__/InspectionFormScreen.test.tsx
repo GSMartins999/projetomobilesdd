@@ -3,6 +3,7 @@ import { render, fireEvent, waitFor, screen, act } from '@testing-library/react-
 import { InspectionFormScreen } from '../InspectionFormScreen';
 import { DIProvider } from '../../../infrastructure/di/DIContext';
 import { NavigationContainer } from '@react-navigation/native';
+import { AuthProvider } from '../../../infrastructure/auth/AuthContext';
 
 // Mocks
 const mockInspectionRepo: any = {
@@ -15,6 +16,9 @@ const mockArtworkRepo: any = {
 const mockPhotoRepo: any = {
     save: jest.fn().mockResolvedValue(undefined),
 };
+const mockAuthRepository: any = {
+    getCurrentUser: jest.fn().mockResolvedValue({ id: 'user-auth-123', name: 'John Doe', email: 'john@example.com' }),
+};
 
 const mockNavigate = jest.fn();
 const mockGoBack = jest.fn();
@@ -24,9 +28,12 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
         <DIProvider values={{
             inspectionRepository: mockInspectionRepo,
             artworkRepository: mockArtworkRepo,
-            photoRepository: mockPhotoRepo
+            photoRepository: mockPhotoRepo,
+            authRepository: mockAuthRepository
         } as any}>
-            {children}
+            <AuthProvider>
+                {children}
+            </AuthProvider>
         </DIProvider>
     </NavigationContainer>
 );
@@ -76,7 +83,9 @@ describe('InspectionFormScreen', () => {
         });
 
         await waitFor(() => {
-            expect(mockInspectionRepo.save).toHaveBeenCalled();
+            expect(mockInspectionRepo.save).toHaveBeenCalledWith(
+                expect.objectContaining({ deviceId: 'user-auth-123' })
+            );
             expect(mockGoBack).toHaveBeenCalled();
         });
     });

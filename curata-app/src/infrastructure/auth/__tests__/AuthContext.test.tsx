@@ -109,7 +109,7 @@ describe('AuthContext', () => {
 
         expect(result.current.user).toBeNull();
         expect(result.current.isLoading).toBe(false);
-        expect(consoleSpy).toHaveBeenCalledWith('[AuthContext] Error recovery session:', expect.any(Error));
+        expect(consoleSpy).toHaveBeenCalledWith('[AuthContext] Error recovering session:', expect.any(Error));
 
         consoleSpy.mockRestore();
     });

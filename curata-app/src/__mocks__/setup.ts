@@ -111,12 +111,21 @@ jest.mock('expo-notifications', () => ({
 // Mock expo-file-system
 jest.mock('expo-file-system', () => ({
     readAsStringAsync: jest.fn().mockResolvedValue('base64data'),
-    EncodingType: { Base64: 'base64' },
+    writeAsStringAsync: jest.fn().mockResolvedValue(undefined),
+    EncodingType: { Base64: 'base64', UTF8: 'utf8' },
+    documentDirectory: 'file:///mock-document-directory/',
 }));
 
 jest.mock('expo-file-system/legacy', () => ({
     readAsStringAsync: jest.fn().mockResolvedValue('base64data'),
-    EncodingType: { Base64: 'base64' },
+    writeAsStringAsync: jest.fn().mockResolvedValue(undefined),
+    EncodingType: { Base64: 'base64', UTF8: 'utf8' },
+    documentDirectory: 'file:///mock-document-directory/',
+}));
+
+// Mock expo-sharing
+jest.mock('expo-sharing', () => ({
+    shareAsync: jest.fn().mockResolvedValue(undefined),
 }));
 
 // Mock expo-secure-store
@@ -129,6 +138,15 @@ jest.mock('expo-secure-store', () => ({
 jest.mock('@react-native-async-storage/async-storage', () =>
     require('@react-native-async-storage/async-storage/jest/async-storage-mock')
 );
+
+// Mock supabaseClient — expõe isSupabaseConfigured = true para testes
+jest.mock('../data/supabaseClient', () => {
+    const { createClient } = require('@supabase/supabase-js');
+    return {
+        supabase: createClient('https://test.supabase.co', 'test-key'),
+        isSupabaseConfigured: true,
+    };
+});
 
 
 // Mock expo-print

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { ReportGeneratorScreen } from '../ReportGeneratorScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { DIProvider } from '../../../infrastructure/di/DIContext';
@@ -77,5 +77,77 @@ describe('ReportGeneratorScreen', () => {
             const btn = getByText(section);
             fireEvent.press(btn);
         });
+    });
+
+    it('should generate and share CSV report when CSV format is selected', async () => {
+        const mockRoute = { params: { artworkId: 'artwork-123' } };
+        const mockArtwork = {
+            id: 'artwork-123',
+            name: 'Monalisa',
+            artist: 'Leonardo da Vinci',
+            type: 'painting',
+            conservationStatus: 'good',
+            address: 'Paris, France',
+        };
+        const mockInspections = [
+            {
+                id: 'inspection-456',
+                artworkId: 'artwork-123',
+                technicalForm: {
+                    structuralCondition: 'Estável',
+                    surfaceCondition: 'Sujidade leve',
+                    recommendation: 'Limpeza superficial',
+                    urgencyLevel: 2,
+                    statusAtVisit: 'good',
+                },
+                deviceId: 'device-test',
+                updatedAt: '2026-06-16T12:00:00Z',
+            }
+        ];
+
+        mockArtworkRepo.findById.mockResolvedValue(mockArtwork);
+        mockInspectionRepo.findByArtworkId.mockResolvedValue(mockInspections);
+
+        const FileSystem = require('expo-file-system/legacy');
+        const Sharing = require('expo-sharing');
+        const RN = require('react-native');
+
+        const { getByText } = render(<ReportGeneratorScreen route={mockRoute} />, { wrapper: Wrapper });
+
+        // Select CSV format
+        const csvBtn = getByText('CSV');
+        fireEvent.press(csvBtn);
+
+        // Click generate button
+        // The generate button text depends on format. It should say 'report.export' or just contain the format name 'CSV'
+        // Let's find button by testID or by text containing CSV.
+        // The text is t('report.export', { format: 'CSV' }) which evaluates to 'report.export' in translation mock
+        const generateBtn = getByText('report.export');
+        fireEvent.press(generateBtn);
+
+        // Wait for async actions in handleGenerate
+        await waitFor(() => {
+            expect(RN.Alert.alert).toHaveBeenCalledWith('Sucesso', 'Relatório gerado com sucesso!');
+        });
+
+        // Verify FileSystem.writeAsStringAsync was called
+        expect(FileSystem.writeAsStringAsync).toHaveBeenCalledWith(
+            expect.stringContaining('.csv'),
+            expect.stringContaining('\ufeff'), // BOM
+            expect.any(Object)
+        );
+
+        // Verify content contains artwork and inspection info
+        const csvCallArg = FileSystem.writeAsStringAsync.mock.calls[0][1];
+        expect(csvCallArg).toContain('Monalisa');
+        expect(csvCallArg).toContain('Leonardo da Vinci');
+        expect(csvCallArg).toContain('Estável');
+        expect(csvCallArg).toContain('Limpeza superficial');
+
+        // Verify Sharing.shareAsync was called
+        expect(Sharing.shareAsync).toHaveBeenCalledWith(
+            expect.stringContaining('.csv'),
+            expect.objectContaining({ mimeType: 'text/csv' })
+        );
     });
 });

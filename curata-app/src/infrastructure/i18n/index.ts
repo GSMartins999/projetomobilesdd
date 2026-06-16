@@ -17,7 +17,7 @@ i18n
     .init({
         compatibilityJSON: 'v3',
         resources,
-        lng: Localization.getLocales()[0].languageCode ?? 'pt-BR',
+        lng: 'pt-BR',
         fallbackLng: 'en',
         interpolation: {
             escapeValue: false,

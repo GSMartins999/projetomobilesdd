@@ -134,4 +134,47 @@ describe('CreateArtworkUseCase', () => {
         expect(result.artwork.updatedAt).toBeDefined();
         expect(typeof result.artwork.updatedAt).toBe('string');
     });
+
+    it('salva multiplas fotos da obra com a primeira como capa (order: 0)', async () => {
+        const repo = makeMockRepository();
+        const photoRepoMock = {
+            save: jest.fn().mockResolvedValue(undefined),
+            findByArtworkId: jest.fn().mockResolvedValue([]),
+            findByInspectionId: jest.fn().mockResolvedValue([]),
+            findById: jest.fn().mockResolvedValue(null),
+            update: jest.fn().mockResolvedValue(undefined),
+            updateUploadStatus: jest.fn().mockResolvedValue(undefined),
+            findUnsyncedPhotos: jest.fn().mockResolvedValue([]),
+            findUnsynced: jest.fn().mockResolvedValue([]),
+            softDelete: jest.fn().mockResolvedValue(undefined),
+        };
+        const useCase = new CreateArtworkUseCase(
+            repo,
+            () => FIXED_DEVICE_ID,
+            () => FIXED_UUID,
+            () => FIXED_NOW,
+            photoRepoMock,
+        );
+
+        await useCase.execute({
+            name: 'Mural do Mercadão',
+            type: 'mural',
+            conservationStatus: 'fair',
+            photoLocalPaths: ['photo1.jpg', 'photo2.jpg', 'photo3.jpg'],
+        });
+
+        expect(photoRepoMock.save).toHaveBeenCalledTimes(3);
+        expect(photoRepoMock.save).toHaveBeenNthCalledWith(1, expect.objectContaining({
+            localPath: 'photo1.jpg',
+            order: 0,
+        }));
+        expect(photoRepoMock.save).toHaveBeenNthCalledWith(2, expect.objectContaining({
+            localPath: 'photo2.jpg',
+            order: 1,
+        }));
+        expect(photoRepoMock.save).toHaveBeenNthCalledWith(3, expect.objectContaining({
+            localPath: 'photo3.jpg',
+            order: 2,
+        }));
+    });
 });

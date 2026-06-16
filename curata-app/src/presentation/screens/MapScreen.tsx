@@ -273,14 +273,16 @@ export function MapScreen({ navigation }: any) {
             )}
 
             {/* FAB */}
-            <TouchableOpacity
-                style={[styles.fab, selected && styles.fabHidden]}
-                onPress={() => navigation.navigate('ArtworkForm')}
-                activeOpacity={0.8}
-                testID="map-fab"
-            >
-                <MaterialIcons name="add" size={32} color="#FFFFFF" />
-            </TouchableOpacity>
+            {!selected && (
+                <TouchableOpacity
+                    style={styles.fab}
+                    onPress={() => navigation.navigate('ArtworkForm')}
+                    activeOpacity={0.8}
+                    testID="map-fab"
+                >
+                    <MaterialIcons name="add" size={32} color="#FFFFFF" />
+                </TouchableOpacity>
+            )}
         </SafeAreaView>
     );
 }

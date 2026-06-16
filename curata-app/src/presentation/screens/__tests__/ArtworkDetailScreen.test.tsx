@@ -177,5 +177,22 @@ describe('ArtworkDetailScreen', () => {
         expect(mockDI.artworkRepository.softDelete).toHaveBeenCalledWith('art-1');
         expect(mockGoBack).toHaveBeenCalled();
     });
+
+    it('does not show delete option if the user is not the owner', async () => {
+        const art = { id: 'art-1', name: 'Mona Lisa', type: 'painting', conservationStatus: 'good', deviceId: 'different-device-id' };
+        const mockDI = {
+            artworkRepository: { findById: jest.fn().mockResolvedValue(art), softDelete: jest.fn().mockResolvedValue(undefined) },
+            inspectionRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
+            photoRepository: { findByArtworkId: jest.fn().mockResolvedValue([]) },
+        };
+
+        const { queryByTestId, findByText } = render(<ArtworkDetailScreen route={route} navigation={{ goBack: mockGoBack, navigate: mockNavigate }} />, {
+            wrapper: (props) => <Wrapper {...props} mockDI={mockDI} />
+        });
+
+        await findByText('Mona Lisa');
+        const deleteBtn = queryByTestId('delete-artwork-btn');
+        expect(deleteBtn).toBeNull();
+    });
 });
 

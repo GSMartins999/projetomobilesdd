@@ -35,8 +35,11 @@ export class AuthRepositoryImpl implements AuthRepository {
             password,
             options: { data: { name } },
         });
-        if (error || !data.user || !data.session) {
-            throw new Error(error?.message || 'Erro ao criar conta');
+        if (error) {
+            throw new Error(error.message);
+        }
+        if (!data.user) {
+            throw new Error('Erro ao criar conta');
         }
 
         const user: User = {
@@ -48,8 +51,10 @@ export class AuthRepositoryImpl implements AuthRepository {
             syncedAt: new Date().toISOString(),
         };
 
-        const token = data.session.access_token;
-        await SecureStore.setItemAsync(JWT_STORE_KEY, token);
+        const token = data.session?.access_token || '';
+        if (token) {
+            await SecureStore.setItemAsync(JWT_STORE_KEY, token);
+        }
 
         return { user, token };
     }

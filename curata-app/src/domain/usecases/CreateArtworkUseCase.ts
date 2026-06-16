@@ -83,22 +83,25 @@ export class CreateArtworkUseCase {
 
         await this.artworkRepository.save(artwork);
 
-        if (input.photoLocalPath && this.photoRepository) {
-            const photo: Photo = {
-                id: this.generateId(),
-                inspectionId: null, // Sem inspeção associada, foto direta da obra
-                artworkId: artwork.id,
-                localPath: input.photoLocalPath,
-                remoteUrl: null,
-                uploadStatus: 'pending',
-                label: 'front',
-                order: 0,
-                deviceId: this.getDeviceId(),
-                updatedAt: this.now(),
-                syncedAt: null,
-                deletedAt: null,
-            };
-            await this.photoRepository.save(photo);
+        const pathsToSave = input.photoLocalPaths || (input.photoLocalPath ? [input.photoLocalPath] : []);
+        if (pathsToSave.length > 0 && this.photoRepository) {
+            for (let i = 0; i < pathsToSave.length; i++) {
+                const photo: Photo = {
+                    id: this.generateId(),
+                    inspectionId: null, // Sem inspeção associada, foto direta da obra
+                    artworkId: artwork.id,
+                    localPath: pathsToSave[i],
+                    remoteUrl: null,
+                    uploadStatus: 'pending',
+                    label: 'front',
+                    order: i,
+                    deviceId: this.getDeviceId(),
+                    updatedAt: this.now(),
+                    syncedAt: null,
+                    deletedAt: null,
+                };
+                await this.photoRepository.save(photo);
+            }
         }
 
         try {

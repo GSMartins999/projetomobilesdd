@@ -64,17 +64,40 @@ describe('ProfileScreen', () => {
         spyAlert.mockRestore();
     });
 
-    it('can toggle language', async () => {
-        const { findByText, getByText, rerender } = render(<ProfileScreen />, { wrapper: Wrapper });
+    it('can toggle language and highlight active pill', async () => {
+        const { findByText, getByText, getByTestId, rerender } = render(<ProfileScreen />, { wrapper: Wrapper });
         await findByText('Test');
         
-        const ptBtn = getByText('PT');
-        fireEvent.press(ptBtn); 
-        rerender(<ProfileScreen />);
-        
+        // Initially, PT (pt-BR) is selected and should be active/highlighted
+        const ptPill = getByTestId('lang-pill-pt-BR');
+        expect(ptPill.props.style).toEqual(
+            expect.objectContaining({ backgroundColor: '#E8752A' })
+        );
+
+        // Switch to EN
         const enBtn = getByText('EN');
         fireEvent.press(enBtn);
         rerender(<ProfileScreen />);
+
+        const enPill = getByTestId('lang-pill-en');
+        expect(enPill.props.style).toEqual(
+            expect.objectContaining({ backgroundColor: '#E8752A' })
+        );
+
+        // PT should no longer be highlighted
+        expect(getByTestId('lang-pill-pt-BR').props.style).not.toEqual(
+            expect.objectContaining({ backgroundColor: '#E8752A' })
+        );
+    });
+
+    it('should highlight PT pill when i18n language is set to pt (without country code)', async () => {
+        mockLocalLang = 'pt';
+        const { getByTestId } = render(<ProfileScreen />, { wrapper: Wrapper });
+        
+        const ptPill = getByTestId('lang-pill-pt-BR');
+        expect(ptPill.props.style).toEqual(
+            expect.objectContaining({ backgroundColor: '#E8752A' })
+        );
     });
 
     it('renders default info when user is null', async () => {

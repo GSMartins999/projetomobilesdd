@@ -16,6 +16,7 @@ import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { LoadingOverlay } from '../components/LoadingOverlay';
+import { AuthErrorHelper } from '../../infrastructure/auth/AuthErrorHelper';
 
 export function RegisterScreen() {
     const { t } = useTranslation();
@@ -49,7 +50,7 @@ export function RegisterScreen() {
             setIsLoading(true);
             await register(email, password, name);
         } catch (err: any) {
-            setError(err.message || t('auth.register_error', 'Erro ao criar conta'));
+            setError(AuthErrorHelper.translate(err, t('auth.register_error', 'Erro ao criar conta')));
         } finally {
             setIsLoading(false);
         }

@@ -16,6 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useDI } from '../../infrastructure/di/DIContext';
+import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { CreateInspectionUseCase } from '../../domain/usecases/CreateInspectionUseCase';
 import { ConservationStatus } from '../../domain/entities/Artwork';
 import { PhotoLabel } from '../../domain/entities/Inspection';
@@ -33,6 +34,7 @@ export function InspectionFormScreen({ navigation, route }: any) {
     const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const { inspectionRepository, artworkRepository, photoRepository } = useDI();
+    const { user } = useAuth();
 
     const createInspectionUseCase = useMemo(() => new CreateInspectionUseCase(
         inspectionRepository,
@@ -40,8 +42,8 @@ export function InspectionFormScreen({ navigation, route }: any) {
         photoRepository,
         () => Math.random().toString(36).substr(2, 9),
         () => Math.random().toString(36).substr(2, 9),
-        () => 'device-1'
-    ), [inspectionRepository, artworkRepository, photoRepository]);
+        () => user?.id || 'device-1'
+    ), [inspectionRepository, artworkRepository, photoRepository, user?.id]);
 
     const [inspectionId] = useState(() => Math.random().toString(36).substr(2, 9));
     const [structuralCondition, setStructuralCondition] = useState('');

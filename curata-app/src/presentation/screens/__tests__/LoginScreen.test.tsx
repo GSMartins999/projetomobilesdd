@@ -115,7 +115,7 @@ describe('LoginScreen', () => {
         fireEvent.press(loginButton);
 
         await waitFor(() => {
-            expect(getByText('Invalid credentials')).toBeTruthy();
+            expect(getByText('E-mail ou senha inválidos.')).toBeTruthy();
         });
     });
 });

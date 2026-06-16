@@ -116,4 +116,17 @@ describe('SearchScreen', () => {
         expect(await screen.findByText('STATUS.UNKNOWN')).toBeTruthy();
         expect(await screen.findByText('Unknown Art')).toBeTruthy();
     });
+
+    it('should show all 7 artwork type filters', async () => {
+        render(<SearchScreen {...mockProps} />, { wrapper: TestWrapper });
+        await screen.findByText(/Mona Lisa/i);
+
+        expect(screen.getByText('Pintura')).toBeTruthy();
+        expect(screen.getByText('Escultura')).toBeTruthy();
+        expect(screen.getByText('Mural')).toBeTruthy();
+        expect(screen.getByText('Azulejo')).toBeTruthy();
+        expect(screen.getByText('Relevo')).toBeTruthy();
+        expect(screen.getByText('Monumento')).toBeTruthy();
+        expect(screen.getByText('Outro')).toBeTruthy();
+    });
 });

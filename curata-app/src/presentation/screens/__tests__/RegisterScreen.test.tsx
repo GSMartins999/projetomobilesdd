@@ -138,6 +138,21 @@ describe('RegisterScreen', () => {
         expect(await findByText('Erro ao criar conta')).toBeTruthy();
     });
 
+    it('should handle rate limit errors and translate them to Portuguese', async () => {
+        mockRegister.mockRejectedValueOnce(new Error('Email rate limit exceeded'));
+        const { findByText, getByText, getByPlaceholderText } = render(<RegisterScreen />, { wrapper: TestWrapper });
+
+        await findByText('Cadastrar');
+        fireEvent.changeText(getByPlaceholderText('Seu nome completo'), 'John Doe');
+        fireEvent.changeText(getByPlaceholderText('seu@email.com'), 'john@example.com');
+        fireEvent.changeText(getByPlaceholderText('Mínimo 6 caracteres'), 'password123');
+        fireEvent.changeText(getByPlaceholderText('Repita a senha'), 'password123');
+
+        fireEvent.press(getByText('Cadastrar'));
+
+        expect(await findByText('Muitas solicitações. Limite de e-mails excedido. Por favor, tente novamente mais tarde.')).toBeTruthy();
+    });
+
     it('should toggle password visibility', async () => {
         const { findByPlaceholderText, getByTestId, findByTestId } = render(<RegisterScreen />, { wrapper: TestWrapper });
         

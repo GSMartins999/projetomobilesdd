@@ -86,6 +86,52 @@ describe('GenerateReportUseCase', () => {
         });
     });
 
+    it('should include photo images in HTML when photos are present', async () => {
+        const mockPhotos = [
+            { id: 'p1', localPath: '/path/to/local.jpg', remoteUrl: null },
+            { id: 'p2', localPath: null, remoteUrl: 'https://supabase.co/remote.jpg' },
+        ];
+        const mockPhotoRepo = {
+            findByInspectionId: jest.fn().mockResolvedValue(mockPhotos),
+            findByArtworkId: jest.fn().mockResolvedValue([]),
+        };
+        useCase = new GenerateReportUseCase(mockPhotoRepo as any);
+
+        await useCase.execute(mockArtwork, mockInspections);
+
+        expect(mockPhotoRepo.findByInspectionId).toHaveBeenCalledWith('101');
+        expect(Print.printToFileAsync).toHaveBeenCalledWith(
+            expect.objectContaining({
+                html: expect.stringContaining('data:image/jpeg;base64,base64data')
+            })
+        );
+        expect(Print.printToFileAsync).toHaveBeenCalledWith(
+            expect.objectContaining({
+                html: expect.stringContaining('https://supabase.co/remote.jpg')
+            })
+        );
+    });
+
+    it('should include artwork cover photo in HTML if present', async () => {
+        const mockPhotos = [
+            { id: 'cover-1', localPath: '/path/to/cover.jpg', remoteUrl: null, inspectionId: null },
+        ];
+        const mockPhotoRepo = {
+            findByArtworkId: jest.fn().mockResolvedValue(mockPhotos),
+            findByInspectionId: jest.fn().mockResolvedValue([]),
+        };
+        useCase = new GenerateReportUseCase(mockPhotoRepo as any);
+
+        await useCase.execute(mockArtwork, mockInspections);
+
+        expect(mockPhotoRepo.findByArtworkId).toHaveBeenCalledWith('1');
+        expect(Print.printToFileAsync).toHaveBeenCalledWith(
+            expect.objectContaining({
+                html: expect.stringContaining('data:image/jpeg;base64,base64data')
+            })
+        );
+    });
+
     it('should handle display defaults if fields are missing', async () => {
         const incompleteArtwork: Artwork = {
             ...mockArtwork,

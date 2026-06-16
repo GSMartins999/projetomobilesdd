@@ -16,10 +16,11 @@ import { useAuth } from '../../infrastructure/auth/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { LoadingOverlay } from '../components/LoadingOverlay';
+import { AuthErrorHelper } from '../../infrastructure/auth/AuthErrorHelper';
 
 export function LoginScreen() {
     const { t } = useTranslation();
-    const { login, isLoading } = useAuth();
+    const { login, isLoading, isSupabaseReady } = useAuth();
     const navigation = useNavigation<any>();
     const insets = useSafeAreaInsets();
 
@@ -37,7 +38,7 @@ export function LoginScreen() {
             setError(null);
             await login(email, password);
         } catch (err: any) {
-            setError(err.message || t('auth.invalid_credentials'));
+            setError(AuthErrorHelper.translate(err, t('auth.invalid_credentials')));
         }
     };
 
@@ -64,6 +65,16 @@ export function LoginScreen() {
                         <Text style={styles.title}>Curata</Text>
                         <Text style={styles.subtitle}>Acesso ao sistema de conservação</Text>
                     </View>
+
+                    {/* Warning: Supabase not configured */}
+                    {!isSupabaseReady && (
+                        <View style={styles.warningBanner}>
+                            <MaterialIcons name="warning" size={20} color="#856404" />
+                            <Text style={styles.warningText}>
+                                Supabase não configurado. Crie o arquivo .env com as credenciais do projeto.
+                            </Text>
+                        </View>
+                    )}
 
                     {/* Form */}
                     <View style={styles.form}>
@@ -250,6 +261,23 @@ const styles = StyleSheet.create({
     registerBold: {
         color: '#E8752A',
         fontWeight: 'bold',
+    },
+    warningBanner: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFF3CD',
+        borderWidth: 1,
+        borderColor: '#FFEEBA',
+        borderRadius: 10,
+        padding: 12,
+        marginBottom: 16,
+        gap: 10,
+    },
+    warningText: {
+        flex: 1,
+        fontSize: 13,
+        color: '#856404',
+        lineHeight: 18,
     },
     footer: {
         alignItems: 'center',

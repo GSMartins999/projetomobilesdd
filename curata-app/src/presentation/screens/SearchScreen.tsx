@@ -79,10 +79,13 @@ export function SearchScreen({ navigation }: any) {
     ];
 
     const typeFilters: { key: ArtworkType; label: string }[] = [
+        { key: 'painting', label: 'Pintura' },
         { key: 'sculpture', label: 'Escultura' },
         { key: 'mural', label: 'Mural' },
-        { key: 'painting', label: 'Pintura' },
+        { key: 'tile', label: 'Azulejo' },
+        { key: 'relief', label: 'Relevo' },
         { key: 'monument', label: 'Monumento' },
+        { key: 'other', label: 'Outro' },
     ];
 
     return (

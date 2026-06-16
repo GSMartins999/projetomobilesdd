@@ -32,10 +32,11 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
     const [artwork, setArtwork] = useState<Artwork | null>(null);
     const [inspections, setInspections] = useState<Inspection[]>([]);
     const [coverPhoto, setCoverPhoto] = useState<string | null>(null);
+    const [artworkPhotos, setArtworkPhotos] = useState<string[]>([]);
 
     const currentDeviceId = user?.id || 'device-id-123';
-    // Em modo offline/mock, obras geradas localmente (não sincronizadas ou com id de mock) pertencem ao curador ativo
-    const isOwner = artwork ? (artwork.deviceId === currentDeviceId || !artwork.syncedAt || artwork.deviceId.includes('-')) : false;
+    // Só é possível excluir uma obra que você cadastrou (o deviceId da obra corresponde ao id do usuário/dispositivo atual)
+    const isOwner = artwork ? artwork.deviceId === currentDeviceId : false;
 
     useEffect(() => {
         async function load() {
@@ -51,9 +52,13 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
 
                 // Buscar fotos diretamente pela obra
                 const photosForArtwork = await photoRepository.findByArtworkId(id);
-                if (photosForArtwork.length > 0) {
-                    const p = photosForArtwork[0];
-                    setCoverPhoto(p.localPath || p.remoteUrl || null);
+                const registeredPhotos = photosForArtwork
+                    .filter(p => !p.inspectionId)
+                    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+                
+                if (registeredPhotos.length > 0) {
+                    setCoverPhoto(registeredPhotos[0].localPath || registeredPhotos[0].remoteUrl || null);
+                    setArtworkPhotos(registeredPhotos.map(p => p.localPath || p.remoteUrl || '').filter(Boolean));
                 }
             }
         }
@@ -236,6 +241,22 @@ export function ArtworkDetailScreen({ route, navigation }: any) {
                         <View style={styles.notesContainer}>
                             <Text style={styles.sectionTitle}>{t('artwork.notes', 'Notas')}</Text>
                             <Text style={styles.notesText}>{artwork.notes}</Text>
+                        </View>
+                    ) : null}
+
+                    {/* Galeria de Fotos da Obra */}
+                    {artworkPhotos.length > 1 ? (
+                        <View style={styles.notesContainer}>
+                            <Text style={styles.sectionTitle}>{t('artwork.photos', 'Fotos da Obra')}</Text>
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexDirection: 'row', marginTop: 12 }}>
+                                {artworkPhotos.map((path, idx) => (
+                                    <Image
+                                        key={idx}
+                                        source={{ uri: ImageUtils.getImageUri(path) || '' }}
+                                        style={{ width: 80, height: 80, borderRadius: 12, marginRight: 10, borderWidth: 1, borderColor: '#eee' }}
+                                    />
+                                ))}
+                            </ScrollView>
                         </View>
                     ) : null}
 
