@@ -23,6 +23,7 @@
     "base64-arraybuffer": "^1.0.2",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
+    "eas-cli": "^20.3.0",
     "expo": "~54.0.35",
     "expo-battery": "~10.0.8",
     "expo-camera": "~17.0.10",
